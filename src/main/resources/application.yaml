@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/libro_oro
+    username: postgres
+    password: jhompe
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      #ddl-auto: create-drop # Para que cree las tablas automaticamente si no existe
+      ddl-auto: update # Para actualizar las tablas sin necesidad de borrarlas
+      generate-ddl: true # Para que imprima en sql las transformaciones a sql
+    show-sql: true  # Para que imprima en sql las transformaciones a sql
