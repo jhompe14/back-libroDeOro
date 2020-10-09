@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/grupo")
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
+        RequestMethod.PUT, RequestMethod.DELETE})
 public class GrupoController {
 
     private GrupoService grupoService;
