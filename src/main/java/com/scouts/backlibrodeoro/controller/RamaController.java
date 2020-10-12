@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/rama")
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
+        RequestMethod.PUT, RequestMethod.DELETE})
 public class RamaController {
 
     private RamaService ramaService;

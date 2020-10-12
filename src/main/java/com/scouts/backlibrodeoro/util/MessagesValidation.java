@@ -15,7 +15,7 @@ public class MessagesValidation {
             "La edad minima no puede ser mayor a la edad maxima";
 
     public static final String VALIDATION_GRUPO_RAMAS_ACTIVAS = "El grupo posee ramas activas";
-    public static final String VALIDATION_GRUPO_CARGOS_ACTIVOS = "El grupo posee cargos activas";
+    public static final String VALIDATION_GRUPO_CARGOS_ACTIVOS = "El grupo posee cargos activos";
 
     public static final String VALIDATION_RAMA_SECCIONES_ACTIVAS = "La rama posee secciones activas";
     public static final String VALIDATION_RAMA_CARGOS_ACTIVOS = "La rama posee cargos activos";
