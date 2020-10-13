@@ -5,6 +5,7 @@ public class RamaDTO {
     private Integer edadMinima;
     private Integer edadMaxima;
     private String descripcion;
+    private Integer idGrupo;
 
     public String getNombre() {
         return nombre;
@@ -36,5 +37,13 @@ public class RamaDTO {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Integer getIdGrupo() {
+        return idGrupo;
+    }
+
+    public void setIdGrupo(Integer idGrupo) {
+        this.idGrupo = idGrupo;
     }
 }

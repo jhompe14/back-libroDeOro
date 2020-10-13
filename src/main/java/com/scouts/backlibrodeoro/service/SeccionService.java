@@ -61,12 +61,13 @@ public class SeccionService {
     @Transactional
     public Seccion updateSeccion(Integer idSeccion, SeccionDTO seccionDTO) throws NegocioException {
         Optional<Seccion> seccion = InspeccionService.getSeccion(seccionRepository, idSeccion);
+        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, seccionDTO.getIdRama());
 
         Seccion seccionEdit = new Seccion();
         seccionEdit.setId(idSeccion);
         seccionEdit.setNombre(seccionDTO.getNombre());
         seccionEdit.setDescripcion(seccionDTO.getDescripcion());
-        seccionEdit.setRama(seccion.orElse(new Seccion()).getRama());
+        seccionEdit.setRama(rama.orElse(new Rama()));
 
         this.seccionValidator.validator(seccionEdit);
 

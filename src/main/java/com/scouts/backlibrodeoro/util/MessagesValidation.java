@@ -10,7 +10,7 @@ public class MessagesValidation {
     public static final String VALIDATION_NOMBRE_OBLIGATORIO = "El nombre es obligatorio";
     public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios";
     public static final String VALIDATION_EDAD_MINIMA_MAXIMA =
-            "Revise la edad maxima y minima no debe ser un numero negativo ni superar los 150";
+            "Revise la edad maxima y minima no debe ser un numero menor a 0 ni superar los 150";
     public static final String VALIDATION_EDAD_MAXIMA_MAJOR_EDAD_MINIMA =
             "La edad minima no puede ser mayor a la edad maxima";
 
