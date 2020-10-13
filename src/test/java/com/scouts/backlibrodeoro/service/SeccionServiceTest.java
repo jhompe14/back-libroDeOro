@@ -179,7 +179,9 @@ public class SeccionServiceTest {
         //Arrange
         Integer idSeccion= 1;
         SeccionDTO seccionDTO = new SeccionDTO();
+        seccionDTO.setIdRama(1);
         when(seccionRepository.findById(idSeccion)).thenReturn(Optional.of(new Seccion()));
+        when(ramaRepository.findById(seccionDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION))
                 .when(seccionValidator).validator(any());
 
@@ -197,7 +199,9 @@ public class SeccionServiceTest {
         //Arrange
         Integer idSeccion= 1;
         SeccionDTO seccionDTO = new SeccionDTO();
+        seccionDTO.setIdRama(1);
         when(seccionRepository.findById(idSeccion)).thenReturn(Optional.of(new Seccion()));
+        when(ramaRepository.findById(seccionDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
 
         Seccion seccion = new Seccion();
         seccion.setId(1);

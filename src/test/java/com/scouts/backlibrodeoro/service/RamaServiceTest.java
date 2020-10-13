@@ -183,7 +183,9 @@ public class RamaServiceTest {
         //Arrange
         Integer idRama= 1;
         RamaDTO ramaDTO = new RamaDTO();
+        ramaDTO.setIdGrupo(1);
         when(ramaRepository.findById(idRama)).thenReturn(Optional.of(new Rama()));
+        when(grupoRepository.findById(ramaDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, TypeException.VALIDATION)).when(ramaValidator).validator(any());
 
         //Act
@@ -200,7 +202,9 @@ public class RamaServiceTest {
         //Arrange
         Integer idRama= 1;
         RamaDTO ramaDTO = new RamaDTO();
+        ramaDTO.setIdGrupo(1);
         when(ramaRepository.findById(idRama)).thenReturn(Optional.of(new Rama()));
+        when(grupoRepository.findById(ramaDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
 
         Rama rama = new Rama();
         rama.setId(1);
