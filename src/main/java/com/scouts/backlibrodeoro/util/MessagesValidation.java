@@ -22,4 +22,8 @@ public class MessagesValidation {
 
     public static final String VALIDATION_SECCION_CARGOS_ACTIVOS = "La seccion posee cargos activos";
 
+    public static final String NOT_FOUND_USUARIO_CONTRASENA = "Usuario y contrasena incorrectos";
+    public static final String DILIGENCIAR_USUARIO_CONTRASENA =
+            "Debe diligenciar correctamente usuario y contrase\u00F1a";
+
 }

@@ -2,8 +2,8 @@ package com.scouts.backlibrodeoro.types;
 
 public enum TypeIntegrante {
 
-    ACTIVO("ACTIVO"),
-    EXINTEGR("EX-INTEGRANTE");
+    AC("ACTIVO"),
+    EX("EX-INTEGRANTE");
 
     private final String value;
 

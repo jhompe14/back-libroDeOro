@@ -2,8 +2,8 @@ package com.scouts.backlibrodeoro.types;
 
 public enum TypeUsuario {
 
-    ADMIN("ADMINISTRADOR"),
-    INTEGR("INTEGRANTE");
+    AD("ADMINISTRADOR"),
+    IN("INTEGRANTE");
 
     private final String value;
 

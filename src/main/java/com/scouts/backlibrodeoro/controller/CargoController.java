@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
         RequestMethod.PUT, RequestMethod.DELETE})
 public class CargoController {
 
-    private CargoService cargoService;
+    private final CargoService cargoService;
 
     @Autowired
     public CargoController(CargoService cargoService) {
