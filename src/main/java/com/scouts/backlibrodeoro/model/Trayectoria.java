@@ -30,6 +30,12 @@ public class Trayectoria {
     @JoinColumn(name = "id_cargo")
     private Cargo cargo;
 
+    @Column(name="anio_ingreso")
+    private Integer anioIngreso;
+
+    @Column(name="anio_retiro")
+    private Integer anioRetiro;
+
     public Integer getId() {
         return id;
     }
@@ -76,5 +82,21 @@ public class Trayectoria {
 
     public void setCargo(Cargo cargo) {
         this.cargo = cargo;
+    }
+
+    public Integer getAnioIngreso() {
+        return anioIngreso;
+    }
+
+    public void setAnioIngreso(Integer anioIngreso) {
+        this.anioIngreso = anioIngreso;
+    }
+
+    public Integer getAnioRetiro() {
+        return anioRetiro;
+    }
+
+    public void setAnioRetiro(Integer anioRetiro) {
+        this.anioRetiro = anioRetiro;
     }
 }
