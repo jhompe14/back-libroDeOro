@@ -26,4 +26,21 @@ public class MessagesValidation {
     public static final String DILIGENCIAR_USUARIO_CONTRASENA =
             "Debe diligenciar correctamente usuario y contrase\u00F1a";
 
+    public static final String VALIDATION_USUARIO_EXISTE = "Este usuario ya existe";
+    public static final String VALIDATION_CONFIRM_CONTRASENA =
+            "La contrase\u00F1a y el confirmar contrase\u00F1a no coinciden";
+
+    public static final String VALIDATION_USUARIO_OBLIGATORIO = "El usuario es obligatorio";
+    public static final String VALIDATION_USUARIO_CONTRASENA = "La contrase\u00F1a es obligatoria";
+    public static final String VALIDATION_APELLIDO_OBLIGATORIO = "El apellido es obligatorio";
+    public static final String VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO = "El tipo de integrante debe ser uno valido";
+    public static final String VALIDATION_TIPO_USUARIO_OBLIGATORIO = "El tipo de usuario debe ser uno valido";
+    public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo de ser uno valido";
+    public static final String VALIDATION_TELEFONO_OBLIGATORIO = "El telefono es obligatorio";
+    public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
+    public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";
+
+    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO = "Debe agregar almenos una trayectoria";
+
+    public static final String VALIDATION_TRAYECTORIA_FECHA_INGRESO = "La fecha ingreso es obligatoria";
 }

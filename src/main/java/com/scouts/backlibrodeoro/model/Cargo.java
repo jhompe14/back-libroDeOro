@@ -26,6 +26,13 @@ public class Cargo {
     @JoinColumn(name = "id_seccion")
     private Seccion seccion;
 
+    public Cargo() {
+    }
+
+    public Cargo(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

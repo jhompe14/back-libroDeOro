@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.validator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +27,7 @@ public class RamaValidator implements IValidator{
 
     private boolean validateRequired(Rama ramaValidate){
         return Optional.ofNullable(ramaValidate).map(r ->{
-                    return Optional.ofNullable(r.getNombre()).isPresent() &&
-                            !r.getNombre().isEmpty() &&
+                    return GeneralValidates.validateStringNotIsEmpty(r.getNombre()) &&
                             Optional.ofNullable(r.getEdadMinima()).isPresent() &&
                             Optional.ofNullable(r.getEdadMaxima()).isPresent();
                 }).orElse(false);

@@ -2,6 +2,8 @@ package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.UsuarioDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
+import com.scouts.backlibrodeoro.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +14,20 @@ import org.springframework.web.bind.annotation.*;
         RequestMethod.PUT, RequestMethod.DELETE})
 public class UsuarioController {
 
+    private final UsuarioService usuarioService;
+
+    @Autowired
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
     @PostMapping
     public ResponseEntity<String> createUsuario(@RequestBody UsuarioDTO usuarioDTO) throws NegocioException {
         try{
-            System.out.println("hola");
-            return new ResponseEntity("", HttpStatus.CREATED);
-        }/*catch (NegocioException ex){
+            return new ResponseEntity(usuarioService.createUsuario(usuarioDTO), HttpStatus.CREATED);
+        }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }*/catch (Exception ex) {
+        }catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

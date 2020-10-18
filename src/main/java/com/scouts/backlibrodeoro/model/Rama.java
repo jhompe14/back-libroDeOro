@@ -24,6 +24,13 @@ public class Rama {
     @JoinColumn(name = "id_grupo")
     private Grupo grupo;
 
+    public Rama() {
+    }
+
+    public Rama(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

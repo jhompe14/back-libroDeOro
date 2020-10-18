@@ -4,6 +4,7 @@ import com.scouts.backlibrodeoro.dto.AuthDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +22,12 @@ public class AuthValidator implements IValidator{
 
     private boolean validateUsuario(AuthDTO auth){
         return Optional.ofNullable(auth).map(c ->
-                Optional.ofNullable(c.getUsuario()).isPresent() &&
-                        !c.getUsuario().isEmpty()).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(c.getUsuario())).orElse(false);
 
     }
 
     private boolean validateContrasena(AuthDTO auth){
         return Optional.ofNullable(auth).map(c ->
-                Optional.ofNullable(c.getContrasena()).isPresent() &&
-                        !c.getContrasena().isEmpty()).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(c.getContrasena())).orElse(false);
     }
 }

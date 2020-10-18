@@ -123,4 +123,5 @@ public class UsuarioDTO {
     public void setTrayectoria(List<TrayectoriaDTO> trayectoria) {
         this.trayectoria = trayectoria;
     }
+
 }

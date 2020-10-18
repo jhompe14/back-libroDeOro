@@ -2,7 +2,6 @@ package com.scouts.backlibrodeoro.validator;
 
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
-import com.scouts.backlibrodeoro.service.CargoService;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

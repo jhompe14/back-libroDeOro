@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.validator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +20,7 @@ public class SeccionValidator implements IValidator{
 
     private boolean validateNombre(Seccion seccionValidate){
         return Optional.ofNullable(seccionValidate).map(s ->
-                Optional.ofNullable(s.getNombre()).isPresent() &&
-                        !s.getNombre().isEmpty()).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(s.getNombre())).orElse(false);
 
     }
 
