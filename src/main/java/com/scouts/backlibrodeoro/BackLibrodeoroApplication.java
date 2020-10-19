@@ -27,6 +27,7 @@ public class BackLibrodeoroApplication {
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
 					.antMatchers("/api/auth").permitAll()
+					.antMatchers(HttpMethod.POST,"/api/usuario").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}

@@ -8,6 +8,7 @@ import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AuthValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
@@ -78,21 +79,19 @@ public class UsuarioService {
     }
 
     private Usuario insertTrayectoria(Usuario usuario, List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
-        if(trayectoriaDTOList.size()>0){
-            trayectoriaDTOList.stream().map(trayectoriaDTO -> {
+        if(Optional.ofNullable(trayectoriaDTOList)
+                .map(trayectoriaDTOS -> trayectoriaDTOS.size()>0)
+                .orElse(false)) {
+
+            trayectoriaDTOList.stream().forEach(trayectoriaDTO -> {
                 try {
                     Trayectoria trayectoria= transformDTOToTrayectoria(trayectoriaDTO);
                     trayectoria.setUsuario(usuario);
                     trayectoriaValidator.validator(trayectoria);
-                    return trayectoriaRepository.save(trayectoria);
-                } catch (NegocioException e) {
-                    try {
-                        throw e;
-                    } catch (NegocioException negocioException) {
-                        negocioException.printStackTrace();
-                    }
+                    trayectoriaRepository.save(trayectoria);
+                } catch (Exception ex) {
+                   throw new RuntimeException(ex);
                 }
-                return null;
             });
         }else{
             throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_OBLIGATORIO, TypeException.VALIDATION);

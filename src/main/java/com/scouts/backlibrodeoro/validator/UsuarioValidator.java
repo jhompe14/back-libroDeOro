@@ -4,6 +4,7 @@ import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.types.TypeIntegrante;
+import com.scouts.backlibrodeoro.types.TypeUsuario;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,9 @@ public class UsuarioValidator implements IValidator{
         validateTipoIntegrante(strValidation, usuarioOptionalValidation);
         validateTipoUsuario(strValidation, usuarioOptionalValidation);
         if(!strValidation.toString().isEmpty()){
-            throw new NegocioException(strValidation.toString(), TypeException.VALIDATION);
+            throw new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS+"</br>"
+                    +strValidation.toString(),
+                    TypeException.VALIDATION);
         }
     }
 
@@ -86,7 +89,7 @@ public class UsuarioValidator implements IValidator{
     private void validateTipoUsuario(StringBuilder strValidation, Optional<Usuario> usuarioOptionalValidation){
         usuarioOptionalValidation.map(usuario -> {
             try {
-                TypeIntegrante.valueOf(usuario.getTipoUsuario());
+                TypeUsuario.valueOf(usuario.getTipoUsuario());
             }catch (IllegalArgumentException ex){
                 strValidation.append(MessagesValidation.VALIDATION_TIPO_USUARIO_OBLIGATORIO).append(" </br>");
             }

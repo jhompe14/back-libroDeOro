@@ -27,7 +27,10 @@ public class UsuarioController {
             return new ResponseEntity(usuarioService.createUsuario(usuarioDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }catch (Exception ex) {
+        }catch (RuntimeException ex){
+            NegocioException negocioException = (NegocioException) ex.getCause();
+            return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

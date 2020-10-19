@@ -8,7 +8,7 @@ public class MessagesValidation {
     public static final String ERROR_CARGO_NO_EXISTE = "El cargo no existe";
 
     public static final String VALIDATION_NOMBRE_OBLIGATORIO = "El nombre es obligatorio";
-    public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios";
+    public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios: ";
     public static final String VALIDATION_EDAD_MINIMA_MAXIMA =
             "Revise la edad maxima y minima no debe ser un numero menor a 0 ni superar los 150";
     public static final String VALIDATION_EDAD_MAXIMA_MAJOR_EDAD_MINIMA =
@@ -19,6 +19,9 @@ public class MessagesValidation {
 
     public static final String VALIDATION_RAMA_SECCIONES_ACTIVAS = "La rama posee secciones activas";
     public static final String VALIDATION_RAMA_CARGOS_ACTIVOS = "La rama posee cargos activos";
+    public static final String VALIDATION_RAMA_EDAD_MINIMA = "La edad minima es obligatoria";
+    public static final String VALIDATION_RAMA_EDAD_MAXIMA = "La edad maxima es obligatoria";
+
 
     public static final String VALIDATION_SECCION_CARGOS_ACTIVOS = "La seccion posee cargos activos";
 
@@ -35,7 +38,7 @@ public class MessagesValidation {
     public static final String VALIDATION_APELLIDO_OBLIGATORIO = "El apellido es obligatorio";
     public static final String VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO = "El tipo de integrante debe ser uno valido";
     public static final String VALIDATION_TIPO_USUARIO_OBLIGATORIO = "El tipo de usuario debe ser uno valido";
-    public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo de ser uno valido";
+    public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo debe ser uno valido";
     public static final String VALIDATION_TELEFONO_OBLIGATORIO = "El telefono es obligatorio";
     public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
     public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";

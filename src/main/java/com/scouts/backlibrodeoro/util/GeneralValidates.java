@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.util;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

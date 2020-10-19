@@ -4,15 +4,18 @@ import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class TrayectoriaValidator implements IValidator{
     @Override
     public <T> void validator(T trayectoria) throws NegocioException {
         Trayectoria trayectoriaValidation = (Trayectoria) trayectoria;
         if(!validateRequired(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_FECHA_INGRESO, TypeException.VALIDATION);
+            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_FECHA_INGRESO,
+                    TypeException.VALIDATION);
         }
     }
 
