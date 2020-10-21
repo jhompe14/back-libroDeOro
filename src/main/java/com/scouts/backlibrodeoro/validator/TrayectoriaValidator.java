@@ -16,15 +16,15 @@ public class TrayectoriaValidator implements IValidator{
     public <T> void validator(T trayectoria) throws NegocioException {
         Trayectoria trayectoriaValidation = (Trayectoria) trayectoria;
         if(!validateRequired(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_FECHA_INGRESO,
+            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_ANIO_INGRESO,
                     TypeException.VALIDATION);
         }
         if(!validateAnioIngresoValid(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_FECHA_INGRESO_VALIDA,
+            throw new NegocioException(MessagesValidation.VALIDATION_ANIO_INGRESO_VALIDA,
                     TypeException.VALIDATION);
         }
         if(!validateAnioIngresoMajorToAnioRetiro(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_FECHA_INGRESO_MAJOR_TO_FECHA_RETIRO,
+            throw new NegocioException(MessagesValidation.VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO,
                     TypeException.VALIDATION);
         }
 
@@ -44,7 +44,8 @@ public class TrayectoriaValidator implements IValidator{
     private Boolean validateAnioIngresoMajorToAnioRetiro(Trayectoria trayectoriaValidation){
         return Optional.ofNullable(trayectoriaValidation).map(r ->
                 Optional.ofNullable(r.getAnioRetiro()).isPresent() &&
-                r.getAnioIngreso() <= r.getAnioRetiro()).orElse(false);
+                (r.getAnioRetiro() == 0 ||
+                r.getAnioIngreso() <= r.getAnioRetiro())).orElse(false);
     }
 
     private Integer getCurrentYear(){

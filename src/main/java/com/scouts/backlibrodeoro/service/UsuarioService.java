@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,20 +76,19 @@ public class UsuarioService {
             throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
         }
 
-        return insertTrayectoria(usuarioRepository.save(usuario), usuarioDTO.getTrayectoria());
+        return commitUsuario(usuario, getTrayectorias(usuario, usuarioDTO.getTrayectoria()));
     }
 
-    private Usuario insertTrayectoria(Usuario usuario, List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
+    private List<Trayectoria> getTrayectorias(Usuario usuario, List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
+        List<Trayectoria> trayectorias = new ArrayList<>();
         if(Optional.ofNullable(trayectoriaDTOList)
                 .map(trayectoriaDTOS -> trayectoriaDTOS.size()>0)
                 .orElse(false)) {
-
             trayectoriaDTOList.stream().forEach(trayectoriaDTO -> {
                 try {
                     Trayectoria trayectoria= transformDTOToTrayectoria(trayectoriaDTO);
-                    trayectoria.setUsuario(usuario);
                     trayectoriaValidator.validator(trayectoria);
-                    trayectoriaRepository.save(trayectoria);
+                    trayectorias.add(trayectoria);
                 } catch (Exception ex) {
                    throw new RuntimeException(ex);
                 }
@@ -96,6 +96,15 @@ public class UsuarioService {
         }else{
             throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_OBLIGATORIO, TypeException.VALIDATION);
         }
+        return trayectorias;
+    }
+
+    private Usuario commitUsuario(Usuario usuario, List<Trayectoria> trayectorias){
+        usuarioRepository.save(usuario);
+        trayectorias.forEach(trayectoria -> {
+            trayectoria.setUsuario(usuario);
+            trayectoriaRepository.save(trayectoria);
+        });
         return usuario;
     }
 
@@ -128,10 +137,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
                         TypeException.VALIDATION)));
         trayectoria.setCargo(cargoRepository.findById(trayectoriaDTO.getCargo())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
+                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE,
                         TypeException.VALIDATION)));
-        trayectoria.setAnioIngreso(trayectoria.getAnioIngreso());
-        trayectoria.setAnioRetiro(trayectoria.getAnioRetiro());
+        trayectoria.setAnioIngreso(trayectoriaDTO.getAnioIngreso());
+        trayectoria.setAnioRetiro(trayectoriaDTO.getAnioRetiro());
         return trayectoria;
     }
 
