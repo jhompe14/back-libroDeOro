@@ -28,6 +28,10 @@ public class BackLibrodeoroApplication {
 					.authorizeRequests()
 					.antMatchers("/api/auth").permitAll()
 					.antMatchers(HttpMethod.POST,"/api/usuario").permitAll()
+					.antMatchers(HttpMethod.GET,"/api/grupo").permitAll()
+					.antMatchers(HttpMethod.GET,"/api/rama").permitAll()
+					.antMatchers(HttpMethod.GET,"/api/seccion").permitAll()
+					.antMatchers(HttpMethod.GET,"/api/cargo").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/seccion")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
@@ -24,7 +26,7 @@ public class SeccionController {
     }
 
     @GetMapping
-    public ResponseEntity<Seccion> findByAll()  {
+    public ResponseEntity<List<Seccion>> findByAll()  {
         return new ResponseEntity(this.seccionService.getAllSecciones(), HttpStatus.OK);
     }
 

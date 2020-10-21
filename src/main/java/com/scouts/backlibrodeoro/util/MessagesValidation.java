@@ -46,4 +46,8 @@ public class MessagesValidation {
     public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO = "Debe agregar almenos una trayectoria";
 
     public static final String VALIDATION_TRAYECTORIA_FECHA_INGRESO = "La fecha ingreso es obligatoria";
+    public static final String VALIDATION_FECHA_INGRESO_VALIDA =
+            "La fecha ingreso debe estar entre 1940 y el a\u00F1o actual";
+    public static final String VALIDATION_FECHA_INGRESO_MAJOR_TO_FECHA_RETIRO =
+            "La fecha ingreso no debe ser mayor a la fecha de retiro";
 }

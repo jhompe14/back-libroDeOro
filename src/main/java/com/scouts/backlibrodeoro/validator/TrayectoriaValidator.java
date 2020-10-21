@@ -6,6 +6,8 @@ import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -17,11 +19,37 @@ public class TrayectoriaValidator implements IValidator{
             throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_FECHA_INGRESO,
                     TypeException.VALIDATION);
         }
+        if(!validateAnioIngresoValid(trayectoriaValidation)){
+            throw new NegocioException(MessagesValidation.VALIDATION_FECHA_INGRESO_VALIDA,
+                    TypeException.VALIDATION);
+        }
+        if(!validateAnioIngresoMajorToAnioRetiro(trayectoriaValidation)){
+            throw new NegocioException(MessagesValidation.VALIDATION_FECHA_INGRESO_MAJOR_TO_FECHA_RETIRO,
+                    TypeException.VALIDATION);
+        }
+
     }
 
     private Boolean validateRequired(Trayectoria trayectoriaValidation){
         return Optional.ofNullable(trayectoriaValidation).map(r ->
                     Optional.ofNullable(r.getAnioIngreso()).isPresent()
         ).orElse(false);
+    }
+
+    private Boolean validateAnioIngresoValid(Trayectoria trayectoriaValidation){
+        return Optional.ofNullable(trayectoriaValidation).map(r -> r.getAnioIngreso() >= 1940 &&
+                r.getAnioIngreso() <= getCurrentYear()).orElse(false);
+    }
+
+    private Boolean validateAnioIngresoMajorToAnioRetiro(Trayectoria trayectoriaValidation){
+        return Optional.ofNullable(trayectoriaValidation).map(r ->
+                Optional.ofNullable(r.getAnioRetiro()).isPresent() &&
+                r.getAnioIngreso() <= r.getAnioRetiro()).orElse(false);
+    }
+
+    private Integer getCurrentYear(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.YEAR);
     }
 }

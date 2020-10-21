@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/grupo")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
@@ -25,7 +27,7 @@ public class GrupoController {
     }
 
     @GetMapping
-    public ResponseEntity<Grupo> findByAll()  {
+    public ResponseEntity<List<Grupo>> findByAll()  {
         return new ResponseEntity(this.grupoService.getAllGrupos(), HttpStatus.OK);
     }
 

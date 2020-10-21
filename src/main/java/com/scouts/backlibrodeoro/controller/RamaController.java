@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rama")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
@@ -24,7 +26,7 @@ public class RamaController {
     }
 
     @GetMapping
-    public ResponseEntity<Rama> findByAll()  {
+    public ResponseEntity<List<Rama>> findByAll()  {
         return new ResponseEntity(this.ramaService.getAllRamas(), HttpStatus.OK);
     }
 

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cargo")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
@@ -24,9 +26,14 @@ public class CargoController {
         this.cargoService = cargoService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Cargo>> findByAll(){
+        return new ResponseEntity(this.cargoService.getAllCargos(), HttpStatus.OK);
+    }
+
     @GetMapping("/type/{typeCargo}/id/{idType}")
-    public ResponseEntity<Cargo> findAllCargosByType(@PathVariable("typeCargo") String typeCargo,
-                                                     @PathVariable("idType") Integer idType)  {
+    public ResponseEntity<List<Cargo>> findAllCargosByType(@PathVariable("typeCargo") String typeCargo,
+                                                          @PathVariable("idType") Integer idType)  {
         return new ResponseEntity(this.cargoService.getAllCargosByType(typeCargo, idType), HttpStatus.OK);
     }
 
