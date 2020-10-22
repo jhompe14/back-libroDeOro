@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/usuario")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
         RequestMethod.PUT, RequestMethod.DELETE})
-public class UsuarioController {
+public class UsuarioRestController {
 
     private final UsuarioService usuarioService;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioRestController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 

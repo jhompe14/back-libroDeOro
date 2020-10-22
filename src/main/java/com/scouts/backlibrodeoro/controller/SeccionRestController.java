@@ -1,9 +1,9 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.RamaDTO;
+import com.scouts.backlibrodeoro.dto.SeccionDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Rama;
-import com.scouts.backlibrodeoro.service.RamaService;
+import com.scouts.backlibrodeoro.model.Seccion;
+import com.scouts.backlibrodeoro.service.SeccionService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rama")
+@RequestMapping("/api/seccion")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
         RequestMethod.PUT, RequestMethod.DELETE})
-public class RamaController {
+public class SeccionRestController {
 
-    private RamaService ramaService;
+    private SeccionService seccionService;
 
     @Autowired
-    public RamaController(RamaService ramaService) {
-        this.ramaService = ramaService;
+    public SeccionRestController(SeccionService seccionService) {
+        this.seccionService = seccionService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Rama>> findByAll()  {
-        return new ResponseEntity(this.ramaService.getAllRamas(), HttpStatus.OK);
+    public ResponseEntity<List<Seccion>> findByAll()  {
+        return new ResponseEntity(this.seccionService.getAllSecciones(), HttpStatus.OK);
     }
 
-    @GetMapping("/{idRama}")
-    public ResponseEntity<Rama> findById(@PathVariable("idRama") Integer idRama) throws NegocioException {
+    @GetMapping("/{idSeccion}")
+    public ResponseEntity<Seccion> findById(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException {
         try {
-            return new ResponseEntity(this.ramaService.getRama(idRama), HttpStatus.OK);
+            return new ResponseEntity(this.seccionService.getSeccion(idSeccion), HttpStatus.OK);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
         }catch (Exception ex){
@@ -41,11 +41,11 @@ public class RamaController {
         }
     }
 
-    @PostMapping("/grupo/{idGrupo}")
-    public ResponseEntity<Rama> createRama(@PathVariable("idGrupo") Integer idGrupo, @RequestBody RamaDTO ramaDTO)
+    @PostMapping("/rama/{idRama}")
+    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama, @RequestBody SeccionDTO seccionDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.ramaService.createRama(ramaDTO, idGrupo), HttpStatus.CREATED);
+            return new ResponseEntity(this.seccionService.createSeccion(seccionDTO, idRama), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -53,11 +53,11 @@ public class RamaController {
         }
     }
 
-    @PutMapping("/{idRama}")
-    public ResponseEntity<Rama> updateRama(@PathVariable("idRama") Integer idRama, @RequestBody RamaDTO ramaDTO)
+    @PutMapping("/{idSeccion}")
+    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion, @RequestBody SeccionDTO seccionDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.ramaService.updateRama(idRama, ramaDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.seccionService.updateSeccion(idSeccion, seccionDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
@@ -66,10 +66,10 @@ public class RamaController {
         }
     }
 
-    @DeleteMapping("/{idRama}")
-    public ResponseEntity deleteRama(@PathVariable("idRama") Integer idRama) throws NegocioException{
+    @DeleteMapping("/{idSeccion}")
+    public ResponseEntity deleteSeccion(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException{
         try{
-            ramaService.deleteRama(idRama);
+            seccionService.deleteSeccion(idSeccion);
             return new ResponseEntity(HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.NOTFOUND)

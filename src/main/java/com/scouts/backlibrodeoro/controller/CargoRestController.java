@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("/api/cargo")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
         RequestMethod.PUT, RequestMethod.DELETE})
-public class CargoController {
+public class CargoRestController {
 
     private final CargoService cargoService;
 
     @Autowired
-    public CargoController(CargoService cargoService) {
+    public CargoRestController(CargoService cargoService) {
         this.cargoService = cargoService;
     }
 

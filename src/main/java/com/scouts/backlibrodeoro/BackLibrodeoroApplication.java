@@ -32,6 +32,7 @@ public class BackLibrodeoroApplication {
 					.antMatchers(HttpMethod.GET,"/api/rama").permitAll()
 					.antMatchers(HttpMethod.GET,"/api/seccion").permitAll()
 					.antMatchers(HttpMethod.GET,"/api/cargo").permitAll()
+					.antMatchers("/", "/static/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}

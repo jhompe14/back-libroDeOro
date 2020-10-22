@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", methods= {RequestMethod.POST})
-public class AuthController {
+public class AuthRestController {
 
     private final UsuarioService usuarioService;
 
     @Autowired
-    public AuthController(UsuarioService usuarioService) {
+    public AuthRestController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 

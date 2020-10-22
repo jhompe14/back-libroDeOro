@@ -1,9 +1,10 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.SeccionDTO;
+
+import com.scouts.backlibrodeoro.dto.GrupoDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Seccion;
-import com.scouts.backlibrodeoro.service.SeccionService;
+import com.scouts.backlibrodeoro.model.Grupo;
+import com.scouts.backlibrodeoro.service.GrupoService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,27 +14,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/seccion")
+@RequestMapping("/api/grupo")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
         RequestMethod.PUT, RequestMethod.DELETE})
-public class SeccionController {
+public class GrupoRestController {
 
-    private SeccionService seccionService;
+    private GrupoService grupoService;
 
     @Autowired
-    public SeccionController(SeccionService seccionService) {
-        this.seccionService = seccionService;
+    public GrupoRestController(GrupoService grupoService){
+        this.grupoService = grupoService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Seccion>> findByAll()  {
-        return new ResponseEntity(this.seccionService.getAllSecciones(), HttpStatus.OK);
+    public ResponseEntity<List<Grupo>> findByAll()  {
+        return new ResponseEntity(this.grupoService.getAllGrupos(), HttpStatus.OK);
     }
 
-    @GetMapping("/{idSeccion}")
-    public ResponseEntity<Seccion> findById(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException {
+    @GetMapping("/{idGrupo}")
+    public ResponseEntity<Grupo> findById(@PathVariable("idGrupo") Integer idGrupo) throws NegocioException {
         try {
-            return new ResponseEntity(this.seccionService.getSeccion(idSeccion), HttpStatus.OK);
+            return new ResponseEntity(this.grupoService.getGrupo(idGrupo), HttpStatus.OK);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
         }catch (Exception ex){
@@ -41,11 +42,10 @@ public class SeccionController {
         }
     }
 
-    @PostMapping("/rama/{idRama}")
-    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama, @RequestBody SeccionDTO seccionDTO)
-            throws NegocioException{
+    @PostMapping
+    public ResponseEntity<Grupo> createGrupo(@RequestBody GrupoDTO grupoDTO) throws NegocioException{
         try{
-            return new ResponseEntity(this.seccionService.createSeccion(seccionDTO, idRama), HttpStatus.CREATED);
+            return new ResponseEntity(this.grupoService.createGrupo(grupoDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -53,11 +53,11 @@ public class SeccionController {
         }
     }
 
-    @PutMapping("/{idSeccion}")
-    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion, @RequestBody SeccionDTO seccionDTO)
+    @PutMapping("/{idGrupo}")
+    public ResponseEntity<Grupo> updateGrupo(@PathVariable("idGrupo") Integer idGrupo, @RequestBody GrupoDTO grupoDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.seccionService.updateSeccion(idSeccion, seccionDTO), HttpStatus.ACCEPTED);
+           return new ResponseEntity(this.grupoService.updateGrupo(idGrupo, grupoDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
@@ -66,10 +66,10 @@ public class SeccionController {
         }
     }
 
-    @DeleteMapping("/{idSeccion}")
-    public ResponseEntity deleteSeccion(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException{
+    @DeleteMapping("/{idGrupo}")
+    public ResponseEntity deleteGrupo(@PathVariable("idGrupo") Integer idGrupo) throws NegocioException{
         try{
-            seccionService.deleteSeccion(idSeccion);
+            grupoService.deleteGrupo(idGrupo);
             return new ResponseEntity(HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.NOTFOUND)
@@ -78,4 +78,5 @@ public class SeccionController {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
