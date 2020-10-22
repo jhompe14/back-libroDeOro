@@ -67,6 +67,7 @@ public class RamaService {
     @Transactional
     public Rama updateRama(Integer idRama, RamaDTO ramaDTO) throws NegocioException {
         Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
+        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, ramaDTO.getIdGrupo());
 
         Rama ramaEdit = new Rama();
         ramaEdit.setId(idRama);
@@ -74,7 +75,7 @@ public class RamaService {
         ramaEdit.setEdadMinima(ramaDTO.getEdadMinima());
         ramaEdit.setEdadMaxima(ramaDTO.getEdadMaxima());
         ramaEdit.setDescripcion(ramaDTO.getDescripcion());
-        ramaEdit.setGrupo(rama.orElse(new Rama()).getGrupo());
+        ramaEdit.setGrupo(grupo.orElse(new Grupo()));
 
         this.ramaValidator.validator(ramaEdit);
         return ramaRepository.save(ramaEdit);

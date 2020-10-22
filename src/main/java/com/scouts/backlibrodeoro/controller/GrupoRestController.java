@@ -11,19 +11,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/grupo")
-public class GrupoController {
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
+        RequestMethod.PUT, RequestMethod.DELETE})
+public class GrupoRestController {
 
     private GrupoService grupoService;
 
     @Autowired
-    public GrupoController(GrupoService grupoService){
+    public GrupoRestController(GrupoService grupoService){
         this.grupoService = grupoService;
     }
 
     @GetMapping
-    public ResponseEntity<Grupo> findByAll()  {
+    public ResponseEntity<List<Grupo>> findByAll()  {
         return new ResponseEntity(this.grupoService.getAllGrupos(), HttpStatus.OK);
     }
 

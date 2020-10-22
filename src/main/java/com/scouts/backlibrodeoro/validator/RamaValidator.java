@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.validator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +14,13 @@ public class RamaValidator implements IValidator{
     @Override
     public <T> void validator(T rama) throws NegocioException {
         Rama ramaValidation = (Rama) rama;
-        if(!validateRequired(ramaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, TypeException.VALIDATION);
+        StringBuilder strValidation = new StringBuilder();
+
+        validateRequired(strValidation, ramaValidation);
+        if(!strValidation.toString().isEmpty()){
+            throw new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS+"</br>"+
+                    strValidation.toString(),
+                    TypeException.VALIDATION);
         }
         if(!validateEdadMaximaMinima(ramaValidation)){
             throw new NegocioException(MessagesValidation.VALIDATION_EDAD_MINIMA_MAXIMA, TypeException.VALIDATION);
@@ -24,13 +30,19 @@ public class RamaValidator implements IValidator{
         }
     }
 
-    private boolean validateRequired(Rama ramaValidate){
-        return Optional.ofNullable(ramaValidate).map(r ->{
-                    return Optional.ofNullable(r.getNombre()).isPresent() &&
-                            !r.getNombre().isEmpty() &&
-                            Optional.ofNullable(r.getEdadMinima()).isPresent() &&
-                            Optional.ofNullable(r.getEdadMaxima()).isPresent();
-                }).orElse(false);
+    private void validateRequired(StringBuilder strValidation, Rama ramaValidate){
+        Optional.ofNullable(ramaValidate).map(r ->{
+            if(!GeneralValidates.validateStringNotIsEmpty(r.getNombre())){
+                strValidation.append(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO).append(" </br>");
+            }
+            if(!Optional.ofNullable(r.getEdadMinima()).isPresent()){
+                strValidation.append(MessagesValidation.VALIDATION_RAMA_EDAD_MINIMA).append(" </br>");
+            }
+            if(!Optional.ofNullable(r.getEdadMaxima()).isPresent()){
+                strValidation.append(MessagesValidation.VALIDATION_RAMA_EDAD_MAXIMA).append(" </br>");
+            }
+            return r;
+        });
     }
 
     private boolean validateEdadMaximaMinima(Rama ramaValidate){

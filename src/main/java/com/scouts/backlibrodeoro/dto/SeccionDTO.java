@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.dto;
 public class SeccionDTO {
     private String nombre;
     private String descripcion;
+    private Integer idRama;
 
     public String getNombre() {
         return nombre;
@@ -18,5 +19,13 @@ public class SeccionDTO {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Integer getIdRama() {
+        return idRama;
+    }
+
+    public void setIdRama(Integer idRama) {
+        this.idRama = idRama;
     }
 }

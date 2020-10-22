@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.validator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,7 @@ public class GrupoValidator implements IValidator{
 
     private boolean validateNombre(Grupo grupoValidate){
         return Optional.ofNullable(grupoValidate).map(g ->
-                        Optional.ofNullable(g.getNombre()).isPresent() &&
-                            !g.getNombre().isEmpty()).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(g.getNombre())).orElse(false);
 
     }
 }

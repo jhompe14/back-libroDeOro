@@ -11,20 +11,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cargo")
-public class CargoController {
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST,
+        RequestMethod.PUT, RequestMethod.DELETE})
+public class CargoRestController {
 
-    private CargoService cargoService;
+    private final CargoService cargoService;
 
     @Autowired
-    public CargoController(CargoService cargoService) {
+    public CargoRestController(CargoService cargoService) {
         this.cargoService = cargoService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Cargo>> findByAll(){
+        return new ResponseEntity(this.cargoService.getAllCargos(), HttpStatus.OK);
+    }
+
     @GetMapping("/type/{typeCargo}/id/{idType}")
-    public ResponseEntity<Cargo> findAllCargosByType(@PathVariable("typeCargo") String typeCargo,
-                                                     @PathVariable("idType") Integer idType)  {
+    public ResponseEntity<List<Cargo>> findAllCargosByType(@PathVariable("typeCargo") String typeCargo,
+                                                          @PathVariable("idType") Integer idType)  {
         return new ResponseEntity(this.cargoService.getAllCargosByType(typeCargo, idType), HttpStatus.OK);
     }
 

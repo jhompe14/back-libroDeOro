@@ -14,6 +14,13 @@ public class Seccion {
 
     private String descripcion;
 
+    public Seccion() {
+    }
+
+    public Seccion(Integer id) {
+        this.id = id;
+    }
+
     @ManyToOne
     @JoinColumn(name = "id_rama")
     private Rama rama;

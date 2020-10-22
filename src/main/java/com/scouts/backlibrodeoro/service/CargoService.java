@@ -42,6 +42,11 @@ public class CargoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Cargo> getAllCargos(){
+        return cargoRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public List<Cargo> getAllCargosByType(String typeCargo, Integer idType){
         List<Cargo> cargoList = new ArrayList<>();
         TypeCargo typeCargoEnum = TypeCargo.valueOf(typeCargo);

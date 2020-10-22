@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.validator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +20,7 @@ public class CargoValidator implements IValidator{
 
     private boolean validateNombre(Cargo cargoValidate){
         return Optional.ofNullable(cargoValidate).map(c ->
-                Optional.ofNullable(c.getNombre()).isPresent() &&
-                        !c.getNombre().isEmpty()).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(c.getNombre())).orElse(false);
 
     }
 }
