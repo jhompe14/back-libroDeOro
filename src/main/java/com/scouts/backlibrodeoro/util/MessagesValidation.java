@@ -6,6 +6,7 @@ public class MessagesValidation {
     public static final String ERROR_RAMA_NO_EXISTE = "La rama no existe";
     public static final String ERROR_SECCION_NO_EXISTE = "La seccion no existe";
     public static final String ERROR_CARGO_NO_EXISTE = "El cargo no existe";
+    public static final String ERROR_USUARIO_NO_EXISTE = "El usuario no existe";
 
     public static final String VALIDATION_NOMBRE_OBLIGATORIO = "El nombre es obligatorio";
     public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios: ";

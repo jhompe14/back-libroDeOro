@@ -15,4 +15,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
     @Query("SELECT COUNT(1) FROM Usuario usu WHERE usu.usuario = :usuario")
     Integer countUsuarioByUsuario(@Param("usuario") String usuario);
 
+    @Query("SELECT usu FROM Usuario usu WHERE usu.usuario = :usuario")
+    Usuario findUsuarioByUsuario(@Param("usuario") String usuario);
 }
