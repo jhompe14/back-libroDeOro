@@ -8,18 +8,19 @@ import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeException;
-import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AuthValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
 import com.scouts.backlibrodeoro.validator.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class UsuarioService {
@@ -76,10 +77,10 @@ public class UsuarioService {
             throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
         }
 
-        return commitUsuario(usuario, getTrayectorias(usuario, usuarioDTO.getTrayectoria()));
+        return commitUsuario(usuario, getTrayectorias(usuarioDTO.getTrayectoria()));
     }
 
-    private List<Trayectoria> getTrayectorias(Usuario usuario, List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
+    private List<Trayectoria> getTrayectorias(List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
         List<Trayectoria> trayectorias = new ArrayList<>();
         if(Optional.ofNullable(trayectoriaDTOList)
                 .map(trayectoriaDTOS -> trayectoriaDTOS.size()>0)
@@ -130,18 +131,28 @@ public class UsuarioService {
         trayectoria.setGrupo(grupoRepository.findById(trayectoriaDTO.getGrupo())
                 .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE,
                         TypeException.VALIDATION)));
-        trayectoria.setRama(ramaRepository.findById(trayectoriaDTO.getRama())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setSeccion(seccionRepository.findById(trayectoriaDTO.getSeccion())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
-                        TypeException.VALIDATION)));
+        trayectoria.setRama(getObjectRamaSeccion(ramaRepository, trayectoriaDTO.getRama()));
+        trayectoria.setSeccion(getObjectRamaSeccion(seccionRepository, trayectoriaDTO.getSeccion()));
         trayectoria.setCargo(cargoRepository.findById(trayectoriaDTO.getCargo())
                 .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE,
                         TypeException.VALIDATION)));
         trayectoria.setAnioIngreso(trayectoriaDTO.getAnioIngreso());
         trayectoria.setAnioRetiro(trayectoriaDTO.getAnioRetiro());
         return trayectoria;
+    }
+
+    private <T> T getObjectRamaSeccion(JpaRepository<T, Integer> jpaRepository, Integer id) throws NegocioException {
+        if(Optional.ofNullable(id).orElse(0) == 0){
+            return null;
+        }
+
+        Function<JpaRepository<T, Integer>, String> defineMessage = (jpaRepositoryInterface) ->
+                jpaRepositoryInterface instanceof RamaRepository
+                    ? MessagesValidation.ERROR_RAMA_NO_EXISTE : MessagesValidation.ERROR_SECCION_NO_EXISTE;
+
+        return jpaRepository.findById(id)
+                .orElseThrow(() -> new NegocioException(defineMessage.apply(jpaRepository),
+                        TypeException.VALIDATION));
     }
 
 }

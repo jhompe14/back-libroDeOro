@@ -22,8 +22,12 @@ public class EstadoAnecdota {
     private Timestamp fechaHoraGestionado;
 
     @ManyToOne
-    @JoinColumn(name = "id_seccion")
+    @JoinColumn(name = "id_anecdota")
     private Anecdota anecdota;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
     public Integer getId() {
         return id;
@@ -71,5 +75,13 @@ public class EstadoAnecdota {
 
     public void setAnecdota(Anecdota anecdota) {
         this.anecdota = anecdota;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

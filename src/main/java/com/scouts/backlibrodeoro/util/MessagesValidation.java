@@ -51,4 +51,6 @@ public class MessagesValidation {
             "La fecha ingreso en la trayectoria debe estar entre 1940 y el a\u00F1o actual";
     public static final String VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO =
             "La fecha ingreso no debe ser mayor a la fecha de retiro en la trayectoria";
+
+    public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripcion es obligatoria";
 }
