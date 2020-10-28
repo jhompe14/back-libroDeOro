@@ -41,8 +41,7 @@ public class SeccionService {
 
     @Transactional(readOnly = true)
     public Seccion getSeccion(Integer id) throws NegocioException {
-        return seccionRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(seccionRepository, id);
     }
 
     @Transactional
@@ -50,25 +49,18 @@ public class SeccionService {
         Seccion seccion = new Seccion();
         seccion.setNombre(seccionDTO.getNombre());
         seccion.setDescripcion(seccionDTO.getDescripcion());
-
         this.seccionValidator.validator(seccion);
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
 
-        seccion.setRama(rama.orElse(new Rama()));
+        seccion.setRama(InspeccionService.getObjectById(ramaRepository, idRama));
         return seccionRepository.save(seccion);
     }
 
     @Transactional
     public Seccion updateSeccion(Integer idSeccion, SeccionDTO seccionDTO) throws NegocioException {
-        Optional<Seccion> seccion = InspeccionService.getSeccion(seccionRepository, idSeccion);
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, seccionDTO.getIdRama());
+        Seccion seccionEdit = InspeccionService.getObjectById(seccionRepository, idSeccion);
 
-        Seccion seccionEdit = new Seccion();
-        seccionEdit.setId(idSeccion);
         seccionEdit.setNombre(seccionDTO.getNombre());
         seccionEdit.setDescripcion(seccionDTO.getDescripcion());
-        seccionEdit.setRama(rama.orElse(new Rama()));
-
         this.seccionValidator.validator(seccionEdit);
 
         return seccionRepository.save(seccionEdit);
@@ -76,12 +68,12 @@ public class SeccionService {
 
     @Transactional
     public void deleteSeccion(Integer idSeccion) throws NegocioException {
-        Optional<Seccion> seccion = InspeccionService.getSeccion(seccionRepository, idSeccion);
+        Seccion seccion = InspeccionService.getObjectById(seccionRepository, idSeccion);
 
         if(cargoRepository.countCargoByTypeSeccion(idSeccion)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_SECCION_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        seccionRepository.delete(seccion.orElse(new Seccion()));
+        seccionRepository.delete(seccion);
     }
 }

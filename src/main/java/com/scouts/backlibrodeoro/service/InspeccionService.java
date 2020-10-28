@@ -1,56 +1,44 @@
 package com.scouts.backlibrodeoro.service;
 
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Cargo;
-import com.scouts.backlibrodeoro.model.Grupo;
-import com.scouts.backlibrodeoro.model.Rama;
-import com.scouts.backlibrodeoro.model.Seccion;
-import com.scouts.backlibrodeoro.repository.CargoRepository;
-import com.scouts.backlibrodeoro.repository.GrupoRepository;
-import com.scouts.backlibrodeoro.repository.RamaRepository;
-import com.scouts.backlibrodeoro.repository.SeccionRepository;
+import com.scouts.backlibrodeoro.model.*;
+import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class InspeccionService {
 
-    public static Optional<Grupo> getGrupo(GrupoRepository grupoRepository, Integer idGrupo) throws NegocioException {
-        Optional<Grupo> grupo = grupoRepository.findById(idGrupo);
-        if(!grupo.isPresent()){
-            throw new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE, TypeException.NOTFOUND);
+    public static <T> T getObjectById(JpaRepository<T, Integer> jpaRepository, Integer id) throws NegocioException {
+        if(Optional.ofNullable(id).orElse(0) == 0){
+            return null;
         }
 
-        return grupo;
+        Function<JpaRepository<T, Integer>, String> defineMessage = (jpaRepositoryInterface) -> {
+            if(jpaRepositoryInterface instanceof GrupoRepository)
+                return MessagesValidation.ERROR_GRUPO_NO_EXISTE;
+            if(jpaRepositoryInterface instanceof RamaRepository)
+                return MessagesValidation.ERROR_RAMA_NO_EXISTE;
+            if(jpaRepositoryInterface instanceof SeccionRepository)
+                return MessagesValidation.ERROR_SECCION_NO_EXISTE;
+            if(jpaRepositoryInterface instanceof CargoRepository)
+                return MessagesValidation.ERROR_CARGO_NO_EXISTE;
+            return "";
+        };
+
+
+        return jpaRepository.findById(id)
+                .orElseThrow(() -> new NegocioException(defineMessage.apply(jpaRepository),
+                        TypeException.VALIDATION));
     }
 
-    public static Optional<Rama> getRama(RamaRepository ramaRepository, Integer idRama) throws NegocioException{
-        Optional<Rama> rama = ramaRepository.findById(idRama);
-        if(!rama.isPresent()){
-            throw new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE, TypeException.NOTFOUND);
-        }
-
-        return rama;
-    }
-
-    public static Optional<Seccion> getSeccion(SeccionRepository seccionRepository, Integer idSeccion)
-            throws NegocioException{
-        Optional<Seccion> seccion= seccionRepository.findById(idSeccion);
-        if(!seccion.isPresent()){
-            throw new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE, TypeException.NOTFOUND);
-        }
-
-        return seccion;
-    }
-
-    public static Optional<Cargo> getCargo(CargoRepository cargoRepository, Integer idCargo) throws NegocioException{
-        Optional<Cargo> cargo = cargoRepository.findById(idCargo);
-        if(!cargo.isPresent()){
-            throw new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE, TypeException.NOTFOUND);
-        }
-
-        return cargo;
+    public static Usuario getUsuarioByUsuario(UsuarioRepository usuarioRepository, String usuario) throws NegocioException {
+        return Optional.ofNullable(usuarioRepository.findUsuarioByUsuario(usuario))
+                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_USUARIO_NO_EXISTE,
+                        TypeException.VALIDATION));
     }
 
 }

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -68,8 +69,7 @@ public class CargoService {
 
     @Transactional(readOnly = true)
     public Cargo getCargo(Integer id) throws NegocioException {
-        return cargoRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(cargoRepository, id);
     }
 
     @Transactional
@@ -88,13 +88,13 @@ public class CargoService {
         TypeCargo typeCargoEnum = TypeCargo.valueOf(typeCargo);
         switch (typeCargoEnum){
             case GR:
-                cargo.setGrupo(InspeccionService.getGrupo(grupoRepository, idType).orElse(new Grupo()));
+                cargo.setGrupo(InspeccionService.getObjectById(grupoRepository, idType));
                 break;
             case RA:
-                cargo.setRama(InspeccionService.getRama(ramaRepository, idType).orElse(new Rama()));
+                cargo.setRama(InspeccionService.getObjectById(ramaRepository, idType));
                 break;
             case SE:
-                cargo.setSeccion(InspeccionService.getSeccion(seccionRepository, idType).orElse(new Seccion()));
+                cargo.setSeccion(InspeccionService.getObjectById(seccionRepository, idType));
                 break;
             default:
                 break;
@@ -103,18 +103,10 @@ public class CargoService {
 
     @Transactional
     public Cargo updateCargo(Integer idCargo, CargoDTO cargoDTO) throws NegocioException {
-        Optional<Cargo> cargoOptional = InspeccionService.getCargo(cargoRepository, idCargo);
+        Cargo cargoEdit = InspeccionService.getObjectById(cargoRepository, idCargo);
 
-        Cargo cargo = cargoOptional.orElse(new Cargo());
-
-        Cargo cargoEdit = new Cargo();
-        cargoEdit.setId(idCargo);
         cargoEdit.setNombre(cargoDTO.getNombre());
         cargoEdit.setDescripcion(cargoDTO.getDescripcion());
-        cargoEdit.setGrupo(cargo.getGrupo());
-        cargoEdit.setRama(cargo.getRama());
-        cargoEdit.setSeccion(cargo.getSeccion());
-
         this.cargoValidator.validator(cargoEdit);
 
         return cargoRepository.save(cargoEdit);
@@ -122,8 +114,7 @@ public class CargoService {
 
     @Transactional
     public void deleteCargo(Integer idCargo) throws NegocioException {
-        Optional<Cargo> cargo = InspeccionService.getCargo(cargoRepository, idCargo);
-        cargoRepository.delete(cargo.orElse(new Cargo()));
+        cargoRepository.delete(Objects.requireNonNull(InspeccionService.getObjectById(cargoRepository, idCargo)));
     }
 
 }

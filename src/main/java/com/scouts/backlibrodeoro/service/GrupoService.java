@@ -40,8 +40,7 @@ public class GrupoService {
 
     @Transactional(readOnly = true)
     public Grupo getGrupo(Integer id) throws NegocioException {
-        return grupoRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(grupoRepository, id);
     }
 
     @Transactional
@@ -56,10 +55,8 @@ public class GrupoService {
 
     @Transactional
     public Grupo updateGrupo(Integer idGrupo, GrupoDTO grupoDTO) throws NegocioException {
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
+        Grupo grupoEdit = InspeccionService.getObjectById(grupoRepository, idGrupo);
 
-        Grupo grupoEdit = new Grupo();
-        grupoEdit.setId(idGrupo);
         grupoEdit.setNombre(grupoDTO.getNombre());
         grupoEdit.setDescripcion(grupoDTO.getDescripcion());
 
@@ -69,7 +66,7 @@ public class GrupoService {
 
     @Transactional
     public void deleteGrupo(Integer idGrupo) throws NegocioException {
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
+        Grupo grupo = InspeccionService.getObjectById(grupoRepository, idGrupo);
 
         if(ramaRepository.countRamaByGrupo(idGrupo)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_RAMAS_ACTIVAS, TypeException.VALIDATION);
@@ -79,7 +76,7 @@ public class GrupoService {
             throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        grupoRepository.delete(grupo.orElse(new Grupo()));
+        grupoRepository.delete(grupo);
     }
 
 }

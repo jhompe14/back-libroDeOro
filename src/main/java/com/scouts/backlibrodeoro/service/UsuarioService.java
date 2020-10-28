@@ -128,31 +128,13 @@ public class UsuarioService {
 
     private Trayectoria transformDTOToTrayectoria(TrayectoriaDTO trayectoriaDTO) throws NegocioException {
         Trayectoria trayectoria = new Trayectoria();
-        trayectoria.setGrupo(grupoRepository.findById(trayectoriaDTO.getGrupo())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setRama(getObjectRamaSeccion(ramaRepository, trayectoriaDTO.getRama()));
-        trayectoria.setSeccion(getObjectRamaSeccion(seccionRepository, trayectoriaDTO.getSeccion()));
-        trayectoria.setCargo(cargoRepository.findById(trayectoriaDTO.getCargo())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE,
-                        TypeException.VALIDATION)));
+        trayectoria.setGrupo(InspeccionService.getObjectById(grupoRepository,trayectoriaDTO.getGrupo()));
+        trayectoria.setRama(InspeccionService.getObjectById(ramaRepository, trayectoriaDTO.getRama()));
+        trayectoria.setSeccion(InspeccionService.getObjectById(seccionRepository, trayectoriaDTO.getSeccion()));
+        trayectoria.setCargo(InspeccionService.getObjectById(cargoRepository,trayectoriaDTO.getCargo()));
         trayectoria.setAnioIngreso(trayectoriaDTO.getAnioIngreso());
         trayectoria.setAnioRetiro(trayectoriaDTO.getAnioRetiro());
         return trayectoria;
-    }
-
-    private <T> T getObjectRamaSeccion(JpaRepository<T, Integer> jpaRepository, Integer id) throws NegocioException {
-        if(Optional.ofNullable(id).orElse(0) == 0){
-            return null;
-        }
-
-        Function<JpaRepository<T, Integer>, String> defineMessage = (jpaRepositoryInterface) ->
-                jpaRepositoryInterface instanceof RamaRepository
-                    ? MessagesValidation.ERROR_RAMA_NO_EXISTE : MessagesValidation.ERROR_SECCION_NO_EXISTE;
-
-        return jpaRepository.findById(id)
-                .orElseThrow(() -> new NegocioException(defineMessage.apply(jpaRepository),
-                        TypeException.VALIDATION));
     }
 
 }

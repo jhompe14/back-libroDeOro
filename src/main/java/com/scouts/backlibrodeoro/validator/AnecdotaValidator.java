@@ -7,6 +7,7 @@ import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -14,8 +15,15 @@ public class AnecdotaValidator implements IValidator{
 
     @Override
     public <T> void validator(T anecdota) throws NegocioException {
-        if(!validateDescripcion((Anecdota) anecdota)){
-            throw new NegocioException(MessagesValidation.VALIDATION_ANECDOTA_DESCRIPCION, TypeException.VALIDATION);
+        Anecdota anecdotaValidate = (Anecdota) anecdota;
+        if(!validateDescripcion(anecdotaValidate)){
+            throw new NegocioException(MessagesValidation.VALIDATION_ANECDOTA_DESCRIPCION,
+                    TypeException.VALIDATION);
+        }
+
+        if(!validateFecha(anecdotaValidate)){
+            throw new NegocioException(MessagesValidation.VALIDATION_ANECDOTA_FECHA,
+                    TypeException.VALIDATION);
         }
     }
 
@@ -23,5 +31,13 @@ public class AnecdotaValidator implements IValidator{
         return Optional.ofNullable(anecdotaValidate).map(a ->
                 GeneralValidates.validateStringNotIsEmpty(a.getDescripcion())).orElse(false);
 
+    }
+
+    private boolean validateFecha(Anecdota anecdotaValidate) {
+        return Optional.ofNullable(anecdotaValidate).map(a ->
+                Optional.ofNullable(a.getFecha())
+                        .map(fecha-> fecha.before(new Date()) ||
+                                        fecha.equals(new Date())).orElse(false))
+                .orElse(false);
     }
 }

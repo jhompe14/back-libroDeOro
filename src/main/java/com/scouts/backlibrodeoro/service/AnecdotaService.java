@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,6 +44,11 @@ public class AnecdotaService {
         this.anecdotaValidator = anecdotaValidator;
     }
 
+    @Transactional(readOnly = true)
+    public List<Anecdota> getFilterAnecdota(String usuarioSession, String usuarioFilter, String estadoAnecdota){
+        return null;
+    }
+
     @Transactional
     public Anecdota createAnecdota(AnecdotaDTO anecdotaDTO) throws NegocioException {
         Anecdota anecdota = transformDTOToAnecdota(anecdotaDTO);
@@ -62,20 +68,14 @@ public class AnecdotaService {
         anecdota.setNombre(anecdotaDTO.getNombre());
         anecdota.setFecha(anecdotaDTO.getFecha());
         anecdota.setDescripcion(anecdotaDTO.getDescripcion());
-        anecdota.setUsuario(Optional.ofNullable(usuarioRepository.findUsuarioByUsuario(anecdotaDTO.getUsuario()))
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_USUARIO_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        anecdota.setRama(ramaRepository.findById(anecdotaDTO.getRama())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE,
-                TypeException.VALIDATION)));
+        anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaDTO.getUsuario()));
+        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaDTO.getRama()));
 
         AddSeccion<Integer, Seccion> addSeccion = (idSeccion) -> {
             if(Optional.ofNullable(idSeccion).orElse(0) == 0){
                 return null;
             }
-            return seccionRepository.findById(idSeccion)
-                    .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
-                            TypeException.VALIDATION));
+            return InspeccionService.getObjectById(seccionRepository, idSeccion);
         };
 
         anecdota.setSeccion(addSeccion.apply(anecdotaDTO.getSeccion()));

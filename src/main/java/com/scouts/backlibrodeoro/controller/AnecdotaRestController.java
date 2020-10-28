@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/anecdota")
 @CrossOrigin(origins = "*", methods= {RequestMethod.POST})
@@ -19,6 +21,15 @@ public class AnecdotaRestController {
     @Autowired
     public AnecdotaRestController(AnecdotaService anecdotaService) {
         this.anecdotaService = anecdotaService;
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<Anecdota>> findByUsuario(@PathVariable("usuarioSession") String usuarioSession,
+                                                        @PathVariable("usuarioFilter") String usuarioFilter,
+                                                        @PathVariable("estadoAnecdota") String estadoAnecdota)  {
+        return new ResponseEntity(this.anecdotaService.getFilterAnecdota(usuarioSession,
+                usuarioFilter, estadoAnecdota), HttpStatus.OK);
     }
 
     @PostMapping

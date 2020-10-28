@@ -53,4 +53,6 @@ public class MessagesValidation {
             "La fecha ingreso no debe ser mayor a la fecha de retiro en la trayectoria";
 
     public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripcion es obligatoria";
+    public static final String VALIDATION_ANECDOTA_FECHA =
+            "La fecha de la anecdota no puede ser superior a la fecha actual";
 }

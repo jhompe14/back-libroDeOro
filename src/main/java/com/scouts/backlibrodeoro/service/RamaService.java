@@ -45,8 +45,7 @@ public class RamaService {
 
     @Transactional(readOnly = true)
     public Rama getRama(Integer id) throws NegocioException{
-        return ramaRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(ramaRepository, id);
     }
 
     @Transactional
@@ -58,32 +57,27 @@ public class RamaService {
         rama.setEdadMaxima(ramaDTO.getEdadMaxima());
 
         this.ramaValidator.validator(rama);
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
 
-        rama.setGrupo(grupo.orElse(new Grupo()));
+        rama.setGrupo(InspeccionService.getObjectById(grupoRepository, idGrupo));
         return ramaRepository.save(rama);
     }
 
     @Transactional
     public Rama updateRama(Integer idRama, RamaDTO ramaDTO) throws NegocioException {
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, ramaDTO.getIdGrupo());
+        Rama ramaEdit = InspeccionService.getObjectById(ramaRepository, idRama);
 
-        Rama ramaEdit = new Rama();
-        ramaEdit.setId(idRama);
         ramaEdit.setNombre(ramaDTO.getNombre());
         ramaEdit.setEdadMinima(ramaDTO.getEdadMinima());
         ramaEdit.setEdadMaxima(ramaDTO.getEdadMaxima());
         ramaEdit.setDescripcion(ramaDTO.getDescripcion());
-        ramaEdit.setGrupo(grupo.orElse(new Grupo()));
-
         this.ramaValidator.validator(ramaEdit);
+
         return ramaRepository.save(ramaEdit);
     }
 
     @Transactional
     public void deleteRama(Integer idRama) throws NegocioException {
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
+        Rama rama = InspeccionService.getObjectById(ramaRepository, idRama);
 
         if(seccionRepository.countSeccionByRama(idRama)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_SECCIONES_ACTIVAS, TypeException.VALIDATION);
@@ -93,6 +87,6 @@ public class RamaService {
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        ramaRepository.delete(rama.orElse(new Rama()));
+        ramaRepository.delete(rama);
     }
 }
