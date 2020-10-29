@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.RamaDTO;
+import com.scouts.backlibrodeoro.dto.request.RamaDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.service.RamaService;

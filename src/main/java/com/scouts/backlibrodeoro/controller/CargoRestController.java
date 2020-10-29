@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.CargoDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.model.Seccion;

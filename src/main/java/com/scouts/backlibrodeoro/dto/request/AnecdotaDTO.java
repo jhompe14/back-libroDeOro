@@ -1,15 +1,10 @@
-package com.scouts.backlibrodeoro.dto;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.util.Date;
+package com.scouts.backlibrodeoro.dto.request;
 
 public class AnecdotaDTO {
 
     private String nombre;
 
-    @JsonFormat(pattern="dd/MM/yy")
-    private Date fecha;
+    private String fecha;
 
     private String descripcion;
 
@@ -27,11 +22,11 @@ public class AnecdotaDTO {
         this.nombre = nombre;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

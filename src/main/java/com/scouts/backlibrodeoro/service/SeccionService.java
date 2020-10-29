@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.SeccionDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SeccionService {

@@ -1,4 +1,4 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
 import java.util.List;
 

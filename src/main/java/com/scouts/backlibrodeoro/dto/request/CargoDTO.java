@@ -1,9 +1,8 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
-public class SeccionDTO {
+public class CargoDTO {
     private String nombre;
     private String descripcion;
-    private Integer idRama;
 
     public String getNombre() {
         return nombre;
@@ -19,13 +18,5 @@ public class SeccionDTO {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public Integer getIdRama() {
-        return idRama;
-    }
-
-    public void setIdRama(Integer idRama) {
-        this.idRama = idRama;
     }
 }

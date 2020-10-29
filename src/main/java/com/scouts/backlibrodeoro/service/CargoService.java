@@ -1,18 +1,13 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.CargoDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
-import com.scouts.backlibrodeoro.model.Grupo;
-import com.scouts.backlibrodeoro.model.Rama;
-import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeCargo;
-import com.scouts.backlibrodeoro.types.TypeException;
-import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.CargoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class CargoService {

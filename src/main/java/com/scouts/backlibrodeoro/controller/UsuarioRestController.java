@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.UsuarioDTO;
+import com.scouts.backlibrodeoro.dto.request.UsuarioDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;

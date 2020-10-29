@@ -1,8 +1,8 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.AuthDTO;
-import com.scouts.backlibrodeoro.dto.TrayectoriaDTO;
-import com.scouts.backlibrodeoro.dto.UsuarioDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthDTO;
+import com.scouts.backlibrodeoro.dto.request.TrayectoriaDTO;
+import com.scouts.backlibrodeoro.dto.request.UsuarioDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
@@ -13,14 +13,12 @@ import com.scouts.backlibrodeoro.validator.AuthValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
 import com.scouts.backlibrodeoro.validator.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class UsuarioService {

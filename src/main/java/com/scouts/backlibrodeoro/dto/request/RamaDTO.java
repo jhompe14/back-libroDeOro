@@ -1,4 +1,4 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
 public class RamaDTO {
     private String nombre;

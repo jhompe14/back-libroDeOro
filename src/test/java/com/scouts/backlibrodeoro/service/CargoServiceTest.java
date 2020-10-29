@@ -1,7 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.CargoDTO;
-import com.scouts.backlibrodeoro.dto.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.model.Grupo;

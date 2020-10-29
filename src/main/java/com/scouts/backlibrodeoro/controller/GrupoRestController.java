@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
 
-import com.scouts.backlibrodeoro.dto.GrupoDTO;
+import com.scouts.backlibrodeoro.dto.request.GrupoDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.service.GrupoService;

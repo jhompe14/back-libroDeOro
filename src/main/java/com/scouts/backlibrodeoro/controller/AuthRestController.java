@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.auth.JWTGenerator;
-import com.scouts.backlibrodeoro.dto.AuthDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import com.scouts.backlibrodeoro.types.TypeException;

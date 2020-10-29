@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.AnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/anecdota")
@@ -25,11 +28,26 @@ public class AnecdotaRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<Anecdota>> findByUsuario(@PathVariable("usuarioSession") String usuarioSession,
-                                                        @PathVariable("usuarioFilter") String usuarioFilter,
-                                                        @PathVariable("estadoAnecdota") String estadoAnecdota)  {
-        return new ResponseEntity(this.anecdotaService.getFilterAnecdota(usuarioSession,
-                usuarioFilter, estadoAnecdota), HttpStatus.OK);
+    public ResponseEntity<List<Anecdota>> findByUsuario(HttpServletRequest request) {
+        try {
+            FilterAnecdotaDTO filterAnecdotaDTO =
+                    new FilterAnecdotaDTO(request.getParameter("idGrupo"),
+                            request.getParameter("idRama"),
+                            request.getParameter("idSeccion"),
+                            request.getParameter("fechaInicioAnecdota"),
+                            request.getParameter("fechaFinAnecdota"),
+                            request.getParameter("estado"),
+                            request.getParameter("usuarioFilter"),
+                            request.getParameter("usuarioOwner"));
+
+            return new ResponseEntity(this.anecdotaService.getFilterAnecdota(filterAnecdotaDTO), HttpStatus.OK);
+        } catch (RuntimeException ex){
+            NegocioException negocioException = (NegocioException) ex.getCause();
+            return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping
@@ -38,6 +56,9 @@ public class AnecdotaRestController {
             return new ResponseEntity(anecdotaService.createAnecdota(anecdotaDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex){
+            NegocioException negocioException = (NegocioException) ex.getCause();
+            return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.AnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.EstadoAnecdota;
@@ -8,15 +9,13 @@ import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
-import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.types.TypeSiNo;
-import com.scouts.backlibrodeoro.util.MessagesValidation;
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.validator.AnecdotaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +44,8 @@ public class AnecdotaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Anecdota> getFilterAnecdota(String usuarioSession, String usuarioFilter, String estadoAnecdota){
+    public List<Anecdota> getFilterAnecdota(FilterAnecdotaDTO filterAnecdotaDTO){
+        Integer x= anecdotaRepository.hola();
         return null;
     }
 
@@ -66,7 +66,7 @@ public class AnecdotaService {
     private Anecdota transformDTOToAnecdota(AnecdotaDTO anecdotaDTO) throws NegocioException {
         Anecdota anecdota = new Anecdota();
         anecdota.setNombre(anecdotaDTO.getNombre());
-        anecdota.setFecha(anecdotaDTO.getFecha());
+        anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaDTO.getFecha()));
         anecdota.setDescripcion(anecdotaDTO.getDescripcion());
         anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaDTO.getUsuario()));
         anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaDTO.getRama()));

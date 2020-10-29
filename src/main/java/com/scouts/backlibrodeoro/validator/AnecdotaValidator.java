@@ -37,7 +37,7 @@ public class AnecdotaValidator implements IValidator{
         return Optional.ofNullable(anecdotaValidate).map(a ->
                 Optional.ofNullable(a.getFecha())
                         .map(fecha-> fecha.before(new Date()) ||
-                                        fecha.equals(new Date())).orElse(false))
+                                        fecha.equals(new Date())).orElse(true))
                 .orElse(false);
     }
 }

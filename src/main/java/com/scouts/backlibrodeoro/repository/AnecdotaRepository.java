@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnecdotaRepository extends JpaRepository<Anecdota, Integer> {
+
+    default Integer hola(){
+        return 1;
+    }
+
 }

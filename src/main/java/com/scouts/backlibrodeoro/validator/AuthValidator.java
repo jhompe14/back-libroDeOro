@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.validator;
 
-import com.scouts.backlibrodeoro.dto.AuthDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
