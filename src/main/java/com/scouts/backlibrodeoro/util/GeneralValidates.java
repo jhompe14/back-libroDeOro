@@ -36,7 +36,7 @@ public class GeneralValidates {
                 }
             } catch (ParseException e) {
                 try {
-                    throw new NegocioException("formato de fecha incorrecto", TypeException.VALIDATION);
+                    throw new NegocioException(MessagesValidation.VALIDATION_FORMAT_FECHA, TypeException.VALIDATION);
                 } catch (NegocioException negocioException) {
                     throw new RuntimeException(negocioException);
                 }

@@ -2,6 +2,7 @@ package com.scouts.backlibrodeoro.service;
 
 import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaGridDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.EstadoAnecdota;
@@ -44,9 +45,8 @@ public class AnecdotaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Anecdota> getFilterAnecdota(FilterAnecdotaDTO filterAnecdotaDTO){
-        Integer x= anecdotaRepository.hola();
-        return null;
+    public List<AnecdotaGridDTO> getFilterAnecdota(FilterAnecdotaDTO filterAnecdotaDTO){
+        return anecdotaRepository.getAnecdotasGrid(filterAnecdotaDTO);
     }
 
     @Transactional

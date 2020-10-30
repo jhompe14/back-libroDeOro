@@ -2,6 +2,7 @@ package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaGridDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/anecdota")
@@ -28,7 +29,7 @@ public class AnecdotaRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<Anecdota>> findByUsuario(HttpServletRequest request) {
+    public ResponseEntity<List<AnecdotaGridDTO>> findByUsuario(HttpServletRequest request) {
         try {
             FilterAnecdotaDTO filterAnecdotaDTO =
                     new FilterAnecdotaDTO(request.getParameter("idGrupo"),
@@ -47,7 +48,6 @@ public class AnecdotaRestController {
         } catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @PostMapping
