@@ -75,7 +75,7 @@ public class UsuarioService {
             throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
         }
 
-        return commitUsuario(usuario, getTrayectorias(usuarioDTO.getTrayectoria()));
+        return usuarioRepository.save(usuario);
     }
 
     private List<Trayectoria> getTrayectorias(List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {

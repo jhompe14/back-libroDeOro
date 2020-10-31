@@ -40,7 +40,8 @@ public class MessagesValidation {
     public static final String VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO = "El tipo de integrante debe ser uno valido";
     public static final String VALIDATION_TIPO_USUARIO_OBLIGATORIO = "El tipo de usuario debe ser uno valido";
     public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo debe ser uno valido";
-    public static final String VALIDATION_TELEFONO_OBLIGATORIO = "El telefono es obligatorio";
+    public static final String VALIDATION_TELEFONO_OBLIGATORIO =
+                                "El telefono es obligatorio y ademas debe tener entre 7 y 12 numeros";
     public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
     public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";
 
