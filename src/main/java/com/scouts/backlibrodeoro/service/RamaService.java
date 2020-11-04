@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.RamaDTO;
+import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -47,12 +47,12 @@ public class RamaService {
     }
 
     @Transactional
-    public Rama createRama(RamaDTO ramaDTO, Integer idGrupo) throws NegocioException {
+    public Rama createRama(RamaRequestDTO ramaRequestDTO, Integer idGrupo) throws NegocioException {
         Rama rama = new Rama();
-        rama.setNombre(ramaDTO.getNombre());
-        rama.setDescripcion(ramaDTO.getDescripcion());
-        rama.setEdadMinima(ramaDTO.getEdadMinima());
-        rama.setEdadMaxima(ramaDTO.getEdadMaxima());
+        rama.setNombre(ramaRequestDTO.getNombre());
+        rama.setDescripcion(ramaRequestDTO.getDescripcion());
+        rama.setEdadMinima(ramaRequestDTO.getEdadMinima());
+        rama.setEdadMaxima(ramaRequestDTO.getEdadMaxima());
 
         this.ramaValidator.validator(rama);
 
@@ -61,13 +61,13 @@ public class RamaService {
     }
 
     @Transactional
-    public Rama updateRama(Integer idRama, RamaDTO ramaDTO) throws NegocioException {
+    public Rama updateRama(Integer idRama, RamaRequestDTO ramaRequestDTO) throws NegocioException {
         Rama ramaEdit = InspeccionService.getObjectById(ramaRepository, idRama);
 
-        ramaEdit.setNombre(ramaDTO.getNombre());
-        ramaEdit.setEdadMinima(ramaDTO.getEdadMinima());
-        ramaEdit.setEdadMaxima(ramaDTO.getEdadMaxima());
-        ramaEdit.setDescripcion(ramaDTO.getDescripcion());
+        ramaEdit.setNombre(ramaRequestDTO.getNombre());
+        ramaEdit.setEdadMinima(ramaRequestDTO.getEdadMinima());
+        ramaEdit.setEdadMaxima(ramaRequestDTO.getEdadMaxima());
+        ramaEdit.setDescripcion(ramaRequestDTO.getDescripcion());
         this.ramaValidator.validator(ramaEdit);
 
         return ramaRepository.save(ramaEdit);

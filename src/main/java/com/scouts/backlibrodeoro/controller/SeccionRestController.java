@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.request.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.service.SeccionService;
@@ -42,10 +42,10 @@ public class SeccionRestController {
     }
 
     @PostMapping("/rama/{idRama}")
-    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama, @RequestBody SeccionDTO seccionDTO)
+    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama, @RequestBody SeccionRequestDTO seccionRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.seccionService.createSeccion(seccionDTO, idRama), HttpStatus.CREATED);
+            return new ResponseEntity(this.seccionService.createSeccion(seccionRequestDTO, idRama), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -54,10 +54,10 @@ public class SeccionRestController {
     }
 
     @PutMapping("/{idSeccion}")
-    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion, @RequestBody SeccionDTO seccionDTO)
+    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion, @RequestBody SeccionRequestDTO seccionRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.seccionService.updateSeccion(idSeccion, seccionDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.seccionService.updateSeccion(idSeccion, seccionRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);

@@ -1,8 +1,8 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
-import com.scouts.backlibrodeoro.dto.response.AnecdotaGridDTO;
+import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
@@ -29,10 +29,10 @@ public class AnecdotaRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<AnecdotaGridDTO>> findByUsuario(HttpServletRequest request) {
+    public ResponseEntity<List<AnecdotaGridResponseDTO>> findByUsuario(HttpServletRequest request) {
         try {
-            FilterAnecdotaDTO filterAnecdotaDTO =
-                    new FilterAnecdotaDTO(request.getParameter("idGrupo"),
+            FilterAnecdotaRequestDTO filterAnecdotaRequestDTO =
+                    new FilterAnecdotaRequestDTO(request.getParameter("idGrupo"),
                             request.getParameter("idRama"),
                             request.getParameter("idSeccion"),
                             request.getParameter("fechaInicioAnecdota"),
@@ -41,7 +41,7 @@ public class AnecdotaRestController {
                             request.getParameter("usuarioFilter"),
                             request.getParameter("usuarioOwner"));
 
-            return new ResponseEntity(this.anecdotaService.getFilterAnecdota(filterAnecdotaDTO), HttpStatus.OK);
+            return new ResponseEntity(this.anecdotaService.getFilterAnecdota(filterAnecdotaRequestDTO), HttpStatus.OK);
         } catch (RuntimeException ex){
             NegocioException negocioException = (NegocioException) ex.getCause();
             return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
@@ -51,9 +51,9 @@ public class AnecdotaRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Anecdota> createAnecdota(@RequestBody AnecdotaDTO anecdotaDTO) throws NegocioException {
+    public ResponseEntity<Anecdota> createAnecdota(@RequestBody AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
         try{
-            return new ResponseEntity(anecdotaService.createAnecdota(anecdotaDTO), HttpStatus.CREATED);
+            return new ResponseEntity(anecdotaService.createAnecdota(anecdotaRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (RuntimeException ex){

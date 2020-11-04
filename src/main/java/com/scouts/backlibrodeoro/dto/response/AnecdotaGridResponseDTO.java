@@ -2,7 +2,7 @@ package com.scouts.backlibrodeoro.dto.response;
 
 import java.util.Date;
 
-public class AnecdotaGridDTO implements java.io.Serializable{
+public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     private Integer idAnecdota;
 
@@ -20,11 +20,11 @@ public class AnecdotaGridDTO implements java.io.Serializable{
 
     private String usuarioGestion;
 
-    public AnecdotaGridDTO() {
+    public AnecdotaGridResponseDTO() {
     }
 
-    public AnecdotaGridDTO(Integer idAnecdota, String nombreGrupo, String nombreRama, String nombreSeccion,
-                           Date fechaSuceso,  String usuarioRegistro, String estado, String usuarioGestion) {
+    public AnecdotaGridResponseDTO(Integer idAnecdota, String nombreGrupo, String nombreRama, String nombreSeccion,
+                                   Date fechaSuceso, String usuarioRegistro, String estado, String usuarioGestion) {
         this.idAnecdota = idAnecdota;
         this.nombreGrupo = nombreGrupo;
         this.nombreRama = nombreRama;

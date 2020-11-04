@@ -1,8 +1,8 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.AnecdotaDTO;
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
-import com.scouts.backlibrodeoro.dto.response.AnecdotaGridDTO;
+import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.EstadoAnecdota;
@@ -45,13 +45,13 @@ public class AnecdotaService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnecdotaGridDTO> getFilterAnecdota(FilterAnecdotaDTO filterAnecdotaDTO){
-        return anecdotaRepository.getAnecdotasGrid(filterAnecdotaDTO);
+    public List<AnecdotaGridResponseDTO> getFilterAnecdota(FilterAnecdotaRequestDTO filterAnecdotaRequestDTO){
+        return anecdotaRepository.getAnecdotasGrid(filterAnecdotaRequestDTO);
     }
 
     @Transactional
-    public Anecdota createAnecdota(AnecdotaDTO anecdotaDTO) throws NegocioException {
-        Anecdota anecdota = transformDTOToAnecdota(anecdotaDTO);
+    public Anecdota createAnecdota(AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
+        Anecdota anecdota = transformDTOToAnecdota(anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
         addEstadoAnecdota(anecdota, TypeEstadoAnecdota.PA, anecdota.getUsuario());
@@ -63,13 +63,13 @@ public class AnecdotaService {
         R apply(T t) throws NegocioException;
     }
 
-    private Anecdota transformDTOToAnecdota(AnecdotaDTO anecdotaDTO) throws NegocioException {
+    private Anecdota transformDTOToAnecdota(AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
         Anecdota anecdota = new Anecdota();
-        anecdota.setNombre(anecdotaDTO.getNombre());
-        anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaDTO.getFecha()));
-        anecdota.setDescripcion(anecdotaDTO.getDescripcion());
-        anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaDTO.getUsuario()));
-        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaDTO.getRama()));
+        anecdota.setNombre(anecdotaRequestDTO.getNombre());
+        anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaRequestDTO.getFecha()));
+        anecdota.setDescripcion(anecdotaRequestDTO.getDescripcion());
+        anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaRequestDTO.getUsuario()));
+        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaRequestDTO.getRama()));
 
         AddSeccion<Integer, Seccion> addSeccion = (idSeccion) -> {
             if(Optional.ofNullable(idSeccion).orElse(0) == 0){
@@ -78,7 +78,7 @@ public class AnecdotaService {
             return InspeccionService.getObjectById(seccionRepository, idSeccion);
         };
 
-        anecdota.setSeccion(addSeccion.apply(anecdotaDTO.getSeccion()));
+        anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getSeccion()));
         return anecdota;
     }
 

@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.dto.request;
 
-public class RamaDTO {
+public class RamaRequestDTO {
     private String nombre;
     private Integer edadMinima;
     private Integer edadMaxima;

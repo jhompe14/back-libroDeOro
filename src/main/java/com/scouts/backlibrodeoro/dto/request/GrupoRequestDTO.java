@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.dto.request;
 
-public class CargoDTO {
+public class GrupoRequestDTO {
     private String nombre;
     private String descripcion;
 

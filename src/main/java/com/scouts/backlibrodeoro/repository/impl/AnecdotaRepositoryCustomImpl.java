@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.repository.impl;
 
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaDTO;
-import com.scouts.backlibrodeoro.dto.response.AnecdotaGridDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.repository.AnecdotaRepositoryCustom;
 
 import javax.persistence.EntityManager;
@@ -15,7 +15,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<AnecdotaGridDTO> getAnecdotasGrid(FilterAnecdotaDTO filterAnecdotaDTO) {
+    public List<AnecdotaGridResponseDTO> getAnecdotasGrid(FilterAnecdotaRequestDTO filterAnecdotaRequestDTO) {
         final String SQL_ESTADO_ANECDOTA = "(SELECT MAX(easub.id) FROM EstadoAnecdota easub " +
                 "INNER JOIN easub.anecdota asub " +
                 "WHERE asub.id= a.id) ";

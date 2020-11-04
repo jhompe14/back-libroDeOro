@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.CargoDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.model.Grupo;
@@ -130,15 +130,15 @@ public class CargoServiceTest {
     @Test
     public void createCargoWhenValidateThrowNegocioException() throws NegocioException {
         //Arrange
-        CargoDTO cargoDTO= new CargoDTO();
-        cargoDTO.setNombre("seccion prueba");
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
+        cargoRequestDTO.setNombre("seccion prueba");
         Integer idType= 1;
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION))
                 .when(cargoValidator).validator(any());
 
         //Act
         try {
-            cargoService.createCargo("", idType, cargoDTO);
+            cargoService.createCargo("", idType, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -148,8 +148,8 @@ public class CargoServiceTest {
     @Test
     public void createCargoWhenTypeCargoIsGR() throws NegocioException {
         //Arrange
-        CargoDTO cargoDTO= new CargoDTO();
-        cargoDTO.setNombre("seccion prueba");
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
+        cargoRequestDTO.setNombre("seccion prueba");
         doNothing().when(cargoValidator).validator(any());
         Integer idType= 1;
         String typeCargo = "GR";
@@ -159,7 +159,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoDTO);
+        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(grupoRepository).findById(idType);
@@ -170,8 +170,8 @@ public class CargoServiceTest {
     @Test
     public void createCargoWhenTypeCargoIsRA() throws NegocioException {
         //Arrange
-        CargoDTO cargoDTO= new CargoDTO();
-        cargoDTO.setNombre("seccion prueba");
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
+        cargoRequestDTO.setNombre("seccion prueba");
         doNothing().when(cargoValidator).validator(any());
         Integer idType= 1;
         String typeCargo = "RA";
@@ -181,7 +181,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoDTO);
+        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(ramaRepository).findById(idType);
@@ -192,8 +192,8 @@ public class CargoServiceTest {
     @Test
     public void createCargoWhenTypeCargoIsSE() throws NegocioException {
         //Arrange
-        CargoDTO cargoDTO= new CargoDTO();
-        cargoDTO.setNombre("seccion prueba");
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
+        cargoRequestDTO.setNombre("seccion prueba");
         doNothing().when(cargoValidator).validator(any());
         Integer idType= 1;
         String typeCargo = "SE";
@@ -203,7 +203,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoDTO);
+        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(seccionRepository).findById(idType);
@@ -215,13 +215,13 @@ public class CargoServiceTest {
     public void updateCargoWhenCargoNotExistAndThrowNegocioException(){
         //Arrange
         Integer idCargo= 1;
-        CargoDTO cargoDTO = new CargoDTO();
-        cargoDTO.setNombre("hola nuevo nombre");
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
+        cargoRequestDTO.setNombre("hola nuevo nombre");
         when(cargoRepository.findById(idCargo)).thenReturn(Optional.empty());
 
         //Act
         try {
-            cargoService.updateCargo(idCargo, cargoDTO);
+            cargoService.updateCargo(idCargo, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_CARGO_NO_EXISTE, ex.getMessage());
@@ -232,14 +232,14 @@ public class CargoServiceTest {
     public void updateCargoWhenValidateThrowNegocioException() throws NegocioException {
         //Arrange
         Integer idCargo= 1;
-        CargoDTO cargoDTO = new CargoDTO();
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
         when(cargoRepository.findById(idCargo)).thenReturn(Optional.of(new Cargo()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION))
                 .when(cargoValidator).validator(any());
 
         //Act
         try {
-            cargoService.updateCargo(idCargo, cargoDTO);
+            cargoService.updateCargo(idCargo, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -250,7 +250,7 @@ public class CargoServiceTest {
     public void updateCargoWhenUpdateObject() throws NegocioException {
         //Arrange
         Integer idCargo= 1;
-        CargoDTO cargoDTO = new CargoDTO();
+        CargoRequestDTO cargoRequestDTO = new CargoRequestDTO();
         when(cargoRepository.findById(idCargo)).thenReturn(Optional.of(new Cargo()));
 
         Cargo cargo = new Cargo();
@@ -260,7 +260,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result = cargoService.updateCargo(idCargo, cargoDTO);
+        Cargo result = cargoService.updateCargo(idCargo, cargoRequestDTO);
 
         //Assert
         assertEquals(cargo.getId(), result.getId());

@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.request.CargoDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.model.Seccion;
@@ -51,9 +51,9 @@ public class CargoRestController {
     @PostMapping("/type/{typeCargo}/id/{idType}")
     public ResponseEntity<Seccion> createCargo(@PathVariable("typeCargo") String typeCargo,
                                                @PathVariable("idType") Integer idType,
-                                               @RequestBody CargoDTO cargoDTO) throws NegocioException{
+                                               @RequestBody CargoRequestDTO cargoRequestDTO) throws NegocioException{
         try{
-            return new ResponseEntity(this.cargoService.createCargo(typeCargo, idType, cargoDTO), HttpStatus.CREATED);
+            return new ResponseEntity(this.cargoService.createCargo(typeCargo, idType, cargoRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -63,10 +63,10 @@ public class CargoRestController {
 
     @PutMapping("/{idCargo}")
     public ResponseEntity<Seccion> updateCargo(@PathVariable("idCargo") Integer idCargo,
-                                                 @RequestBody CargoDTO cargoDTO)
+                                                 @RequestBody CargoRequestDTO cargoRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.cargoService.updateCargo(idCargo, cargoDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.cargoService.updateCargo(idCargo, cargoRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);

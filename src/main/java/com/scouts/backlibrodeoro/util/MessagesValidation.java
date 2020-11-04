@@ -45,9 +45,8 @@ public class MessagesValidation {
     public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
     public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";
 
-    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO = "Debe agregar almenos una trayectoria";
-
-    public static final String VALIDATION_TRAYECTORIA_ANIO_INGRESO = "La fecha ingreso en la trayectoria es obligatoria";
+    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO =
+            "Los campos obligatorios son: </br> Grupo </br> A\u00F1o ingreso";
     public static final String VALIDATION_ANIO_INGRESO_VALIDA =
             "La fecha ingreso en la trayectoria debe estar entre 1940 y el a\u00F1o actual";
     public static final String VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO =

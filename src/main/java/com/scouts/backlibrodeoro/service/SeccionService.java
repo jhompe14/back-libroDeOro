@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -43,10 +43,10 @@ public class SeccionService {
     }
 
     @Transactional
-    public Seccion createSeccion(SeccionDTO seccionDTO, Integer idRama) throws NegocioException {
+    public Seccion createSeccion(SeccionRequestDTO seccionRequestDTO, Integer idRama) throws NegocioException {
         Seccion seccion = new Seccion();
-        seccion.setNombre(seccionDTO.getNombre());
-        seccion.setDescripcion(seccionDTO.getDescripcion());
+        seccion.setNombre(seccionRequestDTO.getNombre());
+        seccion.setDescripcion(seccionRequestDTO.getDescripcion());
         this.seccionValidator.validator(seccion);
 
         seccion.setRama(InspeccionService.getObjectById(ramaRepository, idRama));
@@ -54,11 +54,11 @@ public class SeccionService {
     }
 
     @Transactional
-    public Seccion updateSeccion(Integer idSeccion, SeccionDTO seccionDTO) throws NegocioException {
+    public Seccion updateSeccion(Integer idSeccion, SeccionRequestDTO seccionRequestDTO) throws NegocioException {
         Seccion seccionEdit = InspeccionService.getObjectById(seccionRepository, idSeccion);
 
-        seccionEdit.setNombre(seccionDTO.getNombre());
-        seccionEdit.setDescripcion(seccionDTO.getDescripcion());
+        seccionEdit.setNombre(seccionRequestDTO.getNombre());
+        seccionEdit.setDescripcion(seccionRequestDTO.getDescripcion());
         this.seccionValidator.validator(seccionEdit);
 
         return seccionRepository.save(seccionEdit);

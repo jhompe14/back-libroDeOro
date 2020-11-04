@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.dto.request;
 
-public class AnecdotaDTO {
+public class AnecdotaRequestDTO {
 
     private String nombre;
 

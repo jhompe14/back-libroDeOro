@@ -5,7 +5,7 @@ import com.scouts.backlibrodeoro.util.GeneralValidates;
 import java.util.Date;
 import java.util.Optional;
 
-public class FilterAnecdotaDTO {
+public class FilterAnecdotaRequestDTO {
 
     private Integer idGrupo;
 
@@ -23,8 +23,8 @@ public class FilterAnecdotaDTO {
 
     private String usuarioOwner;
 
-    public FilterAnecdotaDTO(String idGrupo, String idRama, String idSeccion, String fechaInicioAnecdota,
-                             String fechaFinAnecdota, String estado, String usuarioFilter, String usuarioOwner) {
+    public FilterAnecdotaRequestDTO(String idGrupo, String idRama, String idSeccion, String fechaInicioAnecdota,
+                                    String fechaFinAnecdota, String estado, String usuarioFilter, String usuarioOwner) {
         this.idGrupo = Optional.ofNullable(idGrupo).map(Integer::parseInt).orElse(null);
         this.idRama = Optional.ofNullable(idRama).map(Integer::parseInt).orElse(null);
         this.idSeccion = Optional.ofNullable(idSeccion).map(Integer::parseInt).orElse(null);

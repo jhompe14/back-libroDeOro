@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.GrupoDTO;
+import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -43,21 +43,21 @@ public class GrupoService {
     }
 
     @Transactional
-    public Grupo createGrupo(GrupoDTO grupoDTO) throws NegocioException {
+    public Grupo createGrupo(GrupoRequestDTO grupoRequestDTO) throws NegocioException {
         Grupo grupo = new Grupo();
-        grupo.setNombre(grupoDTO.getNombre());
-        grupo.setDescripcion(grupoDTO.getDescripcion());
+        grupo.setNombre(grupoRequestDTO.getNombre());
+        grupo.setDescripcion(grupoRequestDTO.getDescripcion());
 
         this.grupoValidator.validator(grupo);
         return grupoRepository.save(grupo);
     }
 
     @Transactional
-    public Grupo updateGrupo(Integer idGrupo, GrupoDTO grupoDTO) throws NegocioException {
+    public Grupo updateGrupo(Integer idGrupo, GrupoRequestDTO grupoRequestDTO) throws NegocioException {
         Grupo grupoEdit = InspeccionService.getObjectById(grupoRepository, idGrupo);
 
-        grupoEdit.setNombre(grupoDTO.getNombre());
-        grupoEdit.setDescripcion(grupoDTO.getDescripcion());
+        grupoEdit.setNombre(grupoRequestDTO.getNombre());
+        grupoEdit.setDescripcion(grupoRequestDTO.getDescripcion());
 
         this.grupoValidator.validator(grupoEdit);
         return grupoRepository.save(grupoEdit);

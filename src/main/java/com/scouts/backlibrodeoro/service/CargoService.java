@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.CargoDTO;
+import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -67,10 +67,10 @@ public class CargoService {
     }
 
     @Transactional
-    public Cargo createCargo(String typeCargo, Integer idType, CargoDTO cargoDTO) throws NegocioException {
+    public Cargo createCargo(String typeCargo, Integer idType, CargoRequestDTO cargoRequestDTO) throws NegocioException {
         Cargo cargo = new Cargo();
-        cargo.setNombre(cargoDTO.getNombre());
-        cargo.setDescripcion(cargoDTO.getDescripcion());
+        cargo.setNombre(cargoRequestDTO.getNombre());
+        cargo.setDescripcion(cargoRequestDTO.getDescripcion());
 
         this.cargoValidator.validator(cargo);
         this.assignamentTypeCargo(typeCargo, idType, cargo);
@@ -96,11 +96,11 @@ public class CargoService {
     }
 
     @Transactional
-    public Cargo updateCargo(Integer idCargo, CargoDTO cargoDTO) throws NegocioException {
+    public Cargo updateCargo(Integer idCargo, CargoRequestDTO cargoRequestDTO) throws NegocioException {
         Cargo cargoEdit = InspeccionService.getObjectById(cargoRepository, idCargo);
 
-        cargoEdit.setNombre(cargoDTO.getNombre());
-        cargoEdit.setDescripcion(cargoDTO.getDescripcion());
+        cargoEdit.setNombre(cargoRequestDTO.getNombre());
+        cargoEdit.setDescripcion(cargoRequestDTO.getDescripcion());
         this.cargoValidator.validator(cargoEdit);
 
         return cargoRepository.save(cargoEdit);
