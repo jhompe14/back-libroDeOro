@@ -39,7 +39,8 @@ public class AnecdotaRestController {
                             request.getParameter("fechaFinAnecdota"),
                             request.getParameter("estado"),
                             request.getParameter("usuarioFilter"),
-                            request.getParameter("usuarioOwner"));
+                            request.getParameter("usuarioOwner"),
+                            request.getParameter("typeUsuarioOwner"));
 
             return new ResponseEntity(this.anecdotaService.getFilterAnecdota(filterAnecdotaRequestDTO), HttpStatus.OK);
         } catch (RuntimeException ex){
