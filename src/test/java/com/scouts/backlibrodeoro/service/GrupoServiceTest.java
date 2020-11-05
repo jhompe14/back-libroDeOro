@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.GrupoDTO;
+import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -100,12 +100,12 @@ public class GrupoServiceTest {
     @Test
     public void createGrupoWhenThrowValidator() throws NegocioException {
         //Arrange
-        GrupoDTO grupoDTO = new GrupoDTO();
+        GrupoRequestDTO grupoRequestDTO = new GrupoRequestDTO();
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION)).when(grupoValidator).validator(any());
 
         //Act
         try {
-            grupoService.createGrupo(grupoDTO);
+            grupoService.createGrupo(grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -115,9 +115,9 @@ public class GrupoServiceTest {
     @Test
     public void createGrupoWhenCreateObject() throws NegocioException {
         //Arrange
-        GrupoDTO grupoDTO = new GrupoDTO();
-        grupoDTO.setNombre("nombre de prueba");
-        grupoDTO.setDescripcion("");
+        GrupoRequestDTO grupoRequestDTO = new GrupoRequestDTO();
+        grupoRequestDTO.setNombre("nombre de prueba");
+        grupoRequestDTO.setDescripcion("");
 
         Grupo grupo = new Grupo();
         grupo.setId(1);
@@ -126,7 +126,7 @@ public class GrupoServiceTest {
         when(grupoRepository.save(any())).thenReturn(grupo);
 
         //Act
-        Grupo result = grupoService.createGrupo(grupoDTO);
+        Grupo result = grupoService.createGrupo(grupoRequestDTO);
 
         //Assert
         assertEquals(grupo.getId(), result.getId());
@@ -136,12 +136,12 @@ public class GrupoServiceTest {
     public void updateGrupoWhenGrupoNotExist() throws NegocioException{
         //Arrange
         Integer idGrupo= 1;
-        GrupoDTO grupoDTO = new GrupoDTO();
+        GrupoRequestDTO grupoRequestDTO = new GrupoRequestDTO();
         when(grupoRepository.findById(idGrupo)).thenReturn(Optional.empty());
 
         //Act
         try {
-            grupoService.updateGrupo(idGrupo, grupoDTO);
+            grupoService.updateGrupo(idGrupo, grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_GRUPO_NO_EXISTE, ex.getMessage());
@@ -152,13 +152,13 @@ public class GrupoServiceTest {
     public void updateGrupoWhenThrowValidation() throws NegocioException{
         //Arrange
         Integer idGrupo= 1;
-        GrupoDTO grupoDTO = new GrupoDTO();
+        GrupoRequestDTO grupoRequestDTO = new GrupoRequestDTO();
         when(grupoRepository.findById(idGrupo)).thenReturn(Optional.of(new Grupo()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION)).when(grupoValidator).validator(any());
 
         //Act
         try {
-            grupoService.updateGrupo(idGrupo, grupoDTO);
+            grupoService.updateGrupo(idGrupo, grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -169,9 +169,9 @@ public class GrupoServiceTest {
     public void updateGrupoWhenUpdateObject() throws NegocioException{
         //Arrange
         Integer idGrupo= 1;
-        GrupoDTO grupoDTO = new GrupoDTO();
-        grupoDTO.setNombre("nombre de prueba");
-        grupoDTO.setDescripcion("");
+        GrupoRequestDTO grupoRequestDTO = new GrupoRequestDTO();
+        grupoRequestDTO.setNombre("nombre de prueba");
+        grupoRequestDTO.setDescripcion("");
 
         Grupo grupo = new Grupo();
         grupo.setId(1);
@@ -181,7 +181,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findById(idGrupo)).thenReturn(Optional.of(grupo));
 
         //Act
-        Grupo result = grupoService.updateGrupo(idGrupo, grupoDTO);
+        Grupo result = grupoService.updateGrupo(idGrupo, grupoRequestDTO);
 
         //Assert
         assertEquals(grupo.getId(), result.getId());

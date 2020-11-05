@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.auth.JWTGenerator;
-import com.scouts.backlibrodeoro.dto.AuthDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -23,7 +23,7 @@ public class AuthRestController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthDTO> login(@RequestBody AuthDTO auth) throws NegocioException {
+    public ResponseEntity<AuthRequestDTO> login(@RequestBody AuthRequestDTO auth) throws NegocioException {
         try {
             if(usuarioService.authIsSuccess(auth)) {
                 String token = JWTGenerator.getJWTToken(auth.getUsuario());

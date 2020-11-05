@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SeccionService {
@@ -41,34 +39,26 @@ public class SeccionService {
 
     @Transactional(readOnly = true)
     public Seccion getSeccion(Integer id) throws NegocioException {
-        return seccionRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(seccionRepository, id);
     }
 
     @Transactional
-    public Seccion createSeccion(SeccionDTO seccionDTO, Integer idRama) throws NegocioException {
+    public Seccion createSeccion(SeccionRequestDTO seccionRequestDTO, Integer idRama) throws NegocioException {
         Seccion seccion = new Seccion();
-        seccion.setNombre(seccionDTO.getNombre());
-        seccion.setDescripcion(seccionDTO.getDescripcion());
-
+        seccion.setNombre(seccionRequestDTO.getNombre());
+        seccion.setDescripcion(seccionRequestDTO.getDescripcion());
         this.seccionValidator.validator(seccion);
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
 
-        seccion.setRama(rama.orElse(new Rama()));
+        seccion.setRama(InspeccionService.getObjectById(ramaRepository, idRama));
         return seccionRepository.save(seccion);
     }
 
     @Transactional
-    public Seccion updateSeccion(Integer idSeccion, SeccionDTO seccionDTO) throws NegocioException {
-        Optional<Seccion> seccion = InspeccionService.getSeccion(seccionRepository, idSeccion);
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, seccionDTO.getIdRama());
+    public Seccion updateSeccion(Integer idSeccion, SeccionRequestDTO seccionRequestDTO) throws NegocioException {
+        Seccion seccionEdit = InspeccionService.getObjectById(seccionRepository, idSeccion);
 
-        Seccion seccionEdit = new Seccion();
-        seccionEdit.setId(idSeccion);
-        seccionEdit.setNombre(seccionDTO.getNombre());
-        seccionEdit.setDescripcion(seccionDTO.getDescripcion());
-        seccionEdit.setRama(rama.orElse(new Rama()));
-
+        seccionEdit.setNombre(seccionRequestDTO.getNombre());
+        seccionEdit.setDescripcion(seccionRequestDTO.getDescripcion());
         this.seccionValidator.validator(seccionEdit);
 
         return seccionRepository.save(seccionEdit);
@@ -76,12 +66,12 @@ public class SeccionService {
 
     @Transactional
     public void deleteSeccion(Integer idSeccion) throws NegocioException {
-        Optional<Seccion> seccion = InspeccionService.getSeccion(seccionRepository, idSeccion);
+        Seccion seccion = InspeccionService.getObjectById(seccionRepository, idSeccion);
 
         if(cargoRepository.countCargoByTypeSeccion(idSeccion)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_SECCION_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        seccionRepository.delete(seccion.orElse(new Seccion()));
+        seccionRepository.delete(seccion);
     }
 }

@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.RamaDTO;
+import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.service.RamaService;
@@ -42,10 +42,10 @@ public class RamaRestController {
     }
 
     @PostMapping("/grupo/{idGrupo}")
-    public ResponseEntity<Rama> createRama(@PathVariable("idGrupo") Integer idGrupo, @RequestBody RamaDTO ramaDTO)
+    public ResponseEntity<Rama> createRama(@PathVariable("idGrupo") Integer idGrupo, @RequestBody RamaRequestDTO ramaRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.ramaService.createRama(ramaDTO, idGrupo), HttpStatus.CREATED);
+            return new ResponseEntity(this.ramaService.createRama(ramaRequestDTO, idGrupo), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -54,10 +54,10 @@ public class RamaRestController {
     }
 
     @PutMapping("/{idRama}")
-    public ResponseEntity<Rama> updateRama(@PathVariable("idRama") Integer idRama, @RequestBody RamaDTO ramaDTO)
+    public ResponseEntity<Rama> updateRama(@PathVariable("idRama") Integer idRama, @RequestBody RamaRequestDTO ramaRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.ramaService.updateRama(idRama, ramaDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.ramaService.updateRama(idRama, ramaRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);

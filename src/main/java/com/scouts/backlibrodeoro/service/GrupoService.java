@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.GrupoDTO;
+import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GrupoService {
@@ -40,28 +39,25 @@ public class GrupoService {
 
     @Transactional(readOnly = true)
     public Grupo getGrupo(Integer id) throws NegocioException {
-        return grupoRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(grupoRepository, id);
     }
 
     @Transactional
-    public Grupo createGrupo(GrupoDTO grupoDTO) throws NegocioException {
+    public Grupo createGrupo(GrupoRequestDTO grupoRequestDTO) throws NegocioException {
         Grupo grupo = new Grupo();
-        grupo.setNombre(grupoDTO.getNombre());
-        grupo.setDescripcion(grupoDTO.getDescripcion());
+        grupo.setNombre(grupoRequestDTO.getNombre());
+        grupo.setDescripcion(grupoRequestDTO.getDescripcion());
 
         this.grupoValidator.validator(grupo);
         return grupoRepository.save(grupo);
     }
 
     @Transactional
-    public Grupo updateGrupo(Integer idGrupo, GrupoDTO grupoDTO) throws NegocioException {
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
+    public Grupo updateGrupo(Integer idGrupo, GrupoRequestDTO grupoRequestDTO) throws NegocioException {
+        Grupo grupoEdit = InspeccionService.getObjectById(grupoRepository, idGrupo);
 
-        Grupo grupoEdit = new Grupo();
-        grupoEdit.setId(idGrupo);
-        grupoEdit.setNombre(grupoDTO.getNombre());
-        grupoEdit.setDescripcion(grupoDTO.getDescripcion());
+        grupoEdit.setNombre(grupoRequestDTO.getNombre());
+        grupoEdit.setDescripcion(grupoRequestDTO.getDescripcion());
 
         this.grupoValidator.validator(grupoEdit);
         return grupoRepository.save(grupoEdit);
@@ -69,7 +65,7 @@ public class GrupoService {
 
     @Transactional
     public void deleteGrupo(Integer idGrupo) throws NegocioException {
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
+        Grupo grupo = InspeccionService.getObjectById(grupoRepository, idGrupo);
 
         if(ramaRepository.countRamaByGrupo(idGrupo)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_RAMAS_ACTIVAS, TypeException.VALIDATION);
@@ -79,7 +75,7 @@ public class GrupoService {
             throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        grupoRepository.delete(grupo.orElse(new Grupo()));
+        grupoRepository.delete(grupo);
     }
 
 }

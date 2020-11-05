@@ -1,6 +1,6 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
-public class AuthDTO {
+public class AuthRequestDTO {
     private String usuario;
     private String contrasena;
     private String token;

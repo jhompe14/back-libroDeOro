@@ -1,8 +1,8 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
 import java.util.List;
 
-public class UsuarioDTO {
+public class UsuarioRequestDTO {
 
     private String usuario;
 
@@ -26,7 +26,7 @@ public class UsuarioDTO {
 
     private String tipoUsuario;
 
-    private List<TrayectoriaDTO> trayectoria;
+    private List<TrayectoriaRequestDTO> trayectoria;
 
     public String getUsuario() {
         return usuario;
@@ -116,11 +116,11 @@ public class UsuarioDTO {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public List<TrayectoriaDTO> getTrayectoria() {
+    public List<TrayectoriaRequestDTO> getTrayectoria() {
         return trayectoria;
     }
 
-    public void setTrayectoria(List<TrayectoriaDTO> trayectoria) {
+    public void setTrayectoria(List<TrayectoriaRequestDTO> trayectoria) {
         this.trayectoria = trayectoria;
     }
 

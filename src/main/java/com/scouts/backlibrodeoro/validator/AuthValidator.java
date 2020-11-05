@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.validator;
 
-import com.scouts.backlibrodeoro.dto.AuthDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
@@ -14,19 +13,19 @@ import java.util.Optional;
 public class AuthValidator implements IValidator{
     @Override
     public <T> void validator(T authDTO) throws NegocioException {
-        AuthDTO auth = (AuthDTO) authDTO;
+        AuthRequestDTO auth = (AuthRequestDTO) authDTO;
         if(!validateUsuario(auth) || !validateContrasena(auth)){
             throw new NegocioException(MessagesValidation.DILIGENCIAR_USUARIO_CONTRASENA, TypeException.VALIDATION);
         }
     }
 
-    private boolean validateUsuario(AuthDTO auth){
+    private boolean validateUsuario(AuthRequestDTO auth){
         return Optional.ofNullable(auth).map(c ->
                 GeneralValidates.validateStringNotIsEmpty(c.getUsuario())).orElse(false);
 
     }
 
-    private boolean validateContrasena(AuthDTO auth){
+    private boolean validateContrasena(AuthRequestDTO auth){
         return Optional.ofNullable(auth).map(c ->
                 GeneralValidates.validateStringNotIsEmpty(c.getContrasena())).orElse(false);
     }

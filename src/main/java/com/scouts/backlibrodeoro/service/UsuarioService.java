@@ -1,14 +1,14 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.AuthDTO;
-import com.scouts.backlibrodeoro.dto.TrayectoriaDTO;
-import com.scouts.backlibrodeoro.dto.UsuarioDTO;
+import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
+import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeException;
-import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AuthValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
@@ -23,6 +23,10 @@ import java.util.Optional;
 
 @Service
 public class UsuarioService {
+
+    private final String CREATE_USUARIO = "CR";
+    private final String UPDATE_USUARIO = "UP";
+    private final String CONTRASENA_TEMPORAL = "123456";
 
     private final UsuarioRepository usuarioRepository;
     private final TrayectoriaRepository trayectoriaRepository;
@@ -51,7 +55,27 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public boolean authIsSuccess(AuthDTO auth) throws NegocioException {
+    public UsuarioResponseDTO getUsuario(String usuario) throws NegocioException {
+        UsuarioResponseDTO usuarioResponseDTO =
+                transformUsuarioToUsuarioResponseDTO(InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario));
+        usuarioResponseDTO.setTrayectoria(trayectoriaRepository.findTrayectoriaResponseDTOByUsuario(usuario));
+        return usuarioResponseDTO;
+    }
+
+    public Boolean validateUsuario(UsuarioRequestDTO usuarioRequestDTO) throws NegocioException {
+        Usuario usuario = transformDTOToUsuario(usuarioRequestDTO, new Usuario(), UPDATE_USUARIO);
+        usuario.setContrasena(CONTRASENA_TEMPORAL);
+        usuarioValidator.validator(usuario);
+        return Boolean.TRUE;
+    }
+
+    public Boolean validateTrayectoria(TrayectoriaRequestDTO trayectoriaRequestDTO) throws NegocioException {
+        trayectoriaValidator.validator(transformDTOToTrayectoria(trayectoriaRequestDTO));
+        return Boolean.TRUE;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean authIsSuccess(AuthRequestDTO auth) throws NegocioException {
         authValidator.validator(auth);
         Optional<Usuario> usuarioOptional = Optional.ofNullable(
                 usuarioRepository.findUsuarioByUsuarioAndContrasena(auth.getUsuario(), auth.getContrasena()));
@@ -64,42 +88,52 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario createUsuario(UsuarioDTO usuarioDTO) throws NegocioException {
-        if(usuarioRepository.countUsuarioByUsuario(usuarioDTO.getUsuario())>0){
+    public Usuario createUsuario(UsuarioRequestDTO usuarioRequestDTO) throws NegocioException {
+        if(usuarioRepository.countUsuarioByUsuario(usuarioRequestDTO.getUsuario())>0){
             throw new NegocioException(MessagesValidation.VALIDATION_USUARIO_EXISTE, TypeException.VALIDATION);
         }
 
-        Usuario usuario = transformDTOToUsuario(usuarioDTO);
+        Usuario usuario = transformDTOToUsuario(usuarioRequestDTO, new Usuario(), CREATE_USUARIO);
         usuarioValidator.validator(usuario);
 
-        if(!usuarioDTO.getContrasena().equals(usuarioDTO.getConfirmContrasena())){
+        if(!usuarioRequestDTO.getContrasena().equals(usuarioRequestDTO.getConfirmContrasena())){
             throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
         }
 
-        return commitUsuario(usuario, getTrayectorias(usuario, usuarioDTO.getTrayectoria()));
+        return usuarioRepository.save(usuario);
     }
 
-    private List<Trayectoria> getTrayectorias(Usuario usuario, List<TrayectoriaDTO> trayectoriaDTOList) throws NegocioException {
+    @Transactional
+    public Usuario updateUsuario(UsuarioRequestDTO usuarioRequestDTO) throws NegocioException{
+        Usuario usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuarioRequestDTO.getUsuario());
+
+        transformDTOToUsuario(usuarioRequestDTO, usuario, UPDATE_USUARIO);
+        usuarioValidator.validator(usuario);
+
+        return commitUpdateUsuario(usuario, getTrayectorias(usuarioRequestDTO.getTrayectoria()));
+    }
+
+    private List<Trayectoria> getTrayectorias(List<TrayectoriaRequestDTO> trayectoriaRequestDTOList) throws NegocioException {
         List<Trayectoria> trayectorias = new ArrayList<>();
-        if(Optional.ofNullable(trayectoriaDTOList)
+        if(Optional.ofNullable(trayectoriaRequestDTOList)
                 .map(trayectoriaDTOS -> trayectoriaDTOS.size()>0)
                 .orElse(false)) {
-            trayectoriaDTOList.stream().forEach(trayectoriaDTO -> {
+            trayectoriaRequestDTOList.stream().forEach(trayectoriaRequestDTO -> {
                 try {
-                    Trayectoria trayectoria= transformDTOToTrayectoria(trayectoriaDTO);
+                    Trayectoria trayectoria= transformDTOToTrayectoria(trayectoriaRequestDTO);
                     trayectoriaValidator.validator(trayectoria);
                     trayectorias.add(trayectoria);
                 } catch (Exception ex) {
                    throw new RuntimeException(ex);
                 }
             });
-        }else{
-            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_OBLIGATORIO, TypeException.VALIDATION);
         }
+
         return trayectorias;
     }
 
-    private Usuario commitUsuario(Usuario usuario, List<Trayectoria> trayectorias){
+    private Usuario commitUpdateUsuario(Usuario usuario, List<Trayectoria> trayectorias){
+        trayectoriaRepository.deleteTrayectoriasByUsuario(usuario.getUsuario());
         usuarioRepository.save(usuario);
         trayectorias.forEach(trayectoria -> {
             trayectoria.setUsuario(usuario);
@@ -108,40 +142,48 @@ public class UsuarioService {
         return usuario;
     }
 
-    private Usuario transformDTOToUsuario(UsuarioDTO usuarioDTO){
-        Usuario usuario = new Usuario();
-
-        usuario.setUsuario(usuarioDTO.getUsuario());
-        usuario.setContrasena(usuarioDTO.getContrasena());
-        usuario.setNombres(usuarioDTO.getNombres());
-        usuario.setApellidos(usuarioDTO.getApellidos());
-        usuario.setTipoIntegrante(usuarioDTO.getTipoIntegrante());
-        usuario.setCorreo(usuarioDTO.getCorreo());
-        usuario.setTelefono(usuarioDTO.getTelefono());
-        usuario.setDireccion(usuarioDTO.getDireccion());
-        usuario.setCiudad(usuarioDTO.getCiudad());
-        usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
+    private Usuario transformDTOToUsuario(UsuarioRequestDTO usuarioRequestDTO, Usuario usuario, String typeTransaction){
+        usuario.setUsuario(usuarioRequestDTO.getUsuario());
+        usuario.setNombres(usuarioRequestDTO.getNombres());
+        usuario.setApellidos(usuarioRequestDTO.getApellidos());
+        usuario.setTipoIntegrante(usuarioRequestDTO.getTipoIntegrante());
+        usuario.setCorreo(usuarioRequestDTO.getCorreo());
+        usuario.setTelefono(usuarioRequestDTO.getTelefono());
+        usuario.setDireccion(usuarioRequestDTO.getDireccion());
+        usuario.setCiudad(usuarioRequestDTO.getCiudad());
+        usuario.setTipoUsuario(usuarioRequestDTO.getTipoUsuario());
+        if(typeTransaction.equals(CREATE_USUARIO))
+            usuario.setContrasena(usuarioRequestDTO.getContrasena());
 
         return usuario;
     }
 
-    private Trayectoria transformDTOToTrayectoria(TrayectoriaDTO trayectoriaDTO) throws NegocioException {
+    private Trayectoria transformDTOToTrayectoria(TrayectoriaRequestDTO trayectoriaRequestDTO) throws NegocioException {
         Trayectoria trayectoria = new Trayectoria();
-        trayectoria.setGrupo(grupoRepository.findById(trayectoriaDTO.getGrupo())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setRama(ramaRepository.findById(trayectoriaDTO.getRama())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setSeccion(seccionRepository.findById(trayectoriaDTO.getSeccion())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_SECCION_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setCargo(cargoRepository.findById(trayectoriaDTO.getCargo())
-                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CARGO_NO_EXISTE,
-                        TypeException.VALIDATION)));
-        trayectoria.setAnioIngreso(trayectoriaDTO.getAnioIngreso());
-        trayectoria.setAnioRetiro(trayectoriaDTO.getAnioRetiro());
+        trayectoria.setGrupo(InspeccionService.getObjectById(grupoRepository, trayectoriaRequestDTO.getGrupo()));
+        trayectoria.setRama(InspeccionService.getObjectById(ramaRepository, trayectoriaRequestDTO.getRama()));
+        trayectoria.setSeccion(InspeccionService.getObjectById(seccionRepository, trayectoriaRequestDTO.getSeccion()));
+        trayectoria.setCargo(InspeccionService.getObjectById(cargoRepository, trayectoriaRequestDTO.getCargo()));
+        trayectoria.setAnioIngreso(trayectoriaRequestDTO.getAnioIngreso());
+        trayectoria.setAnioRetiro(trayectoriaRequestDTO.getAnioRetiro());
         return trayectoria;
     }
+
+    private UsuarioResponseDTO transformUsuarioToUsuarioResponseDTO(Usuario usuario){
+        UsuarioResponseDTO usuarioResponseDTO = new UsuarioResponseDTO();
+
+        usuarioResponseDTO.setUsuario(usuario.getUsuario());
+        usuarioResponseDTO.setNombres(usuario.getNombres());
+        usuarioResponseDTO.setApellidos(usuario.getApellidos());
+        usuarioResponseDTO.setTipoIntegrante(usuario.getTipoIntegrante());
+        usuarioResponseDTO.setCorreo(usuario.getCorreo());
+        usuarioResponseDTO.setTelefono(usuario.getTelefono());
+        usuarioResponseDTO.setDireccion(usuario.getDireccion());
+        usuarioResponseDTO.setCiudad(usuario.getCiudad());
+        usuarioResponseDTO.setTipoUsuario(usuario.getTipoUsuario());
+
+        return usuarioResponseDTO;
+    }
+
 
 }

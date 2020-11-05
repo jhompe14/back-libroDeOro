@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
 
-import com.scouts.backlibrodeoro.dto.GrupoDTO;
+import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.service.GrupoService;
@@ -43,9 +43,9 @@ public class GrupoRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Grupo> createGrupo(@RequestBody GrupoDTO grupoDTO) throws NegocioException{
+    public ResponseEntity<Grupo> createGrupo(@RequestBody GrupoRequestDTO grupoRequestDTO) throws NegocioException{
         try{
-            return new ResponseEntity(this.grupoService.createGrupo(grupoDTO), HttpStatus.CREATED);
+            return new ResponseEntity(this.grupoService.createGrupo(grupoRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
@@ -54,10 +54,10 @@ public class GrupoRestController {
     }
 
     @PutMapping("/{idGrupo}")
-    public ResponseEntity<Grupo> updateGrupo(@PathVariable("idGrupo") Integer idGrupo, @RequestBody GrupoDTO grupoDTO)
+    public ResponseEntity<Grupo> updateGrupo(@PathVariable("idGrupo") Integer idGrupo, @RequestBody GrupoRequestDTO grupoRequestDTO)
             throws NegocioException{
         try{
-           return new ResponseEntity(this.grupoService.updateGrupo(idGrupo, grupoDTO), HttpStatus.ACCEPTED);
+           return new ResponseEntity(this.grupoService.updateGrupo(idGrupo, grupoRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);

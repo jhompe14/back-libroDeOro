@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.SeccionDTO;
+import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.model.Seccion;
@@ -101,15 +101,15 @@ public class SeccionServiceTest {
     @Test
     public void createSeccionWhenNotPassValidationAndThrowNegocioException() throws NegocioException {
         //Arrange
-        SeccionDTO seccionDTO= new SeccionDTO();
-        seccionDTO.setNombre("seccion prueba");
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setNombre("seccion prueba");
         Integer idRama= 1;
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION))
                 .when(seccionValidator).validator(any());
 
         //Act
         try {
-            seccionService.createSeccion(seccionDTO, idRama);
+            seccionService.createSeccion(seccionRequestDTO, idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -119,15 +119,15 @@ public class SeccionServiceTest {
     @Test
     public void createSeccionWhenRamaNotExistAndThrowNegocioException() throws NegocioException {
         //Arrange
-        SeccionDTO seccionDTO= new SeccionDTO();
-        seccionDTO.setNombre("rama prueba");
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setNombre("rama prueba");
         Integer idRama= 1;
         doNothing().when(seccionValidator).validator(any());
         when(ramaRepository.findById(idRama)).thenReturn(Optional.empty());
 
         //Act
         try {
-            seccionService.createSeccion(seccionDTO, idRama);
+            seccionService.createSeccion(seccionRequestDTO, idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_RAMA_NO_EXISTE, ex.getMessage());
@@ -137,9 +137,9 @@ public class SeccionServiceTest {
     @Test
     public void createSeccionWhenCreateObject() throws NegocioException {
         //Arrange
-        SeccionDTO seccionDTO = new SeccionDTO();
-        seccionDTO.setNombre("nombre de prueba");
-        seccionDTO.setDescripcion("descripcion de prueba");
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setNombre("nombre de prueba");
+        seccionRequestDTO.setDescripcion("descripcion de prueba");
 
         Integer idRama = 1;
 
@@ -151,7 +151,7 @@ public class SeccionServiceTest {
         when(seccionRepository.save(any())).thenReturn(seccion);
 
         //Act
-        Seccion result = seccionService.createSeccion(seccionDTO, idRama);
+        Seccion result = seccionService.createSeccion(seccionRequestDTO, idRama);
 
         //Assert
         assertEquals(seccion.getId(), result.getId());
@@ -161,13 +161,13 @@ public class SeccionServiceTest {
     public void updateSeccionWhenSeccionNotExistAndThrowNegocioException(){
         //Arrange
         Integer idSeccion= 1;
-        SeccionDTO seccionDTO = new SeccionDTO();
-        seccionDTO.setNombre("hola nuevo nombre");
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setNombre("hola nuevo nombre");
         when(seccionRepository.findById(idSeccion)).thenReturn(Optional.empty());
 
         //Act
         try {
-            seccionService.updateSeccion(idSeccion, seccionDTO);
+            seccionService.updateSeccion(idSeccion, seccionRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_SECCION_NO_EXISTE, ex.getMessage());
@@ -178,16 +178,16 @@ public class SeccionServiceTest {
     public void updateSeccionWhenValidateThrowNegocioException() throws NegocioException {
         //Arrange
         Integer idSeccion= 1;
-        SeccionDTO seccionDTO = new SeccionDTO();
-        seccionDTO.setIdRama(1);
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setIdRama(1);
         when(seccionRepository.findById(idSeccion)).thenReturn(Optional.of(new Seccion()));
-        when(ramaRepository.findById(seccionDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
+        when(ramaRepository.findById(seccionRequestDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, TypeException.VALIDATION))
                 .when(seccionValidator).validator(any());
 
         //Act
         try {
-            seccionService.updateSeccion(idSeccion, seccionDTO);
+            seccionService.updateSeccion(idSeccion, seccionRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -198,10 +198,10 @@ public class SeccionServiceTest {
     public void updateSeccionWhenUpdateObject() throws NegocioException {
         //Arrange
         Integer idSeccion= 1;
-        SeccionDTO seccionDTO = new SeccionDTO();
-        seccionDTO.setIdRama(1);
+        SeccionRequestDTO seccionRequestDTO = new SeccionRequestDTO();
+        seccionRequestDTO.setIdRama(1);
         when(seccionRepository.findById(idSeccion)).thenReturn(Optional.of(new Seccion()));
-        when(ramaRepository.findById(seccionDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
+        when(ramaRepository.findById(seccionRequestDTO.getIdRama())).thenReturn(Optional.of(new Rama()));
 
         Seccion seccion = new Seccion();
         seccion.setId(1);
@@ -210,7 +210,7 @@ public class SeccionServiceTest {
         when(seccionRepository.save(any())).thenReturn(seccion);
 
         //Act
-        Seccion result = seccionService.updateSeccion(idSeccion, seccionDTO);
+        Seccion result = seccionService.updateSeccion(idSeccion, seccionRequestDTO);
 
         //Assert
         assertEquals(seccion.getId(), result.getId());

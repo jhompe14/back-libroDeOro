@@ -1,6 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.RamaDTO;
+import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.model.Rama;
@@ -104,14 +104,14 @@ public class RamaServiceTest {
     @Test
     public void createRamaWhenNotPassValidationAndThrowNegocioException() throws NegocioException {
         //Arrange
-        RamaDTO ramaDTO= new RamaDTO();
-        ramaDTO.setNombre("rama prueba");
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setNombre("rama prueba");
         Integer idGrupo= 1;
         doThrow(new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, TypeException.VALIDATION)).when(ramaValidator).validator(any());
 
         //Act
         try {
-            ramaService.createRama(ramaDTO, idGrupo);
+            ramaService.createRama(ramaRequestDTO, idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, ex.getMessage());
@@ -121,15 +121,15 @@ public class RamaServiceTest {
     @Test
     public void createRamaWhenGrupoNotExistAndThrowNegocioException() throws NegocioException {
         //Arrange
-        RamaDTO ramaDTO= new RamaDTO();
-        ramaDTO.setNombre("rama prueba");
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setNombre("rama prueba");
         Integer idGrupo= 1;
         doNothing().when(ramaValidator).validator(any());
         when(grupoRepository.findById(idGrupo)).thenReturn(Optional.empty());
 
         //Act
         try {
-            ramaService.createRama(ramaDTO, idGrupo);
+            ramaService.createRama(ramaRequestDTO, idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_GRUPO_NO_EXISTE, ex.getMessage());
@@ -139,11 +139,11 @@ public class RamaServiceTest {
     @Test
     public void createRamaWhenCreateObject() throws NegocioException {
         //Arrange
-        RamaDTO ramaDTO = new RamaDTO();
-        ramaDTO.setNombre("nombre de prueba");
-        ramaDTO.setDescripcion("descripcion de prueba");
-        ramaDTO.setEdadMinima(3);
-        ramaDTO.setEdadMaxima(15);
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setNombre("nombre de prueba");
+        ramaRequestDTO.setDescripcion("descripcion de prueba");
+        ramaRequestDTO.setEdadMinima(3);
+        ramaRequestDTO.setEdadMaxima(15);
 
         Integer idGrupo = 1;
 
@@ -155,7 +155,7 @@ public class RamaServiceTest {
         when(ramaRepository.save(any())).thenReturn(rama);
 
         //Act
-        Rama result = ramaService.createRama(ramaDTO, idGrupo);
+        Rama result = ramaService.createRama(ramaRequestDTO, idGrupo);
 
         //Assert
         assertEquals(rama.getId(), result.getId());
@@ -165,13 +165,13 @@ public class RamaServiceTest {
     public void updateRamaWhenRamaNotExistAndThrowNegocioException() {
         //Arrange
         Integer idRama= 1;
-        RamaDTO ramaDTO = new RamaDTO();
-        ramaDTO.setNombre("hola nuevo nombre");
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setNombre("hola nuevo nombre");
         when(ramaRepository.findById(idRama)).thenReturn(Optional.empty());
 
         //Act
         try {
-            ramaService.updateRama(idRama, ramaDTO);
+            ramaService.updateRama(idRama, ramaRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_RAMA_NO_EXISTE, ex.getMessage());
@@ -182,15 +182,15 @@ public class RamaServiceTest {
     public void updateRamaWhenValidateThrowNegocioException() throws NegocioException {
         //Arrange
         Integer idRama= 1;
-        RamaDTO ramaDTO = new RamaDTO();
-        ramaDTO.setIdGrupo(1);
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setIdGrupo(1);
         when(ramaRepository.findById(idRama)).thenReturn(Optional.of(new Rama()));
-        when(grupoRepository.findById(ramaDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
+        when(grupoRepository.findById(ramaRequestDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
         doThrow(new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, TypeException.VALIDATION)).when(ramaValidator).validator(any());
 
         //Act
         try {
-            ramaService.updateRama(idRama, ramaDTO);
+            ramaService.updateRama(idRama, ramaRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, ex.getMessage());
@@ -201,10 +201,10 @@ public class RamaServiceTest {
     public void updateRamaWhenUpdateObject() throws NegocioException {
         //Arrange
         Integer idRama= 1;
-        RamaDTO ramaDTO = new RamaDTO();
-        ramaDTO.setIdGrupo(1);
+        RamaRequestDTO ramaRequestDTO = new RamaRequestDTO();
+        ramaRequestDTO.setIdGrupo(1);
         when(ramaRepository.findById(idRama)).thenReturn(Optional.of(new Rama()));
-        when(grupoRepository.findById(ramaDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
+        when(grupoRepository.findById(ramaRequestDTO.getIdGrupo())).thenReturn(Optional.of(new Grupo()));
 
         Rama rama = new Rama();
         rama.setId(1);
@@ -213,7 +213,7 @@ public class RamaServiceTest {
         when(ramaRepository.save(any())).thenReturn(rama);
 
         //Act
-        Rama result = ramaService.updateRama(idRama, ramaDTO);
+        Rama result = ramaService.updateRama(idRama, ramaRequestDTO);
 
         //Assert
         assertEquals(rama.getId(), result.getId());

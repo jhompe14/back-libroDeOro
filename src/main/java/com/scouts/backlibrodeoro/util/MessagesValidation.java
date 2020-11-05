@@ -6,6 +6,7 @@ public class MessagesValidation {
     public static final String ERROR_RAMA_NO_EXISTE = "La rama no existe";
     public static final String ERROR_SECCION_NO_EXISTE = "La seccion no existe";
     public static final String ERROR_CARGO_NO_EXISTE = "El cargo no existe";
+    public static final String ERROR_USUARIO_NO_EXISTE = "El usuario no existe";
 
     public static final String VALIDATION_NOMBRE_OBLIGATORIO = "El nombre es obligatorio";
     public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios: ";
@@ -39,15 +40,22 @@ public class MessagesValidation {
     public static final String VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO = "El tipo de integrante debe ser uno valido";
     public static final String VALIDATION_TIPO_USUARIO_OBLIGATORIO = "El tipo de usuario debe ser uno valido";
     public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo debe ser uno valido";
-    public static final String VALIDATION_TELEFONO_OBLIGATORIO = "El telefono es obligatorio";
+    public static final String VALIDATION_TELEFONO_OBLIGATORIO =
+                                "El telefono es obligatorio y ademas debe tener entre 7 y 12 numeros";
     public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
     public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";
 
-    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO = "Debe agregar almenos una trayectoria";
-
-    public static final String VALIDATION_TRAYECTORIA_ANIO_INGRESO = "La fecha ingreso en la trayectoria es obligatoria";
+    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO =
+            "Los campos obligatorios son: </br> Grupo </br> A\u00F1o ingreso";
     public static final String VALIDATION_ANIO_INGRESO_VALIDA =
             "La fecha ingreso en la trayectoria debe estar entre 1940 y el a\u00F1o actual";
     public static final String VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO =
             "La fecha ingreso no debe ser mayor a la fecha de retiro en la trayectoria";
+
+    public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripcion es obligatoria";
+    public static final String VALIDATION_ANECDOTA_FECHA =
+            "La fecha de la anecdota no puede ser superior a la fecha actual";
+    public static final String VALIDATION_TIPO_ESTADO_ANECDOTA = "Este estado de anecdota no es valido";
+
+    public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
 }

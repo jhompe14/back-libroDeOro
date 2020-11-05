@@ -23,14 +23,10 @@ public class UsuarioValidator implements IValidator{
         validateCorreoValid(strValidation, usuarioOptionalValidation);
         validateTipoIntegrante(strValidation, usuarioOptionalValidation);
         validateTipoUsuario(strValidation, usuarioOptionalValidation);
-        if(!strValidation.toString().isEmpty()){
-            throw new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS+"</br>"
-                    +strValidation.toString(),
-                    TypeException.VALIDATION);
-        }
+        lanzarExceptionValidacion(strValidation);
     }
 
-    private void validateRequired(StringBuilder strValidation, Optional<Usuario> usuarioOptionalValidation){
+    private void validateRequired(StringBuilder strValidation, Optional<Usuario> usuarioOptionalValidation) throws NegocioException {
         usuarioOptionalValidation.map(usuario -> {
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getUsuario())){
                 strValidation.append(MessagesValidation.VALIDATION_USUARIO_OBLIGATORIO).append(" </br>");
@@ -52,6 +48,7 @@ public class UsuarioValidator implements IValidator{
             }
             return usuario;
         });
+        lanzarExceptionValidacion(strValidation);
     }
 
     private void validateTelefonoValid(StringBuilder strValidation, Optional<Usuario> usuarioOptionalValidation){
@@ -95,5 +92,13 @@ public class UsuarioValidator implements IValidator{
             }
             return usuario;
         });
+    }
+
+    private void lanzarExceptionValidacion(StringBuilder strValidation) throws NegocioException {
+        if(!strValidation.toString().isEmpty()){
+            throw new NegocioException(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS+"</br>"
+                    +strValidation.toString(),
+                    TypeException.VALIDATION);
+        }
     }
 }

@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.RamaDTO;
+import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.GrupoRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RamaService {
@@ -45,45 +43,39 @@ public class RamaService {
 
     @Transactional(readOnly = true)
     public Rama getRama(Integer id) throws NegocioException{
-        return ramaRepository.findById(id).orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE,
-                TypeException.NOTFOUND));
+        return InspeccionService.getObjectById(ramaRepository, id);
     }
 
     @Transactional
-    public Rama createRama(RamaDTO ramaDTO, Integer idGrupo) throws NegocioException {
+    public Rama createRama(RamaRequestDTO ramaRequestDTO, Integer idGrupo) throws NegocioException {
         Rama rama = new Rama();
-        rama.setNombre(ramaDTO.getNombre());
-        rama.setDescripcion(ramaDTO.getDescripcion());
-        rama.setEdadMinima(ramaDTO.getEdadMinima());
-        rama.setEdadMaxima(ramaDTO.getEdadMaxima());
+        rama.setNombre(ramaRequestDTO.getNombre());
+        rama.setDescripcion(ramaRequestDTO.getDescripcion());
+        rama.setEdadMinima(ramaRequestDTO.getEdadMinima());
+        rama.setEdadMaxima(ramaRequestDTO.getEdadMaxima());
 
         this.ramaValidator.validator(rama);
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, idGrupo);
 
-        rama.setGrupo(grupo.orElse(new Grupo()));
+        rama.setGrupo(InspeccionService.getObjectById(grupoRepository, idGrupo));
         return ramaRepository.save(rama);
     }
 
     @Transactional
-    public Rama updateRama(Integer idRama, RamaDTO ramaDTO) throws NegocioException {
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
-        Optional<Grupo> grupo = InspeccionService.getGrupo(grupoRepository, ramaDTO.getIdGrupo());
+    public Rama updateRama(Integer idRama, RamaRequestDTO ramaRequestDTO) throws NegocioException {
+        Rama ramaEdit = InspeccionService.getObjectById(ramaRepository, idRama);
 
-        Rama ramaEdit = new Rama();
-        ramaEdit.setId(idRama);
-        ramaEdit.setNombre(ramaDTO.getNombre());
-        ramaEdit.setEdadMinima(ramaDTO.getEdadMinima());
-        ramaEdit.setEdadMaxima(ramaDTO.getEdadMaxima());
-        ramaEdit.setDescripcion(ramaDTO.getDescripcion());
-        ramaEdit.setGrupo(grupo.orElse(new Grupo()));
-
+        ramaEdit.setNombre(ramaRequestDTO.getNombre());
+        ramaEdit.setEdadMinima(ramaRequestDTO.getEdadMinima());
+        ramaEdit.setEdadMaxima(ramaRequestDTO.getEdadMaxima());
+        ramaEdit.setDescripcion(ramaRequestDTO.getDescripcion());
         this.ramaValidator.validator(ramaEdit);
+
         return ramaRepository.save(ramaEdit);
     }
 
     @Transactional
     public void deleteRama(Integer idRama) throws NegocioException {
-        Optional<Rama> rama = InspeccionService.getRama(ramaRepository, idRama);
+        Rama rama = InspeccionService.getObjectById(ramaRepository, idRama);
 
         if(seccionRepository.countSeccionByRama(idRama)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_SECCIONES_ACTIVAS, TypeException.VALIDATION);
@@ -93,6 +85,6 @@ public class RamaService {
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_CARGOS_ACTIVOS, TypeException.VALIDATION);
         }
 
-        ramaRepository.delete(rama.orElse(new Rama()));
+        ramaRepository.delete(rama);
     }
 }

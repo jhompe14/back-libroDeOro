@@ -1,7 +1,7 @@
-package com.scouts.backlibrodeoro.dto;
+package com.scouts.backlibrodeoro.dto.request;
 
 
-public class TrayectoriaDTO {
+public class TrayectoriaRequestDTO {
 
     private Integer grupo;
 
