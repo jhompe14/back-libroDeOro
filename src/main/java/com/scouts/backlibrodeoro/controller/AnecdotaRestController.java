@@ -1,8 +1,9 @@
 package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.GridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/anecdota")
-@CrossOrigin(origins = "*", methods= {RequestMethod.POST})
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST})
 public class AnecdotaRestController {
 
     private final AnecdotaService anecdotaService;
@@ -29,10 +30,10 @@ public class AnecdotaRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<AnecdotaGridResponseDTO>> findByUsuario(HttpServletRequest request) {
+    public ResponseEntity<List<GridResponseDTO>> findByUsuario(HttpServletRequest request) {
         try {
-            FilterAnecdotaRequestDTO filterAnecdotaRequestDTO =
-                    new FilterAnecdotaRequestDTO(request.getParameter("idGrupo"),
+            FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO =
+                    new FilterAnecdotaGridRequestDTO(request.getParameter("idGrupo"),
                             request.getParameter("idRama"),
                             request.getParameter("idSeccion"),
                             request.getParameter("fechaInicioAnecdota"),
@@ -40,9 +41,12 @@ public class AnecdotaRestController {
                             request.getParameter("estado"),
                             request.getParameter("usuarioFilter"),
                             request.getParameter("usuarioOwner"),
-                            request.getParameter("typeUsuarioOwner"));
+                            request.getParameter("typeUsuarioOwner"),
+                            request.getParameter("page"));
 
-            return new ResponseEntity(this.anecdotaService.getFilterAnecdota(filterAnecdotaRequestDTO), HttpStatus.OK);
+            return new ResponseEntity(new GridResponseDTO<>(
+                    this.anecdotaService.countFilterAnecdota(filterAnecdotaGridRequestDTO),
+                    this.anecdotaService.getFilterAnecdota(filterAnecdotaGridRequestDTO)), HttpStatus.OK);
         } catch (RuntimeException ex){
             NegocioException negocioException = (NegocioException) ex.getCause();
             return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);

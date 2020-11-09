@@ -11,7 +11,7 @@ import com.scouts.backlibrodeoro.util.MessagesValidation;
 import java.util.Date;
 import java.util.Optional;
 
-public class FilterAnecdotaRequestDTO {
+public class FilterAnecdotaGridRequestDTO {
 
     private Integer idGrupo;
 
@@ -31,9 +31,11 @@ public class FilterAnecdotaRequestDTO {
 
     private String typeUsuarioOwner;
 
-    public FilterAnecdotaRequestDTO(String idGrupo, String idRama, String idSeccion, String fechaInicioAnecdota,
-                                    String fechaFinAnecdota, String estado, String usuarioFilter,
-                                    String usuarioOwner, String typeUsuarioOwner) {
+    private Integer page;
+
+    public FilterAnecdotaGridRequestDTO(String idGrupo, String idRama, String idSeccion, String fechaInicioAnecdota,
+                                        String fechaFinAnecdota, String estado, String usuarioFilter,
+                                        String usuarioOwner, String typeUsuarioOwner, String page) {
         this.idGrupo = Optional.ofNullable(idGrupo).map(Integer::parseInt).orElse(null);
         this.idRama = Optional.ofNullable(idRama).map(Integer::parseInt).orElse(null);
         this.idSeccion = Optional.ofNullable(idSeccion).map(Integer::parseInt).orElse(null);
@@ -43,6 +45,7 @@ public class FilterAnecdotaRequestDTO {
         this.usuarioFilter = usuarioFilter;
         this.usuarioOwner = usuarioOwner;
         this.typeUsuarioOwner = validateTypeUsuario(typeUsuarioOwner);
+        this.page = Integer.parseInt(page);
     }
 
     public Integer getIdGrupo() {
@@ -79,6 +82,10 @@ public class FilterAnecdotaRequestDTO {
 
     public String getTypeUsuarioOwner() {
         return typeUsuarioOwner;
+    }
+
+    public Integer getPage() {
+        return page;
     }
 
     private String validateEstadoAnecdota(String estado){

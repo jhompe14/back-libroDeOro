@@ -1,5 +1,8 @@
 package com.scouts.backlibrodeoro.dto.response;
 
+import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
+import com.scouts.backlibrodeoro.util.UtilLibroOro;
+
 import java.util.Date;
 
 public class AnecdotaGridResponseDTO implements java.io.Serializable{
@@ -12,7 +15,7 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     private String nombreSeccion;
 
-    private Date fechaSuceso;
+    private String fechaSuceso;
 
     private String usuarioRegistro;
 
@@ -29,9 +32,9 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
         this.nombreGrupo = nombreGrupo;
         this.nombreRama = nombreRama;
         this.nombreSeccion = nombreSeccion;
-        this.fechaSuceso = fechaSuceso;
+        this.fechaSuceso = UtilLibroOro.setFormatDate(fechaSuceso);
         this.usuarioRegistro = usuarioRegistro;
-        this.estado = estado;
+        this.estado = TypeEstadoAnecdota.valueOf(estado).getValue();
         this.usuarioGestion = usuarioGestion;
     }
 
@@ -39,63 +42,31 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
         return idAnecdota;
     }
 
-    public void setIdAnecdota(Integer idAnecdota) {
-        this.idAnecdota = idAnecdota;
-    }
-
     public String getNombreGrupo() {
         return nombreGrupo;
-    }
-
-    public void setNombreGrupo(String nombreGrupo) {
-        this.nombreGrupo = nombreGrupo;
     }
 
     public String getNombreRama() {
         return nombreRama;
     }
 
-    public void setNombreRama(String nombreRama) {
-        this.nombreRama = nombreRama;
-    }
-
     public String getNombreSeccion() {
         return nombreSeccion;
     }
 
-    public void setNombreSeccion(String nombreSeccion) {
-        this.nombreSeccion = nombreSeccion;
-    }
-
-    public Date getFechaSuceso() {
+    public String getFechaSuceso() {
         return fechaSuceso;
-    }
-
-    public void setFechaSuceso(Date fechaSuceso) {
-        this.fechaSuceso = fechaSuceso;
     }
 
     public String getUsuarioRegistro() {
         return usuarioRegistro;
     }
 
-    public void setUsuarioRegistro(String usuarioRegistro) {
-        this.usuarioRegistro = usuarioRegistro;
-    }
-
     public String getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
     public String getUsuarioGestion() {
         return usuarioGestion;
-    }
-
-    public void setUsuarioGestion(String usuarioGestion) {
-        this.usuarioGestion = usuarioGestion;
     }
 }
