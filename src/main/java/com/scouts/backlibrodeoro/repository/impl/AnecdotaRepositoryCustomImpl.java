@@ -33,9 +33,6 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "INNER JOIN a.usuario u " +
                 "WHERE 1=1 ");
 
-        if(filterAnecdotaGridRequestDTO.getTypeUsuarioOwner().equals(TypeUsuario.IN.toString()))
-            filterUsuarioSQL(sql, filterAnecdotaGridRequestDTO.getUsuarioOwner());
-
         filterSQL(sql, filterAnecdotaGridRequestDTO);
         Query q = entityManager.createQuery(sql.toString());
         return q.getSingleResult() != null ? Integer.parseInt(q.getSingleResult().toString()) : 0;
@@ -43,8 +40,6 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
     @Override
     public List<AnecdotaGridResponseDTO> getAnecdotasGrid(FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO) {
-
-
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT new com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO" +
                 "(a.id, g.nombre, r.nombre, s.nombre, a.fecha, u.usuario, " +
@@ -58,26 +53,11 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "INNER JOIN a.usuario u " +
                 "WHERE 1=1 ");
 
-        if(filterAnecdotaGridRequestDTO.getTypeUsuarioOwner().equals(TypeUsuario.IN.toString()))
-            filterUsuarioSQL(sql, filterAnecdotaGridRequestDTO.getUsuarioOwner());
-
         filterSQL(sql, filterAnecdotaGridRequestDTO);
         Query q = entityManager.createQuery(sql.toString());
         q.setFirstResult((filterAnecdotaGridRequestDTO.getPage()-1) * PAGE_SIZE);
         q.setMaxResults(PAGE_SIZE);
         return q.getResultList();
-    }
-
-    private void filterUsuarioSQL(StringBuilder sql, String usuario){
-        sql.append("AND (u.usuario='"+usuario+"' " +
-                "      OR " +
-                "      a.id IN(SELECT ea_eaa.id FROM EstadoAnecdota ea_ea " +
-                "                INNER JOIN ea_ea.usuario ea_eausu " +
-                "                INNER JOIN ea_ea.anecdota ea_eaa " +
-                "                INNER JOIN ea_eaa.usuario eaa_usu " +
-                "                WHERE eaa_usu.usuario != '"+usuario+"' " +
-                "                AND ea_eausu.usuario = '"+usuario+"' " +
-                "                AND ea_ea.id= "+SQL_ESTADO_ANECDOTA+"))");
     }
 
     private void filterSQL(StringBuilder sql, FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
@@ -91,10 +71,63 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
             filterPresent(filterAnecdotaGridRequestDTO.getFechaFinAnecdota()))
             sql.append("AND a.fecha BETWEEN '"+ filterAnecdotaGridRequestDTO.getFechaInicioAnecdota()+"' " +
                     "AND '"+ filterAnecdotaGridRequestDTO.getFechaFinAnecdota()+"' ");
-        if(filterPresent(filterAnecdotaGridRequestDTO.getEstado()))
-            sql.append("AND a.estado = '"+ filterAnecdotaGridRequestDTO.getEstado().toString()+"' ");
-        if(filterPresent(filterAnecdotaGridRequestDTO.getUsuarioFilter()))
-            filterUsuarioSQL(sql, filterAnecdotaGridRequestDTO.getUsuarioFilter());
+
+        filterEstadoAnecdota(sql, filterAnecdotaGridRequestDTO);
+    }
+
+    private void filterEstadoAnecdota(StringBuilder sql,
+                                      FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
+        String usuarioBuscar= null;
+        if(filterAnecdotaGridRequestDTO.getTypeUsuarioOwner().equals(TypeUsuario.IN.toString())){
+            usuarioBuscar=filterAnecdotaGridRequestDTO.getUsuarioOwner();
+        }else if(filterPresent(filterAnecdotaGridRequestDTO.getUsuarioFilter())){
+            usuarioBuscar=filterAnecdotaGridRequestDTO.getUsuarioFilter();
+        }
+        filterUsuarioEstado(sql, usuarioBuscar, filterAnecdotaGridRequestDTO.getEstado());
+    }
+
+    private void filterUsuarioEstado(StringBuilder sql, String usuario, String estado){
+        if(filterPresent(usuario) && !filterPresent(estado)){
+            filterUsuarioSQL(sql, usuario);
+        }else if(!filterPresent(usuario) && filterPresent(estado)){
+            filterEstadoSQL(sql, estado);
+        }else{
+            filterUsuarioEstadoSQL(sql, usuario, estado);
+        }
+    }
+
+    private void filterUsuarioEstadoSQL(StringBuilder sql, String usuario, String estado){
+        sql.append("AND a.id IN(SELECT ea_eaa.id FROM EstadoAnecdota ea_ea " +
+                "                INNER JOIN ea_ea.usuario ea_eausu " +
+                "                INNER JOIN ea_ea.anecdota ea_eaa " +
+                "                INNER JOIN ea_eaa.usuario eaa_usu " +
+                "                WHERE ( " +
+                "                           eaa_usu.usuario = '"+usuario+"' " +
+                "                               OR " +
+                "                           (eaa_usu.usuario != '"+usuario+"' " +
+                "                               AND ea_eausu.usuario = '"+usuario+"') " +
+                "                      ) " +
+                "                AND ea_ea.estado = '"+estado+"' " +
+                "                AND ea_ea.id= "+SQL_ESTADO_ANECDOTA+") ");
+    }
+
+    private void filterUsuarioSQL(StringBuilder sql, String usuario){
+        sql.append("AND (u.usuario='"+usuario+"' " +
+                "      OR " +
+                "      a.id IN(SELECT ea_eaa.id FROM EstadoAnecdota ea_ea " +
+                "                INNER JOIN ea_ea.usuario ea_eausu " +
+                "                INNER JOIN ea_ea.anecdota ea_eaa " +
+                "                INNER JOIN ea_eaa.usuario eaa_usu " +
+                "                WHERE eaa_usu.usuario != '"+usuario+"' " +
+                "                AND ea_eausu.usuario = '"+usuario+"' " +
+                "                AND ea_ea.id= "+SQL_ESTADO_ANECDOTA+")) ");
+    }
+
+    private void filterEstadoSQL(StringBuilder sql, String estado){
+        sql.append("AND a.id IN(SELECT ea_eaa.id FROM EstadoAnecdota ea_ea " +
+                "                INNER JOIN ea_ea.anecdota ea_eaa " +
+                "                WHERE ea_ea.estado = '"+estado+"' " +
+                "                AND ea_ea.id= "+SQL_ESTADO_ANECDOTA+") ");
     }
 
     private <T> Boolean filterPresent(T filter){

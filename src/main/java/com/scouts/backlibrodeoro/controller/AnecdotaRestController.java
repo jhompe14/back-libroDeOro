@@ -30,7 +30,7 @@ public class AnecdotaRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<GridResponseDTO>> findByUsuario(HttpServletRequest request) {
+    public ResponseEntity<List<GridResponseDTO>> findGridAnecdota(HttpServletRequest request) {
         try {
             FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO =
                     new FilterAnecdotaGridRequestDTO(request.getParameter("idGrupo"),
