@@ -26,7 +26,7 @@ public class BackLibrodeoroApplication {
 			http.csrf().disable()
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
-					.antMatchers("/api/auth").permitAll()
+					.antMatchers(HttpMethod.POST,"/api/auth").permitAll()
 					.antMatchers(HttpMethod.POST,"/api/usuario").permitAll()
 					.antMatchers(HttpMethod.GET,"/api/grupo").permitAll()
 					.antMatchers(HttpMethod.GET,"/api/rama").permitAll()
