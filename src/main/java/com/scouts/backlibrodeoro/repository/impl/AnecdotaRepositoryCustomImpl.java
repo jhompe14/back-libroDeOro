@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
-    private final Integer PAGE_SIZE= 4;
+    private final Integer PAGE_SIZE= 6;
 
     private final String SQL_ESTADO_ANECDOTA = "(SELECT MAX(easub.id) FROM EstadoAnecdota easub " +
             "INNER JOIN easub.anecdota asub " +
@@ -54,6 +54,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "WHERE 1=1 ");
 
         filterSQL(sql, filterAnecdotaGridRequestDTO);
+        sql.append("ORDER BY 1 DESC ");
         Query q = entityManager.createQuery(sql.toString());
         q.setFirstResult((filterAnecdotaGridRequestDTO.getPage()-1) * PAGE_SIZE);
         q.setMaxResults(PAGE_SIZE);
@@ -78,7 +79,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     private void filterEstadoAnecdota(StringBuilder sql,
                                       FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
         String usuarioBuscar= null;
-        if(filterAnecdotaGridRequestDTO.getTypeUsuarioOwner().equals(TypeUsuario.IN.toString())){
+        if(TypeUsuario.IN.toString().equals(filterAnecdotaGridRequestDTO.getTypeUsuarioOwner())){
             usuarioBuscar=filterAnecdotaGridRequestDTO.getUsuarioOwner();
         }else if(filterPresent(filterAnecdotaGridRequestDTO.getUsuarioFilter())){
             usuarioBuscar=filterAnecdotaGridRequestDTO.getUsuarioFilter();
@@ -91,7 +92,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
             filterUsuarioSQL(sql, usuario);
         }else if(!filterPresent(usuario) && filterPresent(estado)){
             filterEstadoSQL(sql, estado);
-        }else{
+        }else if(filterPresent(usuario) && filterPresent(estado)){
             filterUsuarioEstadoSQL(sql, usuario, estado);
         }
     }

@@ -16,21 +16,26 @@ public class AnecdotaValidator implements IValidator{
     @Override
     public <T> void validator(T anecdota) throws NegocioException {
         Anecdota anecdotaValidate = (Anecdota) anecdota;
-        if(!validateDescripcion(anecdotaValidate)){
+        if(!validateDescripcion(anecdotaValidate))
             throw new NegocioException(MessagesValidation.VALIDATION_ANECDOTA_DESCRIPCION,
                     TypeException.VALIDATION);
-        }
-
-        if(!validateFecha(anecdotaValidate)){
+        if(!validateFecha(anecdotaValidate))
             throw new NegocioException(MessagesValidation.VALIDATION_ANECDOTA_FECHA,
                     TypeException.VALIDATION);
-        }
+        if(!validateRama(anecdotaValidate))
+            throw new NegocioException(MessagesValidation.VALIDATION_RAMA_ANECDOTA,
+                    TypeException.VALIDATION);
     }
 
     private boolean validateDescripcion(Anecdota anecdotaValidate){
         return Optional.ofNullable(anecdotaValidate).map(a ->
                 GeneralValidates.validateStringNotIsEmpty(a.getDescripcion())).orElse(false);
 
+    }
+
+    private boolean validateRama(Anecdota anecdotaValidate){
+        return Optional.ofNullable(anecdotaValidate).map(a -> Optional.ofNullable(a.getRama()).isPresent())
+                .orElse(false);
     }
 
     private boolean validateFecha(Anecdota anecdotaValidate) {

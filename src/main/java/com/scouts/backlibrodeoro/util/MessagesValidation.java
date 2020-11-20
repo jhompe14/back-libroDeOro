@@ -56,6 +56,7 @@ public class MessagesValidation {
     public static final String VALIDATION_ANECDOTA_FECHA =
             "La fecha de la anecdota no puede ser superior a la fecha actual";
     public static final String VALIDATION_TIPO_ESTADO_ANECDOTA = "Este estado de anecdota no es valido";
+    public static final String VALIDATION_RAMA_ANECDOTA = "La anecdota debe estar asociada a una rama o a seccion";
 
     public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
 }

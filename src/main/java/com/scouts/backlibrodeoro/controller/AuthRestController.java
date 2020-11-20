@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,9 @@ public class AuthRestController {
 
     @GetMapping
     public ResponseEntity<String> pingAuth()  {
-        return new ResponseEntity("OK", HttpStatus.OK);
+        return new ResponseEntity( new HashMap<String, String>() {{
+            put("message", "OK");
+        }}, HttpStatus.OK);
     }
 
 }
