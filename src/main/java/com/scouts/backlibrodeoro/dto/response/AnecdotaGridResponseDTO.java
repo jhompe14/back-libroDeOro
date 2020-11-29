@@ -15,6 +15,8 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     private String nombreSeccion;
 
+    private String nombreSuceso;
+
     private String fechaSuceso;
 
     private String usuarioRegistro;
@@ -27,11 +29,13 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
     }
 
     public AnecdotaGridResponseDTO(Integer idAnecdota, String nombreGrupo, String nombreRama, String nombreSeccion,
-                                   Date fechaSuceso, String usuarioRegistro, String estado, String usuarioGestion) {
+                                   String nombreSuceso, Date fechaSuceso, String usuarioRegistro, String estado,
+                                   String usuarioGestion) {
         this.idAnecdota = idAnecdota;
         this.nombreGrupo = nombreGrupo;
         this.nombreRama = nombreRama;
         this.nombreSeccion = nombreSeccion;
+        this.nombreSuceso = nombreSuceso;
         this.fechaSuceso = UtilLibroOro.setFormatDate(fechaSuceso);
         this.usuarioRegistro = usuarioRegistro;
         this.estado = TypeEstadoAnecdota.valueOf(estado).getValue();
@@ -68,5 +72,9 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     public String getUsuarioGestion() {
         return usuarioGestion;
+    }
+
+    public String getNombreSuceso() {
+        return nombreSuceso;
     }
 }

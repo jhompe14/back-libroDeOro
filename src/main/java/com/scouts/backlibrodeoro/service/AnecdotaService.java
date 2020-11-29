@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.service;
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.EstadoAnecdota;
@@ -10,8 +11,10 @@ import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
+import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.types.TypeSiNo;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
+import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AnecdotaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,12 @@ public class AnecdotaService {
     @Transactional(readOnly = true)
     public List<AnecdotaGridResponseDTO> getFilterAnecdota(FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
         return anecdotaRepository.getAnecdotasGrid(filterAnecdotaGridRequestDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public AnecdotaResponseDTO getAnecdota(Integer id) throws NegocioException {
+        return anecdotaRepository.getAnecdotaById(id).orElseThrow(
+                () -> new NegocioException(MessagesValidation.ERROR_ANECDOTA_NO_EXISTE, TypeException.VALIDATION));
     }
 
     @Transactional

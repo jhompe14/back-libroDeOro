@@ -38,7 +38,7 @@ public class CargoRestController {
     }
 
     @GetMapping("/{idCargo}")
-    public ResponseEntity<Seccion> findById(@PathVariable("idCargo") Integer idCargo) throws NegocioException {
+    public ResponseEntity<Cargo> findById(@PathVariable("idCargo") Integer idCargo) throws NegocioException {
         try {
             return new ResponseEntity(this.cargoService.getCargo(idCargo), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -49,7 +49,7 @@ public class CargoRestController {
     }
 
     @PostMapping("/type/{typeCargo}/id/{idType}")
-    public ResponseEntity<Seccion> createCargo(@PathVariable("typeCargo") String typeCargo,
+    public ResponseEntity<Cargo> createCargo(@PathVariable("typeCargo") String typeCargo,
                                                @PathVariable("idType") Integer idType,
                                                @RequestBody CargoRequestDTO cargoRequestDTO) throws NegocioException{
         try{
@@ -62,7 +62,7 @@ public class CargoRestController {
     }
 
     @PutMapping("/{idCargo}")
-    public ResponseEntity<Seccion> updateCargo(@PathVariable("idCargo") Integer idCargo,
+    public ResponseEntity<Cargo> updateCargo(@PathVariable("idCargo") Integer idCargo,
                                                  @RequestBody CargoRequestDTO cargoRequestDTO)
             throws NegocioException{
         try{

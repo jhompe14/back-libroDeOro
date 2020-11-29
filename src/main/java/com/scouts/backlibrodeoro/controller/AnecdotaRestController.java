@@ -3,9 +3,11 @@ package com.scouts.backlibrodeoro.controller;
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.GridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
+import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,16 @@ public class AnecdotaRestController {
         this.anecdotaService = anecdotaService;
     }
 
+    @GetMapping("/{idAnecdota}")
+    public ResponseEntity<AnecdotaResponseDTO> findById(@PathVariable("idAnecdota") Integer idAnecdota) throws NegocioException {
+        try {
+            return new ResponseEntity(this.anecdotaService.getAnecdota(idAnecdota), HttpStatus.OK);
+        }catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<GridResponseDTO>> findGridAnecdota(HttpServletRequest request) {

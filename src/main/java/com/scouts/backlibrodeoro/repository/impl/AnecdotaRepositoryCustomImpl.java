@@ -2,6 +2,7 @@ package com.scouts.backlibrodeoro.repository.impl;
 
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.repository.AnecdotaRepositoryCustom;
 import com.scouts.backlibrodeoro.types.TypeUsuario;
 
@@ -23,6 +24,21 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
+    public Optional<AnecdotaResponseDTO> getAnecdotaById(Integer idAnecdota) {
+        String sql = "SELECT new com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO" +
+                "(a.id, g.id, g.nombre, r.id, r.nombre, s.id, s.nombre, a.nombre, a.fecha, u.usuario, " +
+                "(SELECT eaestado.estado FROM EstadoAnecdota eaestado WHERE eaestado.id = "+SQL_ESTADO_ANECDOTA+")) " +
+                "FROM Anecdota a " +
+                "INNER JOIN a.rama r " +
+                "INNER JOIN r.grupo g " +
+                "LEFT JOIN a.seccion s " +
+                "INNER JOIN a.usuario u " +
+                "WHERE a.id= "+idAnecdota+" ";
+        Query q = entityManager.createQuery(sql);
+        return q.getResultList().stream().findFirst();
+    }
+
+    @Override
     public Integer countAnecdotasGrid(FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(1) " +
@@ -42,7 +58,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     public List<AnecdotaGridResponseDTO> getAnecdotasGrid(FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT new com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO" +
-                "(a.id, g.nombre, r.nombre, s.nombre, a.fecha, u.usuario, " +
+                "(a.id, g.nombre, r.nombre, s.nombre, a.nombre, a.fecha, u.usuario, " +
                 "(SELECT eaestado.estado FROM EstadoAnecdota eaestado WHERE eaestado.id = "+SQL_ESTADO_ANECDOTA+")," +
                 "(SELECT usuea.usuario FROM EstadoAnecdota eausuario " +
                         "INNER JOIN eausuario.usuario usuea WHERE eausuario.id = "+SQL_ESTADO_ANECDOTA+")) " +
