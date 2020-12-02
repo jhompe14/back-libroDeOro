@@ -83,7 +83,7 @@ public class AnecdotaService {
         anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaRequestDTO.getFecha()));
         anecdota.setDescripcion(anecdotaRequestDTO.getDescripcion());
         anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaRequestDTO.getUsuario()));
-        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaRequestDTO.getRama()));
+        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaRequestDTO.getIdRama()));
 
         AddSeccion<Integer, Seccion> addSeccion = (idSeccion) -> {
             if(Optional.ofNullable(idSeccion).orElse(0) == 0){
@@ -92,7 +92,7 @@ public class AnecdotaService {
             return InspeccionService.getObjectById(seccionRepository, idSeccion);
         };
 
-        anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getSeccion()));
+        anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getIdSeccion()));
         return anecdota;
     }
 

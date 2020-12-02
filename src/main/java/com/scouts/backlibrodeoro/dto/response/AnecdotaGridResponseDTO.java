@@ -23,6 +23,8 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     private String estado;
 
+    private String descripcionEstado;
+
     private String usuarioGestion;
 
     public AnecdotaGridResponseDTO() {
@@ -38,7 +40,8 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
         this.nombreSuceso = nombreSuceso;
         this.fechaSuceso = UtilLibroOro.setFormatDate(fechaSuceso);
         this.usuarioRegistro = usuarioRegistro;
-        this.estado = TypeEstadoAnecdota.valueOf(estado).getValue();
+        this.estado = estado;
+        this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();
         this.usuarioGestion = usuarioGestion;
     }
 
@@ -68,6 +71,10 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     public String getEstado() {
         return estado;
+    }
+
+    public String getDescripcionEstado() {
+        return descripcionEstado;
     }
 
     public String getUsuarioGestion() {

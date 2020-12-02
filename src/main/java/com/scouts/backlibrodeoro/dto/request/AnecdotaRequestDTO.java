@@ -10,9 +10,9 @@ public class AnecdotaRequestDTO {
 
     private String usuario;
 
-    private Integer rama;
+    private Integer idRama;
 
-    private Integer seccion;
+    private Integer idSeccion;
 
     public String getNombre() {
         return nombre;
@@ -46,19 +46,19 @@ public class AnecdotaRequestDTO {
         this.usuario = usuario;
     }
 
-    public Integer getRama() {
-        return rama;
+    public Integer getIdRama() {
+        return idRama;
     }
 
-    public void setRama(Integer rama) {
-        this.rama = rama;
+    public void setIdRama(Integer idRama) {
+        this.idRama = idRama;
     }
 
-    public Integer getSeccion() {
-        return seccion;
+    public Integer getIdSeccion() {
+        return idSeccion;
     }
 
-    public void setSeccion(Integer seccion) {
-        this.seccion = seccion;
+    public void setIdSeccion(Integer idSeccion) {
+        this.idSeccion = idSeccion;
     }
 }

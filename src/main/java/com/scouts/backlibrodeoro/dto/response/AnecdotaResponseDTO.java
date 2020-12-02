@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.dto.response;
 
+import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
 import com.scouts.backlibrodeoro.util.UtilLibroOro;
 
 import java.util.Date;
@@ -28,9 +29,13 @@ public class AnecdotaResponseDTO {
 
     private String estado;
 
+    private String descripcionEstado;
+
+    private String descripcion;
+
     public AnecdotaResponseDTO(Integer id, Integer idGrupo, String nombreGrupo, Integer idRama, String nombreRama,
                                Integer idSeccion, String nombreSeccion, String nombre, Date fecha, String usuario,
-                               String estado) {
+                                String descripcion, String estado) {
         this.id = id;
         this.idGrupo = idGrupo;
         this.nombreGrupo = nombreGrupo;
@@ -42,6 +47,8 @@ public class AnecdotaResponseDTO {
         this.fecha =  UtilLibroOro.setFormatDate(fecha);
         this.usuario = usuario;
         this.estado = estado;
+        this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();
+        this.descripcion = descripcion;
     }
 
     public Integer getId() {
@@ -86,5 +93,13 @@ public class AnecdotaResponseDTO {
 
     public String getEstado() {
         return estado;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getDescripcionEstado() {
+        return descripcionEstado;
     }
 }
