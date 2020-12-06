@@ -65,11 +65,21 @@ public class AnecdotaService {
 
     @Transactional
     public Anecdota createAnecdota(AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
-        Anecdota anecdota = transformDTOToAnecdota(anecdotaRequestDTO);
+        Anecdota anecdota = new Anecdota();
+        transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
         addEstadoAnecdota(anecdota, TypeEstadoAnecdota.PA, anecdota.getUsuario());
         return anecdota;
+    }
+
+    @Transactional
+    public Anecdota updateAnecdota(Integer idAnecdota, AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException{
+        Anecdota anecdota= anecdotaRepository.findById(idAnecdota).orElseThrow(
+                () -> new NegocioException(MessagesValidation.ERROR_ANECDOTA_NO_EXISTE, TypeException.VALIDATION));
+        transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
+        anecdotaValidator.validator(anecdota);
+        return anecdotaRepository.save(anecdota);
     }
 
     @FunctionalInterface
@@ -77,8 +87,7 @@ public class AnecdotaService {
         R apply(T t) throws NegocioException;
     }
 
-    private Anecdota transformDTOToAnecdota(AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
-        Anecdota anecdota = new Anecdota();
+    private void transformDTOToAnecdota(Anecdota anecdota, AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
         anecdota.setNombre(anecdotaRequestDTO.getNombre());
         anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaRequestDTO.getFecha()));
         anecdota.setDescripcion(anecdotaRequestDTO.getDescripcion());
@@ -93,7 +102,6 @@ public class AnecdotaService {
         };
 
         anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getIdSeccion()));
-        return anecdota;
     }
 
     private void addEstadoAnecdota(Anecdota anecdota, TypeEstadoAnecdota typeEstadoAnecdota, Usuario usuario){
