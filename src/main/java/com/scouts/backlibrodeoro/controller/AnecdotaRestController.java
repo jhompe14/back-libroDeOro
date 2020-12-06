@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
@@ -96,5 +97,20 @@ public class AnecdotaRestController {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/estado/{idAnecdota}")
+    public ResponseEntity<Anecdota> updateEstadoAnecdota(@PathVariable("idAnecdota") Integer idAnecdota, @RequestBody EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO)
+            throws NegocioException{
+        try{
+            return new ResponseEntity(this.anecdotaService.updateEstadoAnecdota(idAnecdota, estadoAnecdotaRequestDTO), HttpStatus.ACCEPTED);
+        }catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
+                    HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
+        }catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }

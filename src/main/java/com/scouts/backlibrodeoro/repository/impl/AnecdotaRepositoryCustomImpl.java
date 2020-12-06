@@ -27,7 +27,8 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     public Optional<AnecdotaResponseDTO> getAnecdotaById(Integer idAnecdota) {
         String sql = "SELECT new com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO" +
                 "(a.id, g.id, g.nombre, r.id, r.nombre, s.id, s.nombre, a.nombre, a.fecha, u.usuario, a.descripcion,  " +
-                "(SELECT eaestado.estado FROM EstadoAnecdota eaestado WHERE eaestado.id = "+SQL_ESTADO_ANECDOTA+")) " +
+                "(SELECT eaestado.estado FROM EstadoAnecdota eaestado WHERE eaestado.id = "+SQL_ESTADO_ANECDOTA+"), " +
+                "a.visualizacion) " +
                 "FROM Anecdota a " +
                 "INNER JOIN a.rama r " +
                 "INNER JOIN r.grupo g " +

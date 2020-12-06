@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
@@ -80,6 +81,11 @@ public class AnecdotaService {
         transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         return anecdotaRepository.save(anecdota);
+    }
+
+    @Transactional
+    public Anecdota updateEstadoAnecdota(Integer idAnecdota, EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO) throws NegocioException{
+        return null;
     }
 
     @FunctionalInterface

@@ -33,9 +33,11 @@ public class AnecdotaResponseDTO {
 
     private String descripcion;
 
+    private String visualizacion;
+
     public AnecdotaResponseDTO(Integer id, Integer idGrupo, String nombreGrupo, Integer idRama, String nombreRama,
                                Integer idSeccion, String nombreSeccion, String nombre, Date fecha, String usuario,
-                                String descripcion, String estado) {
+                                String descripcion, String estado, String visualizacion) {
         this.id = id;
         this.idGrupo = idGrupo;
         this.nombreGrupo = nombreGrupo;
@@ -49,6 +51,7 @@ public class AnecdotaResponseDTO {
         this.estado = estado;
         this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();
         this.descripcion = descripcion;
+        this.visualizacion = visualizacion;
     }
 
     public Integer getId() {
@@ -101,5 +104,9 @@ public class AnecdotaResponseDTO {
 
     public String getDescripcionEstado() {
         return descripcionEstado;
+    }
+
+    public String getVisualizacion() {
+        return visualizacion;
     }
 }
