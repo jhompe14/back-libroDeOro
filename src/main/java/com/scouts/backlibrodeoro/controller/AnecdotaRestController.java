@@ -98,11 +98,11 @@ public class AnecdotaRestController {
         }
     }
 
-    @PutMapping("/estado/{idAnecdota}")
+    @PutMapping("/estado/visualizacion/{idAnecdota}")
     public ResponseEntity<Anecdota> updateEstadoAnecdota(@PathVariable("idAnecdota") Integer idAnecdota, @RequestBody EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO)
             throws NegocioException{
         try{
-            return new ResponseEntity(this.anecdotaService.updateEstadoAnecdota(idAnecdota, estadoAnecdotaRequestDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.anecdotaService.updateEstadoVisualizacionAnecdota(idAnecdota, estadoAnecdotaRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);

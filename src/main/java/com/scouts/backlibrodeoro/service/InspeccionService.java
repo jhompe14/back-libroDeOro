@@ -29,7 +29,6 @@ public class InspeccionService {
             return "";
         };
 
-
         return jpaRepository.findById(id)
                 .orElseThrow(() -> new NegocioException(defineMessage.apply(jpaRepository),
                         TypeException.VALIDATION));

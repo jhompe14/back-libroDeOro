@@ -17,10 +17,12 @@ import com.scouts.backlibrodeoro.types.TypeSiNo;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AnecdotaValidator;
+import com.scouts.backlibrodeoro.validator.EstadoAnecdotaRequestDTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -35,17 +37,20 @@ public class AnecdotaService {
     private final AnecdotaRepository anecdotaRepository;
     private final EstadoAnecdotaRepository estadoAnecdotaRepository;
     private final AnecdotaValidator anecdotaValidator;
+    private final EstadoAnecdotaRequestDTOValidator estadoAnecdotaRequestDTOValidator;
 
     @Autowired
     public AnecdotaService(UsuarioRepository usuarioRepository, RamaRepository ramaRepository,
                            SeccionRepository seccionRepository, AnecdotaRepository anecdotaRepository,
-                           EstadoAnecdotaRepository estadoAnecdotaRepository, AnecdotaValidator anecdotaValidator) {
+                           EstadoAnecdotaRepository estadoAnecdotaRepository, AnecdotaValidator anecdotaValidator,
+                           EstadoAnecdotaRequestDTOValidator estadoAnecdotaRequestDTOValidator) {
         this.usuarioRepository = usuarioRepository;
         this.ramaRepository = ramaRepository;
         this.seccionRepository = seccionRepository;
         this.anecdotaRepository = anecdotaRepository;
         this.estadoAnecdotaRepository = estadoAnecdotaRepository;
         this.anecdotaValidator = anecdotaValidator;
+        this.estadoAnecdotaRequestDTOValidator = estadoAnecdotaRequestDTOValidator;
     }
 
     @Transactional(readOnly = true)
@@ -83,11 +88,6 @@ public class AnecdotaService {
         return anecdotaRepository.save(anecdota);
     }
 
-    @Transactional
-    public Anecdota updateEstadoAnecdota(Integer idAnecdota, EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO) throws NegocioException{
-        return null;
-    }
-
     @FunctionalInterface
     public interface AddSeccion<T, R> {
         R apply(T t) throws NegocioException;
@@ -110,16 +110,35 @@ public class AnecdotaService {
         anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getIdSeccion()));
     }
 
+    @Transactional
+    public Anecdota updateEstadoVisualizacionAnecdota(Integer idAnecdota, EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO) throws NegocioException {
+       estadoAnecdotaRequestDTOValidator.validator(estadoAnecdotaRequestDTO);
+       Anecdota anecdota = anecdotaRepository.findById(idAnecdota).orElseThrow(
+               () -> new NegocioException(MessagesValidation.ERROR_ANECDOTA_NO_EXISTE, TypeException.VALIDATION));
+       anecdota.setVisualizacion(estadoAnecdotaRequestDTO.getVisualizacion());
+       anecdotaRepository.save(anecdota);
+
+        Usuario usuario = null;
+        if(estadoAnecdotaRequestDTO.getEstado().equals(TypeEstadoAnecdota.PM.toString())){
+            usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
+        } else{
+            usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuario());
+        }
+        addEstadoAnecdota(anecdota, TypeEstadoAnecdota.valueOf(estadoAnecdotaRequestDTO.getEstado()), usuario);
+
+       return anecdota;
+    }
+
     private void addEstadoAnecdota(Anecdota anecdota, TypeEstadoAnecdota typeEstadoAnecdota, Usuario usuario){
         EstadoAnecdota estadoAnecdota = estadoAnecdotaRepository
                 .findEstadoAnecdotaByIdAnecdotaAndEstadoGestionado(anecdota.getId(), TypeSiNo.NO.name());
         if(Optional.ofNullable(estadoAnecdota).isPresent()){
             finalizeEstadoAnecdota(estadoAnecdota);
         }
-        createEstadoAnecdota(anecdota, typeEstadoAnecdota, usuario);
+        inicializeEstadoAnecdota(anecdota, typeEstadoAnecdota, usuario);
     }
 
-    private void createEstadoAnecdota(Anecdota anecdota, TypeEstadoAnecdota typeEstadoAnecdota, Usuario usuario){
+    private void inicializeEstadoAnecdota(Anecdota anecdota, TypeEstadoAnecdota typeEstadoAnecdota, Usuario usuario){
         EstadoAnecdota estadoAnecdota = new EstadoAnecdota();
         estadoAnecdota.setEstado(typeEstadoAnecdota.name());
         estadoAnecdota.setUsuario(usuario);

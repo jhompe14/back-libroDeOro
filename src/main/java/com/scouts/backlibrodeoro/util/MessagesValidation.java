@@ -60,4 +60,9 @@ public class MessagesValidation {
     public static final String VALIDATION_RAMA_ANECDOTA = "La anecdota debe estar asociada a una rama o seccion";
 
     public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
+
+    public static final String VALIDATION_ESTADO_VISUALIZACION_ANECDOTA =
+            "Los campos obligatorios son: </br> Estado an\u00E9cdota </br> Visualizaci\u00F3n";
+    public static final String VALIDATION_USUARIO_MODIFICACION_ANECDOTA =
+            "Si el estado es pendiente de modificaci\u00F3n debe agregar un usuario";
 }

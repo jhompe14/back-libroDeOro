@@ -5,6 +5,7 @@ public class EstadoAnecdotaRequestDTO {
     private String estado;
     private String usuarioModificacion;
     private String visualizacion;
+    private String usuario;
 
     public String getEstado() {
         return estado;
@@ -28,5 +29,13 @@ public class EstadoAnecdotaRequestDTO {
 
     public void setVisualizacion(String visualizacion) {
         this.visualizacion = visualizacion;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 }
