@@ -2,10 +2,10 @@ package com.scouts.backlibrodeoro.types;
 
 public enum TypeEstadoAnecdota {
 
-    PA("PENDIENTE APROBACION"),
+    PA("PENDIENTE APROBACIÓN"),
     AP("APROBADO"),
     RE("RECHAZADO"),
-    PM("PENDIENTE DE MODIFICACION");
+    PM("PENDIENTE MODIFICACIÓN");
 
     private final String value;
 

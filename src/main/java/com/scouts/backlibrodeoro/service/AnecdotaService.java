@@ -85,7 +85,14 @@ public class AnecdotaService {
                 () -> new NegocioException(MessagesValidation.ERROR_ANECDOTA_NO_EXISTE, TypeException.VALIDATION));
         transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
-        return anecdotaRepository.save(anecdota);
+        anecdotaRepository.save(anecdota);
+
+        if(estadoAnecdotaRepository.findEstadoAnecdotaActive(idAnecdota).getEstado()
+                .equals(TypeEstadoAnecdota.PM.toString())){
+            addEstadoAnecdota(anecdota, TypeEstadoAnecdota.PA, anecdota.getUsuario());
+        }
+
+        return anecdota;
     }
 
     @FunctionalInterface

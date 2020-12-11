@@ -64,5 +64,5 @@ public class MessagesValidation {
     public static final String VALIDATION_ESTADO_VISUALIZACION_ANECDOTA =
             "Los campos obligatorios son: </br> Estado an\u00E9cdota </br> Visualizaci\u00F3n";
     public static final String VALIDATION_USUARIO_MODIFICACION_ANECDOTA =
-            "Si el estado es pendiente de modificaci\u00F3n debe agregar un usuario";
+            "Si el estado es pendiente modificaci\u00F3n debe agregar un usuario";
 }
