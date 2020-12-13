@@ -1,6 +1,7 @@
 package com.scouts.backlibrodeoro.service;
 
 import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
@@ -8,9 +9,11 @@ import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
+import com.scouts.backlibrodeoro.types.TypeChangeContrasena;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AuthValidator;
+import com.scouts.backlibrodeoro.validator.ContrasenaRequestDTOValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
 import com.scouts.backlibrodeoro.validator.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +40,13 @@ public class UsuarioService {
     private final AuthValidator authValidator;
     private final UsuarioValidator usuarioValidator;
     private final TrayectoriaValidator trayectoriaValidator;
+    private final ContrasenaRequestDTOValidator contrasenaRequestDTOValidator;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, TrayectoriaRepository trayectoriaRepository,
             GrupoRepository grupoRepository, RamaRepository ramaRepository, SeccionRepository seccionRepository,
             CargoRepository cargoRepository, AuthValidator authValidator, UsuarioValidator usuarioValidator,
-            TrayectoriaValidator trayectoriaValidator) {
+            TrayectoriaValidator trayectoriaValidator, ContrasenaRequestDTOValidator contrasenaRequestDTOValidator) {
         this.usuarioRepository = usuarioRepository;
         this.trayectoriaRepository = trayectoriaRepository;
         this.grupoRepository = grupoRepository;
@@ -52,6 +56,7 @@ public class UsuarioService {
         this.authValidator = authValidator;
         this.usuarioValidator = usuarioValidator;
         this.trayectoriaValidator = trayectoriaValidator;
+        this.contrasenaRequestDTOValidator = contrasenaRequestDTOValidator;
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +118,7 @@ public class UsuarioService {
         return commitUpdateUsuario(usuario, getTrayectorias(usuarioRequestDTO.getTrayectoria()));
     }
 
-    private List<Trayectoria> getTrayectorias(List<TrayectoriaRequestDTO> trayectoriaRequestDTOList) throws NegocioException {
+    private List<Trayectoria> getTrayectorias(List<TrayectoriaRequestDTO> trayectoriaRequestDTOList) {
         List<Trayectoria> trayectorias = new ArrayList<>();
         if(Optional.ofNullable(trayectoriaRequestDTOList)
                 .map(trayectoriaDTOS -> trayectoriaDTOS.size()>0)
@@ -183,6 +188,25 @@ public class UsuarioService {
         usuarioResponseDTO.setTipoUsuario(usuario.getTipoUsuario());
 
         return usuarioResponseDTO;
+    }
+
+    @Transactional
+    public void updateContrasena(String usuario, ContrasenaRequestDTO contrasenaRequestDTO) throws NegocioException {
+        contrasenaRequestDTOValidator.validator(contrasenaRequestDTO);
+
+        if(!contrasenaRequestDTO.getNewContrasena().equals(contrasenaRequestDTO.getConfirmContrasena())){
+            throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
+        }
+
+        Usuario usuarioToUpdate = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario);
+        if(contrasenaRequestDTO.getTypeChangeContrasena().equals(TypeChangeContrasena.MO.toString())
+                && !contrasenaRequestDTO.getActualContrasena().equals(usuarioToUpdate.getContrasena())){
+            throw new NegocioException(MessagesValidation.VALIDATION_ACTUAL_CONTRASENA, TypeException.VALIDATION);
+        }
+
+        usuarioToUpdate.setContrasena(contrasenaRequestDTO.getNewContrasena());
+
+        usuarioRepository.save(usuarioToUpdate);
     }
 
 

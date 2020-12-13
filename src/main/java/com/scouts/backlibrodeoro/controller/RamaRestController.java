@@ -31,7 +31,7 @@ public class RamaRestController {
     }
 
     @GetMapping("/{idRama}")
-    public ResponseEntity<Rama> findById(@PathVariable("idRama") Integer idRama) throws NegocioException {
+    public ResponseEntity<Rama> findById(@PathVariable("idRama") Integer idRama) {
         try {
             return new ResponseEntity(this.ramaService.getRama(idRama), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -42,8 +42,8 @@ public class RamaRestController {
     }
 
     @PostMapping("/grupo/{idGrupo}")
-    public ResponseEntity<Rama> createRama(@PathVariable("idGrupo") Integer idGrupo, @RequestBody RamaRequestDTO ramaRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Rama> createRama(@PathVariable("idGrupo") Integer idGrupo,
+                                           @RequestBody RamaRequestDTO ramaRequestDTO) {
         try{
             return new ResponseEntity(this.ramaService.createRama(ramaRequestDTO, idGrupo), HttpStatus.CREATED);
         }catch (NegocioException ex){
@@ -54,8 +54,8 @@ public class RamaRestController {
     }
 
     @PutMapping("/{idRama}")
-    public ResponseEntity<Rama> updateRama(@PathVariable("idRama") Integer idRama, @RequestBody RamaRequestDTO ramaRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Rama> updateRama(@PathVariable("idRama") Integer idRama,
+                                           @RequestBody RamaRequestDTO ramaRequestDTO){
         try{
             return new ResponseEntity(this.ramaService.updateRama(idRama, ramaRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -67,7 +67,7 @@ public class RamaRestController {
     }
 
     @DeleteMapping("/{idRama}")
-    public ResponseEntity deleteRama(@PathVariable("idRama") Integer idRama) throws NegocioException{
+    public ResponseEntity deleteRama(@PathVariable("idRama") Integer idRama) {
         try{
             ramaService.deleteRama(idRama);
             return new ResponseEntity(HttpStatus.ACCEPTED);

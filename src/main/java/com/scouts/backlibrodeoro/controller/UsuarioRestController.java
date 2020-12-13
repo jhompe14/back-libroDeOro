@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.controller;
 
+import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
@@ -28,7 +29,7 @@ public class UsuarioRestController {
     }
 
     @GetMapping("/{usuario}")
-    public ResponseEntity<UsuarioResponseDTO> findByUsuario(@PathVariable("usuario") String usuario) throws NegocioException {
+    public ResponseEntity<UsuarioResponseDTO> findByUsuario(@PathVariable("usuario") String usuario) {
         try {
             return new ResponseEntity(this.usuarioService.getUsuario(usuario), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -65,7 +66,7 @@ public class UsuarioRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> createUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) throws NegocioException {
+    public ResponseEntity<Usuario> createUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         try{
             return new ResponseEntity(usuarioService.createUsuario(usuarioRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
@@ -79,7 +80,7 @@ public class UsuarioRestController {
     }
 
     @PutMapping
-    public ResponseEntity<Usuario> updateUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) throws NegocioException {
+    public ResponseEntity<Usuario> updateUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         try{
             return new ResponseEntity(usuarioService.updateUsuario(usuarioRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -92,6 +93,16 @@ public class UsuarioRestController {
         }
     }
 
-
+    @PutMapping("contrasena/{usuario}")
+    public ResponseEntity<Void> updateContrasena(@PathVariable("usuario") String usuario, @RequestBody ContrasenaRequestDTO contrasenaRequestDTO) {
+        try{
+            usuarioService.updateContrasena(usuario, contrasenaRequestDTO);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        } catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

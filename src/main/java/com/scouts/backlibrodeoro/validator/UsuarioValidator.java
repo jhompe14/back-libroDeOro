@@ -29,7 +29,7 @@ public class UsuarioValidator implements IValidator{
     private void validateRequired(StringBuilder strValidation, Optional<Usuario> usuarioOptionalValidation) throws NegocioException {
         usuarioOptionalValidation.map(usuario -> {
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getUsuario())){
-                strValidation.append(MessagesValidation.VALIDATION_USUARIO_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_USUARIO_REQUIRED).append(" </br>");
             }
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getContrasena())){
                 strValidation.append(MessagesValidation.VALIDATION_USUARIO_CONTRASENA).append(" </br>");
@@ -38,13 +38,13 @@ public class UsuarioValidator implements IValidator{
                 strValidation.append(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO).append(" </br>");
             }
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getApellidos())){
-                strValidation.append(MessagesValidation.VALIDATION_APELLIDO_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_APELLIDO_REQUIRED).append(" </br>");
             }
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getDireccion())){
-                strValidation.append(MessagesValidation.VALIDATION_DIRECCION_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_DIRECCION_REQUIRED).append(" </br>");
             }
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getCiudad())){
-                strValidation.append(MessagesValidation.VALIDATION_CIUDAD_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_CIUDAD_REQUIRED).append(" </br>");
             }
             return usuario;
         });
@@ -56,7 +56,7 @@ public class UsuarioValidator implements IValidator{
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getTelefono()) ||
                     usuario.getTelefono().length() < 7 ||
                     usuario.getTelefono().length() > 12){
-                strValidation.append(MessagesValidation.VALIDATION_TELEFONO_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_TELEFONO_REQUIRED).append(" </br>");
             }
             return usuario;
         });
@@ -66,7 +66,7 @@ public class UsuarioValidator implements IValidator{
         usuarioOptionalValidation.map(usuario -> {
             if(!GeneralValidates.validateStringNotIsEmpty(usuario.getCorreo())
                     || !GeneralValidates.validateCorreoIsCorrect(usuario.getCorreo())){
-                strValidation.append(MessagesValidation.VALIDATION_CORREO_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_CORREO_REQUIRED).append(" </br>");
             }
             return usuario;
         });
@@ -77,7 +77,7 @@ public class UsuarioValidator implements IValidator{
             try {
                 TypeIntegrante.valueOf(usuario.getTipoIntegrante());
             }catch (IllegalArgumentException ex){
-                strValidation.append(MessagesValidation.VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_TIPO_INTEGRANTE_REQUIRED).append(" </br>");
             }
             return usuario;
         });
@@ -88,7 +88,7 @@ public class UsuarioValidator implements IValidator{
             try {
                 TypeUsuario.valueOf(usuario.getTipoUsuario());
             }catch (IllegalArgumentException ex){
-                strValidation.append(MessagesValidation.VALIDATION_TIPO_USUARIO_OBLIGATORIO).append(" </br>");
+                strValidation.append(MessagesValidation.VALIDATION_TIPO_USUARIO_REQUIRED).append(" </br>");
             }
             return usuario;
         });

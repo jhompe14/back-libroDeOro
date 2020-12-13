@@ -58,6 +58,7 @@ public class AnecdotaRestController {
                             request.getParameter("usuarioFilter"),
                             request.getParameter("usuarioOwner"),
                             request.getParameter("typeUsuarioOwner"),
+                            request.getParameter("codigoAnecdota"),
                             request.getParameter("page"));
 
             return new ResponseEntity(new GridResponseDTO<>(

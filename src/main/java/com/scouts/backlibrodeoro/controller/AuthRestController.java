@@ -27,7 +27,7 @@ public class AuthRestController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthRequestDTO> login(@RequestBody AuthRequestDTO auth) throws NegocioException {
+    public ResponseEntity<AuthRequestDTO> login(@RequestBody AuthRequestDTO auth) {
         try {
             if(usuarioService.authIsSuccess(auth)) {
                 String token = JWTGenerator.getJWTToken(auth.getUsuario());

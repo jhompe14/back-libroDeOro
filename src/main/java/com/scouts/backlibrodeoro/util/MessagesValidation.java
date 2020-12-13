@@ -35,18 +35,18 @@ public class MessagesValidation {
     public static final String VALIDATION_CONFIRM_CONTRASENA =
             "La contrase\u00F1a y el confirmar contrase\u00F1a no coinciden";
 
-    public static final String VALIDATION_USUARIO_OBLIGATORIO = "El usuario es obligatorio";
+    public static final String VALIDATION_USUARIO_REQUIRED = "El usuario es obligatorio";
     public static final String VALIDATION_USUARIO_CONTRASENA = "La contrase\u00F1a es obligatoria";
-    public static final String VALIDATION_APELLIDO_OBLIGATORIO = "El apellido es obligatorio";
-    public static final String VALIDATION_TIPO_INTEGRANTE_OBLIGATORIO = "El tipo de integrante debe ser uno valido";
-    public static final String VALIDATION_TIPO_USUARIO_OBLIGATORIO = "El tipo de usuario debe ser uno valido";
-    public static final String VALIDATION_CORREO_OBLIGATORIO = "El tipo de correo debe ser uno valido";
-    public static final String VALIDATION_TELEFONO_OBLIGATORIO =
+    public static final String VALIDATION_APELLIDO_REQUIRED = "El apellido es obligatorio";
+    public static final String VALIDATION_TIPO_INTEGRANTE_REQUIRED = "El tipo de integrante debe ser uno valido";
+    public static final String VALIDATION_TIPO_USUARIO_REQUIRED = "El tipo de usuario debe ser uno valido";
+    public static final String VALIDATION_CORREO_REQUIRED = "El tipo de correo debe ser uno valido";
+    public static final String VALIDATION_TELEFONO_REQUIRED =
                                 "El telefono es obligatorio y ademas debe tener entre 7 y 12 numeros";
-    public static final String VALIDATION_DIRECCION_OBLIGATORIO = "La direccion es obligatoria";
-    public static final String VALIDATION_CIUDAD_OBLIGATORIO = "La ciudad es obligatoria";
+    public static final String VALIDATION_DIRECCION_REQUIRED = "La direccion es obligatoria";
+    public static final String VALIDATION_CIUDAD_REQUIRED = "La ciudad es obligatoria";
 
-    public static final String VALIDATION_TRAYECTORIA_OBLIGATORIO =
+    public static final String VALIDATION_TRAYECTORIA_REQUIRED =
             "Los campos obligatorios son: </br> Grupo </br> A\u00F1o ingreso";
     public static final String VALIDATION_ANIO_INGRESO_VALIDA =
             "La fecha ingreso en la trayectoria debe estar entre 1940 y el a\u00F1o actual";
@@ -65,4 +65,11 @@ public class MessagesValidation {
             "Los campos obligatorios son: </br> Estado an\u00E9cdota </br> Visualizaci\u00F3n";
     public static final String VALIDATION_USUARIO_MODIFICACION_ANECDOTA =
             "Si el estado es pendiente modificaci\u00F3n debe agregar un usuario";
+
+    public static final String VALIDATION_TYPE_CHANGE_CONTRASENA = "Este tipo de cambio de contrasena no es valido";
+    public static final String VALIDATION_TYPE_CHANGE_CONTRASENA_MODIFICATION_REQUIRED =
+            "Los campos obligatorios son </br> Contrase\u00F1a Actual </br> Nueva Contrase\u00F1a </br> Confirmar Contrase\u00F1a ";
+    public static final String VALIDATION_TYPE_CHANGE_CONTRASENA_RECOVERED_REQUIRED =
+            "Los campos obligatorios son </br> Contrase\u00F1a Actual </br> Nueva Contrase\u00F1a";
+    public static final String VALIDATION_ACTUAL_CONTRASENA = "La contrase\u00F1a actual no coincide";
 }

@@ -89,6 +89,8 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
             filterPresent(filterAnecdotaGridRequestDTO.getFechaFinAnecdota()))
             sql.append("AND a.fecha BETWEEN '"+ filterAnecdotaGridRequestDTO.getFechaInicioAnecdota()+"' " +
                     "AND '"+ filterAnecdotaGridRequestDTO.getFechaFinAnecdota()+"' ");
+        if(filterPresent(filterAnecdotaGridRequestDTO.getCodigoAnecdota()))
+            sql.append("AND a.id = "+filterAnecdotaGridRequestDTO.getCodigoAnecdota()+"");
 
         filterEstadoAnecdota(sql, filterAnecdotaGridRequestDTO);
     }

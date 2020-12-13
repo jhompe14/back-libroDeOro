@@ -16,7 +16,7 @@ public class TrayectoriaValidator implements IValidator{
     public <T> void validator(T trayectoria) throws NegocioException {
         Trayectoria trayectoriaValidation = (Trayectoria) trayectoria;
         if(!validateRequired(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_OBLIGATORIO,
+            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_REQUIRED,
                     TypeException.VALIDATION);
         }
         if(!validateAnioIngresoValid(trayectoriaValidation)){
