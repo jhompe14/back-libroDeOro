@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.dto.response;
 
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
-import com.scouts.backlibrodeoro.util.UtilLibroOro;
+import com.scouts.backlibrodeoro.util.LibroOroUtil;
 
 import java.util.Date;
 
@@ -38,7 +38,7 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
         this.nombreRama = nombreRama;
         this.nombreSeccion = nombreSeccion;
         this.nombreSuceso = nombreSuceso;
-        this.fechaSuceso = UtilLibroOro.setFormatDate(fechaSuceso);
+        this.fechaSuceso = LibroOroUtil.setFormatDate(fechaSuceso);
         this.usuarioRegistro = usuarioRegistro;
         this.estado = estado;
         this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();

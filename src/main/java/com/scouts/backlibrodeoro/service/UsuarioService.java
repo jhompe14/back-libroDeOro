@@ -6,11 +6,14 @@ import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
+import com.scouts.backlibrodeoro.model.RecuperoContrasena;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
+import com.scouts.backlibrodeoro.types.TypeActiveInactive;
 import com.scouts.backlibrodeoro.types.TypeChangeContrasena;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.LibroOroUtil;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.AuthValidator;
 import com.scouts.backlibrodeoro.validator.ContrasenaRequestDTOValidator;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +41,7 @@ public class UsuarioService {
     private final RamaRepository ramaRepository;
     private final SeccionRepository seccionRepository;
     private final CargoRepository cargoRepository;
+    private final RecuperoContrasenaRepository recuperoContrasenaRepository;
     private final AuthValidator authValidator;
     private final UsuarioValidator usuarioValidator;
     private final TrayectoriaValidator trayectoriaValidator;
@@ -45,18 +50,33 @@ public class UsuarioService {
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, TrayectoriaRepository trayectoriaRepository,
             GrupoRepository grupoRepository, RamaRepository ramaRepository, SeccionRepository seccionRepository,
-            CargoRepository cargoRepository, AuthValidator authValidator, UsuarioValidator usuarioValidator,
-            TrayectoriaValidator trayectoriaValidator, ContrasenaRequestDTOValidator contrasenaRequestDTOValidator) {
+            CargoRepository cargoRepository, RecuperoContrasenaRepository recuperoContrasenaRepository,
+            AuthValidator authValidator, UsuarioValidator usuarioValidator, TrayectoriaValidator trayectoriaValidator,
+            ContrasenaRequestDTOValidator contrasenaRequestDTOValidator) {
         this.usuarioRepository = usuarioRepository;
         this.trayectoriaRepository = trayectoriaRepository;
         this.grupoRepository = grupoRepository;
         this.ramaRepository = ramaRepository;
         this.seccionRepository = seccionRepository;
         this.cargoRepository = cargoRepository;
+        this.recuperoContrasenaRepository = recuperoContrasenaRepository;
         this.authValidator = authValidator;
         this.usuarioValidator = usuarioValidator;
         this.trayectoriaValidator = trayectoriaValidator;
         this.contrasenaRequestDTOValidator = contrasenaRequestDTOValidator;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean authIsSuccess(AuthRequestDTO auth) throws NegocioException {
+        authValidator.validator(auth);
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(
+                usuarioRepository.findUsuarioByUsuarioAndContrasena(auth.getUsuario(), auth.getContrasena()));
+        if(!usuarioOptional.isPresent()) {
+            throw new NegocioException(MessagesValidation.NOT_FOUND_USUARIO_CONTRASENA, TypeException.NOTFOUND);
+        }else{
+            auth.setTipoUsuario(usuarioOptional.orElse(new Usuario()).getTipoUsuario());
+        }
+        return true;
     }
 
     @Transactional(readOnly = true)
@@ -77,19 +97,6 @@ public class UsuarioService {
     public Boolean validateTrayectoria(TrayectoriaRequestDTO trayectoriaRequestDTO) throws NegocioException {
         trayectoriaValidator.validator(transformDTOToTrayectoria(trayectoriaRequestDTO));
         return Boolean.TRUE;
-    }
-
-    @Transactional(readOnly = true)
-    public boolean authIsSuccess(AuthRequestDTO auth) throws NegocioException {
-        authValidator.validator(auth);
-        Optional<Usuario> usuarioOptional = Optional.ofNullable(
-                usuarioRepository.findUsuarioByUsuarioAndContrasena(auth.getUsuario(), auth.getContrasena()));
-        if(!usuarioOptional.isPresent()) {
-            throw new NegocioException(MessagesValidation.NOT_FOUND_USUARIO_CONTRASENA, TypeException.NOTFOUND);
-        }else{
-            auth.setTipoUsuario(usuarioOptional.orElse(new Usuario()).getTipoUsuario());
-        }
-        return true;
     }
 
     @Transactional
@@ -209,5 +216,33 @@ public class UsuarioService {
         usuarioRepository.save(usuarioToUpdate);
     }
 
+    @Transactional
+    public RecuperoContrasena setRecoveredContrasena(String usuario) throws NegocioException, MessagingException {
+        Usuario usuarioRecoveredContrasena = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario);
+        inactivateEstadoRecuperoContrasena(usuario);
+
+        RecuperoContrasena recuperoContrasena = new RecuperoContrasena();
+        recuperoContrasena.setUsuario(usuarioRecoveredContrasena);
+        recuperoContrasena.setEstado(TypeActiveInactive.AC.toString());
+        recuperoContrasena.setCodigo(LibroOroUtil.randomCode(10));
+
+        LibroOroUtil.sendEmail(usuarioRecoveredContrasena.getCorreo(),
+                "Recupero Contrase\u00F1a", messageRecoveredContrasena(recuperoContrasena.getCodigo()));
+
+        return recuperoContrasenaRepository.save(recuperoContrasena);
+    }
+
+    private void inactivateEstadoRecuperoContrasena(String usuario){
+        RecuperoContrasena recuperoContrasena = recuperoContrasenaRepository
+                .findRecuperoContrasenaUsuarioAndEstado(usuario, TypeActiveInactive.AC.toString());
+        if (Optional.ofNullable(recuperoContrasena).isPresent()) {
+            recuperoContrasena.setEstado(TypeActiveInactive.IN.toString());
+            recuperoContrasenaRepository.save(recuperoContrasena);
+        }
+    }
+
+    private String messageRecoveredContrasena(String codigo){
+        return codigo;
+    }
 
 }

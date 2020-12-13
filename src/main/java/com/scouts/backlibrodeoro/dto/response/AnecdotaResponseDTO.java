@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.dto.response;
 
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
-import com.scouts.backlibrodeoro.util.UtilLibroOro;
+import com.scouts.backlibrodeoro.util.LibroOroUtil;
 
 import java.util.Date;
 
@@ -46,7 +46,7 @@ public class AnecdotaResponseDTO {
         this.idSeccion = idSeccion;
         this.nombreSeccion = nombreSeccion;
         this.nombre = nombre;
-        this.fecha =  UtilLibroOro.setFormatDate(fecha);
+        this.fecha =  LibroOroUtil.setFormatDate(fecha);
         this.usuario = usuario;
         this.estado = estado;
         this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();
