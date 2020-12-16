@@ -20,6 +20,7 @@ import com.scouts.backlibrodeoro.validator.ContrasenaRequestDTOValidator;
 import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
 import com.scouts.backlibrodeoro.validator.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +43,14 @@ public class UsuarioService {
     private final SeccionRepository seccionRepository;
     private final CargoRepository cargoRepository;
     private final RecuperoContrasenaRepository recuperoContrasenaRepository;
+
     private final AuthValidator authValidator;
     private final UsuarioValidator usuarioValidator;
     private final TrayectoriaValidator trayectoriaValidator;
     private final ContrasenaRequestDTOValidator contrasenaRequestDTOValidator;
+
+    @Value("${host.frontend}")
+    private String hostFrontEnd;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, TrayectoriaRepository trayectoriaRepository,
@@ -197,6 +202,13 @@ public class UsuarioService {
         return usuarioResponseDTO;
     }
 
+    @Transactional(readOnly = true)
+    public Usuario getUsuarioByRecovered(String idRecovered) throws NegocioException {
+        return Optional.ofNullable(usuarioRepository.findUsuarioByRecoverd(idRecovered, TypeActiveInactive.AC.toString()))
+                .orElseThrow(() -> new NegocioException(MessagesValidation.CODIGO_RECOVERED_CONTRASENA_NO_VALIDO,
+                        TypeException.VALIDATION));
+    }
+
     @Transactional
     public void updateContrasena(String usuario, ContrasenaRequestDTO contrasenaRequestDTO) throws NegocioException {
         contrasenaRequestDTOValidator.validator(contrasenaRequestDTO);
@@ -209,6 +221,10 @@ public class UsuarioService {
         if(contrasenaRequestDTO.getTypeChangeContrasena().equals(TypeChangeContrasena.MO.toString())
                 && !contrasenaRequestDTO.getActualContrasena().equals(usuarioToUpdate.getContrasena())){
             throw new NegocioException(MessagesValidation.VALIDATION_ACTUAL_CONTRASENA, TypeException.VALIDATION);
+        }
+
+        if(contrasenaRequestDTO.getTypeChangeContrasena().equals(TypeChangeContrasena.RC.toString())){
+            inactivateEstadoRecuperoContrasena(usuario);
         }
 
         usuarioToUpdate.setContrasena(contrasenaRequestDTO.getNewContrasena());
@@ -242,7 +258,7 @@ public class UsuarioService {
     }
 
     private String messageRecoveredContrasena(String codigo){
-        return codigo;
+        return hostFrontEnd+"/contrasena/"+codigo;
     }
 
 }

@@ -106,10 +106,33 @@ public class UsuarioRestController {
         }
     }
 
+    @GetMapping("/recovered/contrasena/{idRecovered}")
+    public ResponseEntity<Usuario> getUsuarioByRecovered(@PathVariable("idRecovered") String idRecovered){
+        try {
+            return new ResponseEntity(this.usuarioService.getUsuarioByRecovered(idRecovered), HttpStatus.OK);
+        } catch (NegocioException ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/recovered/contrasena/{usuario}")
     public ResponseEntity<RecuperoContrasena> recoveredContrasena(@PathVariable("usuario") String usuario){
         try{
             return new ResponseEntity(usuarioService.setRecoveredContrasena(usuario), HttpStatus.ACCEPTED);
+        } catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/recovered/contrasena/{usuario}")
+    public ResponseEntity<Void> updateRecoveredContrasena(@PathVariable("usuario") String usuario, @RequestBody ContrasenaRequestDTO contrasenaRequestDTO) {
+        try{
+            usuarioService.updateContrasena(usuario, contrasenaRequestDTO);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
         } catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {

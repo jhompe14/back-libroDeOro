@@ -72,4 +72,7 @@ public class MessagesValidation {
     public static final String VALIDATION_TYPE_CHANGE_CONTRASENA_RECOVERED_REQUIRED =
             "Los campos obligatorios son </br> Contrase\u00F1a Actual </br> Nueva Contrase\u00F1a";
     public static final String VALIDATION_ACTUAL_CONTRASENA = "La contrase\u00F1a actual no coincide";
+
+    public static final String CODIGO_RECOVERED_CONTRASENA_NO_VALIDO = "El c\u00F3digo de recuperaci\u00F3n no esta disponible";
+
 }
