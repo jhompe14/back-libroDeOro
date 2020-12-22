@@ -1,4 +1,4 @@
-package com.scouts.backlibrodeoro.service;
+package com.scouts.backlibrodeoro.util;
 
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.*;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class InspeccionService {
+public class QueryUtil {
 
     public static <T> T getObjectById(JpaRepository<T, Integer> jpaRepository, Integer id) throws NegocioException {
         if(Optional.ofNullable(id).orElse(0) == 0){

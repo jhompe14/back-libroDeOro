@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
@@ -9,7 +10,7 @@ import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.RamaValidator;
+import com.scouts.backlibrodeoro.validator.impl.RamaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class RamaService {
 
     @Transactional(readOnly = true)
     public Rama getRama(Integer id) throws NegocioException{
-        return InspeccionService.getObjectById(ramaRepository, id);
+        return QueryUtil.getObjectById(ramaRepository, id);
     }
 
     @Transactional
@@ -56,13 +57,13 @@ public class RamaService {
 
         this.ramaValidator.validator(rama);
 
-        rama.setGrupo(InspeccionService.getObjectById(grupoRepository, idGrupo));
+        rama.setGrupo(QueryUtil.getObjectById(grupoRepository, idGrupo));
         return ramaRepository.save(rama);
     }
 
     @Transactional
     public Rama updateRama(Integer idRama, RamaRequestDTO ramaRequestDTO) throws NegocioException {
-        Rama ramaEdit = InspeccionService.getObjectById(ramaRepository, idRama);
+        Rama ramaEdit = QueryUtil.getObjectById(ramaRepository, idRama);
 
         ramaEdit.setNombre(ramaRequestDTO.getNombre());
         ramaEdit.setEdadMinima(ramaRequestDTO.getEdadMinima());
@@ -75,7 +76,7 @@ public class RamaService {
 
     @Transactional
     public void deleteRama(Integer idRama) throws NegocioException {
-        Rama rama = InspeccionService.getObjectById(ramaRepository, idRama);
+        Rama rama = QueryUtil.getObjectById(ramaRepository, idRama);
 
         if(seccionRepository.countSeccionByRama(idRama)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_SECCIONES_ACTIVAS, TypeException.VALIDATION);

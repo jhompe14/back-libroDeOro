@@ -8,7 +8,7 @@ import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.GrupoValidator;
+import com.scouts.backlibrodeoro.validator.impl.GrupoValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

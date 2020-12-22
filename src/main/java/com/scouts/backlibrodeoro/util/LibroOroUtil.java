@@ -12,8 +12,8 @@ import java.util.Random;
 public class LibroOroUtil {
 
     private static final String FORMAT_DATE = "dd/MM/yyyy";
-    private static String USER_EMAIL = "champascouts@gmail.com";
-    private static String PASSWORD_EMAIL = "champascouts123";
+    private static final String USER_EMAIL = "champascouts@gmail.com";
+    private static final String PASSWORD_EMAIL = "champascouts123";
 
     public static String setFormatDate(Date date){
         return Optional.ofNullable(date).map(d -> {

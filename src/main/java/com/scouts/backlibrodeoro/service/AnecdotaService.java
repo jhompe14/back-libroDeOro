@@ -1,31 +1,32 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.external.CloudinaryComponent;
+import com.scouts.backlibrodeoro.model.*;
+import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Anecdota;
-import com.scouts.backlibrodeoro.model.EstadoAnecdota;
-import com.scouts.backlibrodeoro.model.Seccion;
-import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.types.TypeSiNo;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.AnecdotaValidator;
-import com.scouts.backlibrodeoro.validator.EstadoAnecdotaRequestDTOValidator;
+import com.scouts.backlibrodeoro.validator.impl.AnecdotaValidator;
+import com.scouts.backlibrodeoro.validator.impl.EstadoAnecdotaRequestDTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,21 +37,26 @@ public class AnecdotaService {
     private final SeccionRepository seccionRepository;
     private final AnecdotaRepository anecdotaRepository;
     private final EstadoAnecdotaRepository estadoAnecdotaRepository;
+    private final EnlaceRepository enlaceRepository;
     private final AnecdotaValidator anecdotaValidator;
     private final EstadoAnecdotaRequestDTOValidator estadoAnecdotaRequestDTOValidator;
+    private final CloudinaryComponent cloudinaryComponent;
 
     @Autowired
     public AnecdotaService(UsuarioRepository usuarioRepository, RamaRepository ramaRepository,
                            SeccionRepository seccionRepository, AnecdotaRepository anecdotaRepository,
-                           EstadoAnecdotaRepository estadoAnecdotaRepository, AnecdotaValidator anecdotaValidator,
-                           EstadoAnecdotaRequestDTOValidator estadoAnecdotaRequestDTOValidator) {
+                           EstadoAnecdotaRepository estadoAnecdotaRepository, EnlaceRepository enlaceRepository,
+                           AnecdotaValidator anecdotaValidator, EstadoAnecdotaRequestDTOValidator estadoAnecdotaRequestDTOValidator,
+                           CloudinaryComponent cloudinaryComponent) {
         this.usuarioRepository = usuarioRepository;
         this.ramaRepository = ramaRepository;
         this.seccionRepository = seccionRepository;
         this.anecdotaRepository = anecdotaRepository;
         this.estadoAnecdotaRepository = estadoAnecdotaRepository;
+        this.enlaceRepository = enlaceRepository;
         this.anecdotaValidator = anecdotaValidator;
         this.estadoAnecdotaRequestDTOValidator = estadoAnecdotaRequestDTOValidator;
+        this.cloudinaryComponent = cloudinaryComponent;
     }
 
     @Transactional(readOnly = true)
@@ -76,6 +82,7 @@ public class AnecdotaService {
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
         addEstadoAnecdota(anecdota, TypeEstadoAnecdota.PA, anecdota.getUsuario());
+        addAttachedAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
         return anecdota;
     }
 
@@ -86,6 +93,7 @@ public class AnecdotaService {
         transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
+        addAttachedAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
 
         if(estadoAnecdotaRepository.findEstadoAnecdotaActive(idAnecdota).getEstado()
                 .equals(TypeEstadoAnecdota.PM.toString())){
@@ -93,28 +101,6 @@ public class AnecdotaService {
         }
 
         return anecdota;
-    }
-
-    @FunctionalInterface
-    public interface AddSeccion<T, R> {
-        R apply(T t) throws NegocioException;
-    }
-
-    private void transformDTOToAnecdota(Anecdota anecdota, AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
-        anecdota.setNombre(anecdotaRequestDTO.getNombre());
-        anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaRequestDTO.getFecha()));
-        anecdota.setDescripcion(anecdotaRequestDTO.getDescripcion());
-        anecdota.setUsuario(InspeccionService.getUsuarioByUsuario(usuarioRepository, anecdotaRequestDTO.getUsuario()));
-        anecdota.setRama(InspeccionService.getObjectById(ramaRepository, anecdotaRequestDTO.getIdRama()));
-
-        AddSeccion<Integer, Seccion> addSeccion = (idSeccion) -> {
-            if(Optional.ofNullable(idSeccion).orElse(0) == 0){
-                return null;
-            }
-            return InspeccionService.getObjectById(seccionRepository, idSeccion);
-        };
-
-        anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getIdSeccion()));
     }
 
     @Transactional
@@ -127,13 +113,51 @@ public class AnecdotaService {
 
         Usuario usuario = null;
         if(estadoAnecdotaRequestDTO.getEstado().equals(TypeEstadoAnecdota.PM.toString())){
-            usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
+            usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
         } else{
-            usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuario());
+            usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuario());
         }
         addEstadoAnecdota(anecdota, TypeEstadoAnecdota.valueOf(estadoAnecdotaRequestDTO.getEstado()), usuario);
 
        return anecdota;
+    }
+
+    @Transactional
+    public void deleteAttachedAnecdota(String idPublica) throws NegocioException {
+        Optional.ofNullable(enlaceRepository.findEnlaceByIdPublica(idPublica)).map(enlace -> {
+            try {
+                Map result= cloudinaryComponent.delete(idPublica);
+                if(Optional.ofNullable(result).isPresent() && Optional.ofNullable(result.get("result")).isPresent()
+                        && result.get("result").toString().equals("ok")){
+                    enlaceRepository.delete(enlace);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return Optional.empty();
+        }).orElseThrow(() -> new NegocioException(MessagesValidation.VALIDATION_ATTACHED_ANECDOTA, TypeException.VALIDATION));
+    }
+
+    @FunctionalInterface
+    public interface AddSeccion<T, R> {
+        R apply(T t) throws NegocioException;
+    }
+
+    private void transformDTOToAnecdota(Anecdota anecdota, AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
+        anecdota.setNombre(anecdotaRequestDTO.getNombre());
+        anecdota.setFecha(GeneralValidates.validateFormatDate(anecdotaRequestDTO.getFecha()));
+        anecdota.setDescripcion(anecdotaRequestDTO.getDescripcion());
+        anecdota.setUsuario(QueryUtil.getUsuarioByUsuario(usuarioRepository, anecdotaRequestDTO.getUsuario()));
+        anecdota.setRama(QueryUtil.getObjectById(ramaRepository, anecdotaRequestDTO.getIdRama()));
+
+        AddSeccion<Integer, Seccion> addSeccion = (idSeccion) -> {
+            if(Optional.ofNullable(idSeccion).orElse(0) == 0){
+                return null;
+            }
+            return QueryUtil.getObjectById(seccionRepository, idSeccion);
+        };
+
+        anecdota.setSeccion(addSeccion.apply(anecdotaRequestDTO.getIdSeccion()));
     }
 
     private void addEstadoAnecdota(Anecdota anecdota, TypeEstadoAnecdota typeEstadoAnecdota, Usuario usuario){
@@ -159,6 +183,23 @@ public class AnecdotaService {
         estadoAnecdota.setGestionado(TypeSiNo.SI.name());
         estadoAnecdota.setFechaHoraGestionado(new Timestamp(new Date().getTime()));
         estadoAnecdotaRepository.save(estadoAnecdota);
+    }
+
+    private void addAttachedAnecdota(Anecdota anecdota, List<MultipartFile> attachedFiles){
+        attachedFiles.forEach(attached ->{
+            try {
+                Map responseCloudinary = cloudinaryComponent.upload(attached);
+                Enlace enlace = new Enlace();
+                enlace.setNombre(attached.getName());
+                enlace.setIdPublica(responseCloudinary.get("public_id").toString());
+                enlace.setUrl(responseCloudinary.get("url").toString());
+                enlace.setAnecdota(anecdota);
+                enlaceRepository.save(enlace);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
 }

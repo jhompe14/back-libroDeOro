@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.validator;
 
+import com.scouts.backlibrodeoro.validator.impl.SeccionValidator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.junit.jupiter.api.Assertions;

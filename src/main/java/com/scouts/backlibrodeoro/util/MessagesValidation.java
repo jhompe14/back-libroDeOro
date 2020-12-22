@@ -53,11 +53,12 @@ public class MessagesValidation {
     public static final String VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO =
             "La fecha ingreso no debe ser mayor a la fecha de retiro en la trayectoria";
 
-    public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripcion es obligatoria";
+    public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripci\u00F3n es obligatoria";
     public static final String VALIDATION_ANECDOTA_FECHA =
             "La fecha de la anecdota no puede ser superior a la fecha actual";
     public static final String VALIDATION_TIPO_ESTADO_ANECDOTA = "Este estado de anecdota no es valido";
     public static final String VALIDATION_RAMA_ANECDOTA = "La anecdota debe estar asociada a una rama o seccion";
+    public static final String VALIDATION_ATTACHED_ANECDOTA = "El archivo adjunto no existe";
 
     public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
 

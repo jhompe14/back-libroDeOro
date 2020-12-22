@@ -9,7 +9,7 @@ import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.SeccionValidator;
+import com.scouts.backlibrodeoro.validator.impl.SeccionValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

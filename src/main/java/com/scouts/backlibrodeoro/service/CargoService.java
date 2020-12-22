@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
@@ -8,7 +9,7 @@ import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeCargo;
-import com.scouts.backlibrodeoro.validator.CargoValidator;
+import com.scouts.backlibrodeoro.validator.impl.CargoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +64,7 @@ public class CargoService {
 
     @Transactional(readOnly = true)
     public Cargo getCargo(Integer id) throws NegocioException {
-        return InspeccionService.getObjectById(cargoRepository, id);
+        return QueryUtil.getObjectById(cargoRepository, id);
     }
 
     @Transactional
@@ -82,13 +83,13 @@ public class CargoService {
         TypeCargo typeCargoEnum = TypeCargo.valueOf(typeCargo);
         switch (typeCargoEnum){
             case GR:
-                cargo.setGrupo(InspeccionService.getObjectById(grupoRepository, idType));
+                cargo.setGrupo(QueryUtil.getObjectById(grupoRepository, idType));
                 break;
             case RA:
-                cargo.setRama(InspeccionService.getObjectById(ramaRepository, idType));
+                cargo.setRama(QueryUtil.getObjectById(ramaRepository, idType));
                 break;
             case SE:
-                cargo.setSeccion(InspeccionService.getObjectById(seccionRepository, idType));
+                cargo.setSeccion(QueryUtil.getObjectById(seccionRepository, idType));
                 break;
             default:
                 break;
@@ -97,7 +98,7 @@ public class CargoService {
 
     @Transactional
     public Cargo updateCargo(Integer idCargo, CargoRequestDTO cargoRequestDTO) throws NegocioException {
-        Cargo cargoEdit = InspeccionService.getObjectById(cargoRepository, idCargo);
+        Cargo cargoEdit = QueryUtil.getObjectById(cargoRepository, idCargo);
 
         cargoEdit.setNombre(cargoRequestDTO.getNombre());
         cargoEdit.setDescripcion(cargoRequestDTO.getDescripcion());
@@ -108,7 +109,7 @@ public class CargoService {
 
     @Transactional
     public void deleteCargo(Integer idCargo) throws NegocioException {
-        cargoRepository.delete(Objects.requireNonNull(InspeccionService.getObjectById(cargoRepository, idCargo)));
+        cargoRepository.delete(Objects.requireNonNull(QueryUtil.getObjectById(cargoRepository, idCargo)));
     }
 
 }

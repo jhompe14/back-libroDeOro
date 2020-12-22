@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-public class TrayectoriaValidator implements IValidator{
+public class TrayectoriaValidator implements IValidator {
     @Override
     public <T> void validator(T trayectoria) throws NegocioException {
         Trayectoria trayectoriaValidation = (Trayectoria) trayectoria;

@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class CargoValidator implements IValidator{
+public class CargoValidator implements IValidator {
     @Override
     public <T> void validator(T cargo) throws NegocioException {
         if(!validateNombre((Cargo) cargo)){

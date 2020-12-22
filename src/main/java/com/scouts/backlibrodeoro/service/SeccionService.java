@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Seccion;
@@ -8,7 +9,7 @@ import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.SeccionValidator;
+import com.scouts.backlibrodeoro.validator.impl.SeccionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class SeccionService {
 
     @Transactional(readOnly = true)
     public Seccion getSeccion(Integer id) throws NegocioException {
-        return InspeccionService.getObjectById(seccionRepository, id);
+        return QueryUtil.getObjectById(seccionRepository, id);
     }
 
     @Transactional
@@ -49,13 +50,13 @@ public class SeccionService {
         seccion.setDescripcion(seccionRequestDTO.getDescripcion());
         this.seccionValidator.validator(seccion);
 
-        seccion.setRama(InspeccionService.getObjectById(ramaRepository, idRama));
+        seccion.setRama(QueryUtil.getObjectById(ramaRepository, idRama));
         return seccionRepository.save(seccion);
     }
 
     @Transactional
     public Seccion updateSeccion(Integer idSeccion, SeccionRequestDTO seccionRequestDTO) throws NegocioException {
-        Seccion seccionEdit = InspeccionService.getObjectById(seccionRepository, idSeccion);
+        Seccion seccionEdit = QueryUtil.getObjectById(seccionRepository, idSeccion);
 
         seccionEdit.setNombre(seccionRequestDTO.getNombre());
         seccionEdit.setDescripcion(seccionRequestDTO.getDescripcion());
@@ -66,7 +67,7 @@ public class SeccionService {
 
     @Transactional
     public void deleteSeccion(Integer idSeccion) throws NegocioException {
-        Seccion seccion = InspeccionService.getObjectById(seccionRepository, idSeccion);
+        Seccion seccion = QueryUtil.getObjectById(seccionRepository, idSeccion);
 
         if(cargoRepository.countCargoByTypeSeccion(idSeccion)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_SECCION_CARGOS_ACTIVOS, TypeException.VALIDATION);

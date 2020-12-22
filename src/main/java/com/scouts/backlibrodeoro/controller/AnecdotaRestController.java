@@ -15,8 +15,10 @@ import com.scouts.backlibrodeoro.service.AnecdotaService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,7 +37,7 @@ public class AnecdotaRestController {
     }
 
     @GetMapping("/{idAnecdota}")
-    public ResponseEntity<AnecdotaResponseDTO> findById(@PathVariable("idAnecdota") Integer idAnecdota) throws NegocioException {
+    public ResponseEntity<AnecdotaResponseDTO> findById(@PathVariable("idAnecdota") Integer idAnecdota) {
         try {
             return new ResponseEntity(this.anecdotaService.getAnecdota(idAnecdota), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -72,10 +74,18 @@ public class AnecdotaRestController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Anecdota> createAnecdota(@RequestBody AnecdotaRequestDTO anecdotaRequestDTO) throws NegocioException {
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Anecdota> createAnecdota(@RequestPart("nombre") String nombre,
+                                                   @RequestPart("fecha") String fecha,
+                                                   @RequestPart("descripcion") String descripcion,
+                                                   @RequestPart("usuario") String usuario,
+                                                   @RequestPart("rama") String rama,
+                                                   @RequestPart("seccion") String seccion,
+                                                   @RequestPart("attachedFiles") List<MultipartFile> attachedFiles) {
         try{
-            return new ResponseEntity(anecdotaService.createAnecdota(anecdotaRequestDTO), HttpStatus.CREATED);
+            return new ResponseEntity(anecdotaService.createAnecdota(
+                            new AnecdotaRequestDTO(nombre, fecha, descripcion, usuario, rama, seccion, attachedFiles)),
+                    HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (RuntimeException ex){
@@ -87,8 +97,8 @@ public class AnecdotaRestController {
     }
 
     @PutMapping("/{idAnecdota}")
-    public ResponseEntity<Anecdota> updateAnecdota(@PathVariable("idAnecdota") Integer idAnecdota, @RequestBody AnecdotaRequestDTO anecdotaRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Anecdota> updateAnecdota(@PathVariable("idAnecdota") Integer idAnecdota,
+                                                   @RequestBody AnecdotaRequestDTO anecdotaRequestDTO){
         try{
             return new ResponseEntity(this.anecdotaService.updateAnecdota(idAnecdota, anecdotaRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -100,10 +110,11 @@ public class AnecdotaRestController {
     }
 
     @PutMapping("/estado/visualizacion/{idAnecdota}")
-    public ResponseEntity<Anecdota> updateEstadoAnecdota(@PathVariable("idAnecdota") Integer idAnecdota, @RequestBody EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Anecdota> updateEstadoAnecdota(@PathVariable("idAnecdota") Integer idAnecdota,
+                                                         @RequestBody EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO){
         try{
-            return new ResponseEntity(this.anecdotaService.updateEstadoVisualizacionAnecdota(idAnecdota, estadoAnecdotaRequestDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.anecdotaService
+                    .updateEstadoVisualizacionAnecdota(idAnecdota, estadoAnecdotaRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
@@ -112,6 +123,17 @@ public class AnecdotaRestController {
         }
     }
 
-
+    @DeleteMapping("/attached/{idPublica}")
+    public ResponseEntity deleteAttachedAnecdota(@PathVariable("idPublica") String idPublica){
+        try{
+            this.anecdotaService.deleteAttachedAnecdota(idPublica);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        }catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
+                    HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
+        }catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

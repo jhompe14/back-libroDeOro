@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
@@ -15,10 +16,10 @@ import com.scouts.backlibrodeoro.types.TypeChangeContrasena;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.LibroOroUtil;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.AuthValidator;
-import com.scouts.backlibrodeoro.validator.ContrasenaRequestDTOValidator;
-import com.scouts.backlibrodeoro.validator.TrayectoriaValidator;
-import com.scouts.backlibrodeoro.validator.UsuarioValidator;
+import com.scouts.backlibrodeoro.validator.impl.AuthValidator;
+import com.scouts.backlibrodeoro.validator.impl.ContrasenaRequestDTOValidator;
+import com.scouts.backlibrodeoro.validator.impl.TrayectoriaValidator;
+import com.scouts.backlibrodeoro.validator.impl.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public UsuarioResponseDTO getUsuario(String usuario) throws NegocioException {
         UsuarioResponseDTO usuarioResponseDTO =
-                transformUsuarioToUsuarioResponseDTO(InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario));
+                transformUsuarioToUsuarioResponseDTO(QueryUtil.getUsuarioByUsuario(usuarioRepository, usuario));
         usuarioResponseDTO.setTrayectoria(trayectoriaRepository.findTrayectoriaResponseDTOByUsuario(usuario));
         return usuarioResponseDTO;
     }
@@ -122,7 +123,7 @@ public class UsuarioService {
 
     @Transactional
     public Usuario updateUsuario(UsuarioRequestDTO usuarioRequestDTO) throws NegocioException{
-        Usuario usuario = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuarioRequestDTO.getUsuario());
+        Usuario usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, usuarioRequestDTO.getUsuario());
 
         transformDTOToUsuario(usuarioRequestDTO, usuario, UPDATE_USUARIO);
         usuarioValidator.validator(usuario);
@@ -177,10 +178,10 @@ public class UsuarioService {
 
     private Trayectoria transformDTOToTrayectoria(TrayectoriaRequestDTO trayectoriaRequestDTO) throws NegocioException {
         Trayectoria trayectoria = new Trayectoria();
-        trayectoria.setGrupo(InspeccionService.getObjectById(grupoRepository, trayectoriaRequestDTO.getGrupo()));
-        trayectoria.setRama(InspeccionService.getObjectById(ramaRepository, trayectoriaRequestDTO.getRama()));
-        trayectoria.setSeccion(InspeccionService.getObjectById(seccionRepository, trayectoriaRequestDTO.getSeccion()));
-        trayectoria.setCargo(InspeccionService.getObjectById(cargoRepository, trayectoriaRequestDTO.getCargo()));
+        trayectoria.setGrupo(QueryUtil.getObjectById(grupoRepository, trayectoriaRequestDTO.getGrupo()));
+        trayectoria.setRama(QueryUtil.getObjectById(ramaRepository, trayectoriaRequestDTO.getRama()));
+        trayectoria.setSeccion(QueryUtil.getObjectById(seccionRepository, trayectoriaRequestDTO.getSeccion()));
+        trayectoria.setCargo(QueryUtil.getObjectById(cargoRepository, trayectoriaRequestDTO.getCargo()));
         trayectoria.setAnioIngreso(trayectoriaRequestDTO.getAnioIngreso());
         trayectoria.setAnioRetiro(trayectoriaRequestDTO.getAnioRetiro());
         return trayectoria;
@@ -217,7 +218,7 @@ public class UsuarioService {
             throw new NegocioException(MessagesValidation.VALIDATION_CONFIRM_CONTRASENA, TypeException.VALIDATION);
         }
 
-        Usuario usuarioToUpdate = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario);
+        Usuario usuarioToUpdate = QueryUtil.getUsuarioByUsuario(usuarioRepository, usuario);
         if(contrasenaRequestDTO.getTypeChangeContrasena().equals(TypeChangeContrasena.MO.toString())
                 && !contrasenaRequestDTO.getActualContrasena().equals(usuarioToUpdate.getContrasena())){
             throw new NegocioException(MessagesValidation.VALIDATION_ACTUAL_CONTRASENA, TypeException.VALIDATION);
@@ -234,7 +235,7 @@ public class UsuarioService {
 
     @Transactional
     public RecuperoContrasena setRecoveredContrasena(String usuario) throws NegocioException, MessagingException {
-        Usuario usuarioRecoveredContrasena = InspeccionService.getUsuarioByUsuario(usuarioRepository, usuario);
+        Usuario usuarioRecoveredContrasena = QueryUtil.getUsuarioByUsuario(usuarioRepository, usuario);
         inactivateEstadoRecuperoContrasena(usuario);
 
         RecuperoContrasena recuperoContrasena = new RecuperoContrasena();

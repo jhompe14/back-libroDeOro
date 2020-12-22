@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.types.TypeChangeContrasena;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ContrasenaRequestDTOValidator implements IValidator{
+public class ContrasenaRequestDTOValidator implements IValidator {
     @Override
     public <T> void validator(T contrasenaRequestDTO) throws NegocioException {
         ContrasenaRequestDTO contrasenaRequestDTOValidate = (ContrasenaRequestDTO) contrasenaRequestDTO;
