@@ -14,4 +14,8 @@ public interface EnlaceRepository extends JpaRepository<Enlace, Integer> {
     @Query("SELECT e FROM Enlace e WHERE e.idPublica = :idPublica")
     Enlace findEnlaceByIdPublica(@Param("idPublica") String idPublica);
 
+    @Query("SELECT e FROM Enlace e WHERE e.anecdota.id = :idAnecdota ")
+    List<Enlace> findEnlaceByIdAnecdota(@Param("idAnecdota") Integer idAnecdota);
+
+
 }

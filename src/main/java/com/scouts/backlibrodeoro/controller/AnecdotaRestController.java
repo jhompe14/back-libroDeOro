@@ -1,14 +1,12 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.*;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.GridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
+import com.scouts.backlibrodeoro.model.Enlace;
 import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
@@ -26,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/anecdota")
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class AnecdotaRestController {
 
     private final AnecdotaService anecdotaService;
@@ -75,16 +73,17 @@ public class AnecdotaRestController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Anecdota> createAnecdota(@RequestPart("nombre") String nombre,
-                                                   @RequestPart("fecha") String fecha,
-                                                   @RequestPart("descripcion") String descripcion,
-                                                   @RequestPart("usuario") String usuario,
-                                                   @RequestPart("rama") String rama,
-                                                   @RequestPart("seccion") String seccion,
-                                                   @RequestPart("attachedFiles") List<MultipartFile> attachedFiles) {
+    public ResponseEntity<Anecdota> createAnecdota(@RequestParam(value = "nombre", required = false) String nombre,
+                                                   @RequestParam(value = "fecha", required = false) String fecha,
+                                                   @RequestParam("descripcion") String descripcion,
+                                                   @RequestParam("usuario") String usuario,
+                                                   @RequestParam("idRama") String idRama,
+                                                   @RequestParam(value = "idSeccion", required = false) String idSeccion,
+                                                   @RequestParam(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
+                                                   @RequestParam(value = "videos", required = false) List<String> videos) {
         try{
             return new ResponseEntity(anecdotaService.createAnecdota(
-                            new AnecdotaRequestDTO(nombre, fecha, descripcion, usuario, rama, seccion, attachedFiles)),
+                            new AnecdotaRequestDTO(nombre, fecha, descripcion, usuario, idRama, idSeccion, attachedFiles, videos)),
                     HttpStatus.CREATED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -96,11 +95,20 @@ public class AnecdotaRestController {
         }
     }
 
-    @PutMapping("/{idAnecdota}")
+    @PutMapping(value = "/{idAnecdota}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Anecdota> updateAnecdota(@PathVariable("idAnecdota") Integer idAnecdota,
-                                                   @RequestBody AnecdotaRequestDTO anecdotaRequestDTO){
+                                                   @RequestParam(value = "nombre", required = false) String nombre,
+                                                   @RequestParam(value = "fecha", required = false) String fecha,
+                                                   @RequestParam("descripcion") String descripcion,
+                                                   @RequestParam("usuario") String usuario,
+                                                   @RequestParam("idRama") String idRama,
+                                                   @RequestParam(value = "idSeccion", required = false) String idSeccion,
+                                                   @RequestParam(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
+                                                   @RequestParam(value = "videos", required = false) List<String> videos){
         try{
-            return new ResponseEntity(this.anecdotaService.updateAnecdota(idAnecdota, anecdotaRequestDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity(this.anecdotaService.updateAnecdota(idAnecdota,
+                    new AnecdotaRequestDTO(nombre, fecha, descripcion, usuario, idRama, idSeccion, attachedFiles, videos)),
+                    HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
@@ -123,10 +131,19 @@ public class AnecdotaRestController {
         }
     }
 
-    @DeleteMapping("/attached/{idPublica}")
-    public ResponseEntity deleteAttachedAnecdota(@PathVariable("idPublica") String idPublica){
+    @GetMapping("/enlace/{idAnecdota}")
+    public ResponseEntity<List<Enlace>> getEnlacesByIdAnecdota(@PathVariable("idAnecdota") Integer idAnecdota){
+        try {
+            return new ResponseEntity(anecdotaService.getEnlacesByIdAnecdota(idAnecdota), HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/enlace/{idEnlace}")
+    public ResponseEntity deleteEnlaceAnecdota(@PathVariable("idEnlace") Integer idEnlace){
         try{
-            this.anecdotaService.deleteAttachedAnecdota(idPublica);
+            this.anecdotaService.deleteEnlaceAnecdota(idEnlace);
             return new ResponseEntity(HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?

@@ -10,13 +10,16 @@ public class Enlace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique=true)
+    @Column
     private String url;
 
-    @Column(name="id_publica", unique=true)
+    @Column(name="id_publica")
     private String idPublica;
 
     private String nombre;
+
+    @Column(name="tipo_enlace")
+    private String tipoEnlace;
 
     @ManyToOne
     @JoinColumn(name = "id_anecdota")
@@ -63,5 +66,13 @@ public class Enlace {
 
     public void setAnecdota(Anecdota anecdota) {
         this.anecdota = anecdota;
+    }
+
+    public String getTipoEnlace() {
+        return tipoEnlace;
+    }
+
+    public void setTipoEnlace(String tipoEnlace) {
+        this.tipoEnlace = tipoEnlace;
     }
 }

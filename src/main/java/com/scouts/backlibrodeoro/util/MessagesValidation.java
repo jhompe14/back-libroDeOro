@@ -59,6 +59,9 @@ public class MessagesValidation {
     public static final String VALIDATION_TIPO_ESTADO_ANECDOTA = "Este estado de anecdota no es valido";
     public static final String VALIDATION_RAMA_ANECDOTA = "La anecdota debe estar asociada a una rama o seccion";
     public static final String VALIDATION_ATTACHED_ANECDOTA = "El archivo adjunto no existe";
+    public static final String VALIDATION_ATTACHED_FORMAT_ANECDOTA = "El formato de los adjuntos debe ser .PNG .JPG .JPEG";
+    public static final String VALIDATION_VIDEO_FORMAT_ANECDOTA = "El nombre y la url son obligatorios para adjuntar videos";
+    public static final String VALIDATION_VIDEO_STRUCTURE_ANECDOTA = "La estructura de los videos esta mal formada";
 
     public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
 

@@ -1,9 +1,11 @@
 package com.scouts.backlibrodeoro.dto.request;
 
+import com.scouts.backlibrodeoro.util.GeneralValidates;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AnecdotaRequestDTO {
 
@@ -21,15 +23,20 @@ public class AnecdotaRequestDTO {
 
     private List<MultipartFile> attachedFiles;
 
+    private List<VideoEnlaceRequestDTO> videosEnlace;
+
     public AnecdotaRequestDTO(String nombre, String fecha, String descripcion, String usuario, String idRama,
-                              String idSeccion, List<MultipartFile> attachedFiles) {
+                              String idSeccion, List<MultipartFile> attachedFiles, List<String> videosEnlace) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.usuario = usuario;
-        this.idRama = Optional.ofNullable(idRama).map(Integer::parseInt).orElse(0);
-        this.idSeccion = Optional.ofNullable(idSeccion).map(Integer::parseInt).orElse(0);
+        this.idRama = Optional.ofNullable(idRama).map(GeneralValidates::validateIntegerType).orElse(0);
+        this.idSeccion = Optional.ofNullable(idSeccion).map(GeneralValidates::validateIntegerType).orElse(0);
         this.attachedFiles = attachedFiles;
+        this.videosEnlace = videosEnlace.stream()
+                            .map(VideoEnlaceRequestDTO::new)
+                            .collect(Collectors.toList());
     }
 
     public String getNombre() {
@@ -86,5 +93,13 @@ public class AnecdotaRequestDTO {
 
     public void setAttachedFiles(List<MultipartFile> attachedFiles) {
         this.attachedFiles = attachedFiles;
+    }
+
+    public List<VideoEnlaceRequestDTO> getVideosEnlace() {
+        return videosEnlace;
+    }
+
+    public void setVideosEnlace(List<VideoEnlaceRequestDTO> videosEnlace) {
+        this.videosEnlace = videosEnlace;
     }
 }

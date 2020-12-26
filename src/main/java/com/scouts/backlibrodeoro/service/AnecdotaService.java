@@ -1,7 +1,9 @@
 package com.scouts.backlibrodeoro.service;
 
+import com.scouts.backlibrodeoro.dto.request.VideoEnlaceRequestDTO;
 import com.scouts.backlibrodeoro.external.CloudinaryComponent;
 import com.scouts.backlibrodeoro.model.*;
+import com.scouts.backlibrodeoro.types.TypeEnlace;
 import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
@@ -81,8 +83,9 @@ public class AnecdotaService {
         transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
+        addVideosAnecdota(anecdota, anecdotaRequestDTO.getVideosEnlace());
+        addImagesAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
         addEstadoAnecdota(anecdota, TypeEstadoAnecdota.PA, anecdota.getUsuario());
-        addAttachedAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
         return anecdota;
     }
 
@@ -93,7 +96,8 @@ public class AnecdotaService {
         transformDTOToAnecdota(anecdota, anecdotaRequestDTO);
         anecdotaValidator.validator(anecdota);
         anecdotaRepository.save(anecdota);
-        addAttachedAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
+        addVideosAnecdota(anecdota, anecdotaRequestDTO.getVideosEnlace());
+        addImagesAnecdota(anecdota, anecdotaRequestDTO.getAttachedFiles());
 
         if(estadoAnecdotaRepository.findEstadoAnecdotaActive(idAnecdota).getEstado()
                 .equals(TypeEstadoAnecdota.PM.toString())){
@@ -123,12 +127,16 @@ public class AnecdotaService {
     }
 
     @Transactional
-    public void deleteAttachedAnecdota(String idPublica) throws NegocioException {
-        Optional.ofNullable(enlaceRepository.findEnlaceByIdPublica(idPublica)).map(enlace -> {
+    public void deleteEnlaceAnecdota(Integer idEnlace) throws NegocioException {
+        enlaceRepository.findById(idEnlace).map(enlace -> {
             try {
-                Map result= cloudinaryComponent.delete(idPublica);
-                if(Optional.ofNullable(result).isPresent() && Optional.ofNullable(result.get("result")).isPresent()
-                        && result.get("result").toString().equals("ok")){
+                if(enlace.getTipoEnlace().equals(TypeEnlace.IM.toString())){
+                    Map result= cloudinaryComponent.delete(enlace.getIdPublica());
+                    if(Optional.ofNullable(result).isPresent() && Optional.ofNullable(result.get("result")).isPresent()
+                            && result.get("result").toString().equals("ok")){
+                        enlaceRepository.delete(enlace);
+                    }
+                }else if(enlace.getTipoEnlace().equals(TypeEnlace.VI.toString())){
                     enlaceRepository.delete(enlace);
                 }
             } catch (IOException e) {
@@ -136,6 +144,11 @@ public class AnecdotaService {
             }
             return Optional.empty();
         }).orElseThrow(() -> new NegocioException(MessagesValidation.VALIDATION_ATTACHED_ANECDOTA, TypeException.VALIDATION));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Enlace> getEnlacesByIdAnecdota(Integer idAnecdota){
+        return enlaceRepository.findEnlaceByIdAnecdota(idAnecdota);
     }
 
     @FunctionalInterface
@@ -185,21 +198,52 @@ public class AnecdotaService {
         estadoAnecdotaRepository.save(estadoAnecdota);
     }
 
-    private void addAttachedAnecdota(Anecdota anecdota, List<MultipartFile> attachedFiles){
+    private void addVideosAnecdota(Anecdota anecdota, List<VideoEnlaceRequestDTO> videosEnlace) throws NegocioException {
+        if(errorFormatVideos(videosEnlace)){
+            throw new NegocioException(MessagesValidation.VALIDATION_VIDEO_FORMAT_ANECDOTA, TypeException.VALIDATION);
+        }
+
+        videosEnlace.forEach(video -> {
+            Enlace enlace = new Enlace();
+            enlace.setNombre(video.getNombre());
+            enlace.setUrl(video.getUrl());
+            enlace.setTipoEnlace(TypeEnlace.VI.toString());
+            enlace.setAnecdota(anecdota);
+            enlaceRepository.save(enlace);
+        });
+    }
+
+    private boolean errorFormatVideos(List<VideoEnlaceRequestDTO> videosEnlace) {
+        return videosEnlace.stream()
+                .map(video -> !video.getNombre().isEmpty() && !video.getUrl().isEmpty())
+                .anyMatch(isCorrect -> !isCorrect);
+    }
+
+    private void addImagesAnecdota(Anecdota anecdota, List<MultipartFile> attachedFiles) throws NegocioException {
+        if(errorFormatImages(attachedFiles)){
+            throw new NegocioException(MessagesValidation.VALIDATION_ATTACHED_FORMAT_ANECDOTA, TypeException.VALIDATION);
+        }
+
         attachedFiles.forEach(attached ->{
             try {
                 Map responseCloudinary = cloudinaryComponent.upload(attached);
                 Enlace enlace = new Enlace();
-                enlace.setNombre(attached.getName());
+                enlace.setNombre(attached.getOriginalFilename());
                 enlace.setIdPublica(responseCloudinary.get("public_id").toString());
                 enlace.setUrl(responseCloudinary.get("url").toString());
+                enlace.setTipoEnlace(TypeEnlace.IM.toString());
                 enlace.setAnecdota(anecdota);
                 enlaceRepository.save(enlace);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-
     }
 
+    private boolean errorFormatImages(List<MultipartFile> attachedFiles) {
+        return attachedFiles.stream().map(attached -> {
+            String fileName = attached.getOriginalFilename().toUpperCase();
+            return fileName.endsWith(".JPG") || fileName.endsWith(".JPEG") || fileName.endsWith(".PNG");
+        }).anyMatch(isCorrect -> !isCorrect);
+    }
 }
