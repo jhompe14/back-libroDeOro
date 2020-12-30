@@ -1,13 +1,11 @@
 package com.scouts.backlibrodeoro.service;
 
-import com.scouts.backlibrodeoro.dto.request.VideoEnlaceRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.*;
+import com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.external.CloudinaryComponent;
 import com.scouts.backlibrodeoro.model.*;
 import com.scouts.backlibrodeoro.types.TypeEnlace;
 import com.scouts.backlibrodeoro.util.QueryUtil;
-import com.scouts.backlibrodeoro.dto.request.AnecdotaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
@@ -69,6 +67,16 @@ public class AnecdotaService {
     @Transactional(readOnly = true)
     public List<AnecdotaGridResponseDTO> getFilterAnecdota(FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
         return anecdotaRepository.getAnecdotasGrid(filterAnecdotaGridRequestDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer countCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
+        return null;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CatalogAnecdotaResponseDTO> getCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
+        return null;
     }
 
     @Transactional(readOnly = true)

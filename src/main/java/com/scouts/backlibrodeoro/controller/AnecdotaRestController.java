@@ -3,6 +3,7 @@ package com.scouts.backlibrodeoro.controller;
 import com.scouts.backlibrodeoro.dto.request.*;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.GridResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
@@ -34,17 +35,6 @@ public class AnecdotaRestController {
         this.anecdotaService = anecdotaService;
     }
 
-    @GetMapping("/{idAnecdota}")
-    public ResponseEntity<AnecdotaResponseDTO> findById(@PathVariable("idAnecdota") Integer idAnecdota) {
-        try {
-            return new ResponseEntity(this.anecdotaService.getAnecdota(idAnecdota), HttpStatus.OK);
-        }catch (NegocioException ex){
-            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }catch (Exception ex){
-            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping
     public ResponseEntity<List<GridResponseDTO>> findGridAnecdota(HttpServletRequest request) {
         try {
@@ -64,6 +54,34 @@ public class AnecdotaRestController {
             return new ResponseEntity(new GridResponseDTO<>(
                     this.anecdotaService.countFilterAnecdota(filterAnecdotaGridRequestDTO),
                     this.anecdotaService.getFilterAnecdota(filterAnecdotaGridRequestDTO)), HttpStatus.OK);
+        } catch (RuntimeException ex){
+            NegocioException negocioException = (NegocioException) ex.getCause();
+            return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{idAnecdota}")
+    public ResponseEntity<AnecdotaResponseDTO> findById(@PathVariable("idAnecdota") Integer idAnecdota) {
+        try {
+            return new ResponseEntity(this.anecdotaService.getAnecdota(idAnecdota), HttpStatus.OK);
+        }catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/catalog")
+    public ResponseEntity<List<CatalogAnecdotaResponseDTO>> findCatalogAnecdota(HttpServletRequest request) {
+        try {
+            CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO = new CatalogAnecdotaRequestDTO(
+                    request.getParameter("usuario"), request.getParameter("page"));
+
+            return new ResponseEntity(new GridResponseDTO<>(
+                    this.anecdotaService.countCatalogAnecdota(catalogAnecdotaRequestDTO),
+                    this.anecdotaService.getCatalogAnecdota(catalogAnecdotaRequestDTO)), HttpStatus.OK);
         } catch (RuntimeException ex){
             NegocioException negocioException = (NegocioException) ex.getCause();
             return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
