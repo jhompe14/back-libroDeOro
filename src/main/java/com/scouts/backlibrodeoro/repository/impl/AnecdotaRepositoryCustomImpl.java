@@ -1,20 +1,26 @@
 package com.scouts.backlibrodeoro.repository.impl;
 
+import com.scouts.backlibrodeoro.dto.request.CatalogAnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.dto.request.FilterAnecdotaGridRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.repository.AnecdotaRepositoryCustom;
+import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
 import com.scouts.backlibrodeoro.types.TypeUsuario;
+import com.scouts.backlibrodeoro.types.TypeVisualizacion;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
 public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
-    private final Integer PAGE_SIZE= 6;
+    private final Integer PAGE_SIZE_GRID= 6;
+    private final Integer PAGE_SIZE_CATALOG = 6;
 
     private final String SQL_ESTADO_ANECDOTA = "(SELECT MAX(easub.id) FROM EstadoAnecdota easub " +
             "INNER JOIN easub.anecdota asub " +
@@ -73,8 +79,37 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
         filterSQL(sql, filterAnecdotaGridRequestDTO);
         sql.append("ORDER BY 1 DESC ");
         Query q = entityManager.createQuery(sql.toString());
-        q.setFirstResult((filterAnecdotaGridRequestDTO.getPage()-1) * PAGE_SIZE);
-        q.setMaxResults(PAGE_SIZE);
+        q.setFirstResult((filterAnecdotaGridRequestDTO.getPage()-1) * PAGE_SIZE_GRID);
+        q.setMaxResults(PAGE_SIZE_GRID);
+        return q.getResultList();
+    }
+
+    @Override
+    public Integer countCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public List<CatalogAnecdotaResponseDTO> getCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT new com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO" +
+                "(a.nombre) " +
+                "FROM Anecdota a " +
+                "INNER JOIN a.rama r " +
+                "LEFT JOIN a.seccion s " +
+                "INNER JOIN a.usuario u " +
+                "WHERE 1=1 ");
+
+        filterEstadoSQL(sql, TypeEstadoAnecdota.AP.toString());
+        sql.append("( ");
+        filterRamaUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
+        filterSeccionUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
+        filterVisualizacionAnecdotaSQL(sql, TypeVisualizacion.PL.toString());
+        sql.append(") ");
+
+        Query q = entityManager.createQuery(sql.toString());
+        q.setFirstResult((catalogAnecdotaRequestDTO.getPage()-1) * PAGE_SIZE_CATALOG);
+        q.setMaxResults(PAGE_SIZE_CATALOG);
         return q.getResultList();
     }
 
@@ -148,6 +183,29 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "                INNER JOIN ea_ea.anecdota ea_eaa " +
                 "                WHERE ea_ea.estado = '"+estado+"' " +
                 "                AND ea_ea.id= "+SQL_ESTADO_ANECDOTA+") ");
+    }
+
+    private void filterRamaUsuarioSQL(StringBuilder sql, String usuario){
+        sql.append("OR (r.id IN(SELECT rt.id FROM Trayectoria t " +
+                                "INNER JOIN t.usuario usurt " +
+                                "INNER JOIN t.rama rt "+
+                                "LEFT JOIN t.seccion srt "+
+                                "WHERE usurt.usuario = '"+usuario+"' " +
+                                "AND srt IS NULL) " +
+                        "AND s IS NULL) ");
+    }
+
+    private void filterSeccionUsuarioSQL(StringBuilder sql, String usuario){
+        sql.append("OR (s.id IN(SELECT st.id FROM Trayectoria t " +
+                                "INNER JOIN t.usuario usust " +
+                                "LEFT JOIN t.seccion sst " +
+                                "WHERE usust.usuario = '"+usuario+"' " +
+                                "AND sst NOT IS NULL)" +
+                        "AND s NOT IS NULL) ");
+    }
+
+    private void filterVisualizacionAnecdotaSQL(StringBuilder sql, String visualizacion){
+        sql.append("OR (a.visualizacion = '"+visualizacion+"') ");
     }
 
     private <T> Boolean filterPresent(T filter){
