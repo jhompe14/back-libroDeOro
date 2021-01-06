@@ -111,6 +111,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "WHERE 1=1 ");
 
         filterCatalogSQL(sql, catalogAnecdotaRequestDTO);
+        sql.append("ORDER BY 1 DESC ");
         Query q = entityManager.createQuery(sql.toString());
         q.setFirstResult((catalogAnecdotaRequestDTO.getPage()-1) * PAGE_SIZE_CATALOG);
         q.setMaxResults(PAGE_SIZE_CATALOG);
