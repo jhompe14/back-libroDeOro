@@ -1,15 +1,12 @@
 package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.request.*;
-import com.scouts.backlibrodeoro.dto.response.AnecdotaGridResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO;
-import com.scouts.backlibrodeoro.dto.response.GridResponseDTO;
+import com.scouts.backlibrodeoro.dto.response.PageResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.Enlace;
-import com.scouts.backlibrodeoro.model.Grupo;
-import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +33,7 @@ public class AnecdotaRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GridResponseDTO>> findGridAnecdota(HttpServletRequest request) {
+    public ResponseEntity<PageResponseDTO> findGridAnecdota(HttpServletRequest request) {
         try {
             FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO =
                     new FilterAnecdotaGridRequestDTO(request.getParameter("idGrupo"),
@@ -51,7 +48,7 @@ public class AnecdotaRestController {
                             request.getParameter("codigoAnecdota"),
                             request.getParameter("page"));
 
-            return new ResponseEntity(new GridResponseDTO<>(
+            return new ResponseEntity(new PageResponseDTO<>(
                     this.anecdotaService.countFilterAnecdota(filterAnecdotaGridRequestDTO),
                     this.anecdotaService.getFilterAnecdota(filterAnecdotaGridRequestDTO)), HttpStatus.OK);
         } catch (RuntimeException ex){
@@ -74,12 +71,12 @@ public class AnecdotaRestController {
     }
 
     @GetMapping("/catalog")
-    public ResponseEntity<List<CatalogAnecdotaResponseDTO>> findCatalogAnecdota(HttpServletRequest request) {
+    public ResponseEntity<PageResponseDTO> findCatalogAnecdota(HttpServletRequest request) {
         try {
             CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO = new CatalogAnecdotaRequestDTO(
                     request.getParameter("usuario"), request.getParameter("page"));
 
-            return new ResponseEntity(new GridResponseDTO<>(
+            return new ResponseEntity(new PageResponseDTO<>(
                     this.anecdotaService.countCatalogAnecdota(catalogAnecdotaRequestDTO),
                     this.anecdotaService.getCatalogAnecdota(catalogAnecdotaRequestDTO)), HttpStatus.OK);
         } catch (RuntimeException ex){

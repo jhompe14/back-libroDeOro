@@ -1,18 +1,54 @@
 package com.scouts.backlibrodeoro.dto.response;
 
+import com.scouts.backlibrodeoro.util.LibroOroUtil;
+
+import java.util.Date;
+
 public class CatalogAnecdotaResponseDTO {
 
-    private String nombre;
+    private Integer idAnecdota;
 
-    public CatalogAnecdotaResponseDTO(String nombre) {
-        this.nombre = nombre;
+    private String nombreSuceso;
+
+    private String descripcionSuceso;
+
+    private String fechaSuceso;
+
+    private String nombreUsuario;
+
+    private String usuario;
+
+    public CatalogAnecdotaResponseDTO(Integer idAnecdota, String nombreSuceso, String descripcionSuceso, Date fechaSuceso,
+                                      String nombreUsuario, String apellidoUsuario, String usuario) {
+        this.idAnecdota = idAnecdota;
+        this.nombreSuceso = nombreSuceso;
+        this.descripcionSuceso = descripcionSuceso;
+        this.fechaSuceso = LibroOroUtil.setFormatDate(fechaSuceso);
+        this.nombreUsuario = nombreUsuario+" "+apellidoUsuario;
+        this.usuario = usuario;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Integer getIdAnecdota() {
+        return idAnecdota;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getNombreSuceso() {
+        return nombreSuceso;
+    }
+
+    public String getDescripcionSuceso() {
+        return descripcionSuceso;
+    }
+
+    public String getFechaSuceso() {
+        return fechaSuceso;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public String getUsuario() {
+        return usuario;
     }
 }

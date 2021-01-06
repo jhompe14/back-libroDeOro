@@ -56,7 +56,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "INNER JOIN a.usuario u " +
                 "WHERE 1=1 ");
 
-        filterSQL(sql, filterAnecdotaGridRequestDTO);
+        filterGridSQL(sql, filterAnecdotaGridRequestDTO);
         Query q = entityManager.createQuery(sql.toString());
         return q.getSingleResult() != null ? Integer.parseInt(q.getSingleResult().toString()) : 0;
     }
@@ -76,7 +76,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
                 "INNER JOIN a.usuario u " +
                 "WHERE 1=1 ");
 
-        filterSQL(sql, filterAnecdotaGridRequestDTO);
+        filterGridSQL(sql, filterAnecdotaGridRequestDTO);
         sql.append("ORDER BY 1 DESC ");
         Query q = entityManager.createQuery(sql.toString());
         q.setFirstResult((filterAnecdotaGridRequestDTO.getPage()-1) * PAGE_SIZE_GRID);
@@ -86,34 +86,49 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
     @Override
     public Integer countCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO) {
-        return null;
-    }
-
-    @Override
-    public List<CatalogAnecdotaResponseDTO> getCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT new com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO" +
-                "(a.nombre) " +
+        sql.append("SELECT COUNT(1) " +
                 "FROM Anecdota a " +
                 "INNER JOIN a.rama r " +
                 "LEFT JOIN a.seccion s " +
                 "INNER JOIN a.usuario u " +
                 "WHERE 1=1 ");
 
-        filterEstadoSQL(sql, TypeEstadoAnecdota.AP.toString());
-        sql.append("( ");
-        filterRamaUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
-        filterSeccionUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
-        filterVisualizacionAnecdotaSQL(sql, TypeVisualizacion.PL.toString());
-        sql.append(") ");
+        filterCatalogSQL(sql, catalogAnecdotaRequestDTO);
+        Query q = entityManager.createQuery(sql.toString());
+        return q.getSingleResult() != null ? Integer.parseInt(q.getSingleResult().toString()) : 0;
+    }
 
+    @Override
+    public List<CatalogAnecdotaResponseDTO> getCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT new com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO" +
+                "(a.id, a.nombre, a.descripcion, a.fecha, u.nombres, u.apellidos, u.usuario) " +
+                "FROM Anecdota a " +
+                "INNER JOIN a.rama r " +
+                "LEFT JOIN a.seccion s " +
+                "INNER JOIN a.usuario u " +
+                "WHERE 1=1 ");
+
+        filterCatalogSQL(sql, catalogAnecdotaRequestDTO);
         Query q = entityManager.createQuery(sql.toString());
         q.setFirstResult((catalogAnecdotaRequestDTO.getPage()-1) * PAGE_SIZE_CATALOG);
         q.setMaxResults(PAGE_SIZE_CATALOG);
         return q.getResultList();
     }
 
-    private void filterSQL(StringBuilder sql, FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
+    private void filterCatalogSQL(StringBuilder sql, CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
+        filterEstadoSQL(sql, TypeEstadoAnecdota.AP.toString());
+        sql.append("AND ( ");
+        filterRamaUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
+        sql.append("OR ");
+        filterSeccionUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
+        sql.append("OR ");
+        filterVisualizacionAnecdotaSQL(sql, TypeVisualizacion.PL.toString());
+        sql.append(") ");
+    }
+
+    private void filterGridSQL(StringBuilder sql, FilterAnecdotaGridRequestDTO filterAnecdotaGridRequestDTO){
         if(filterPresent(filterAnecdotaGridRequestDTO.getIdGrupo()))
             sql.append("AND g.id = "+ filterAnecdotaGridRequestDTO.getIdGrupo()+" ");
         if(filterPresent(filterAnecdotaGridRequestDTO.getIdRama()))
@@ -186,7 +201,7 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     }
 
     private void filterRamaUsuarioSQL(StringBuilder sql, String usuario){
-        sql.append("OR (r.id IN(SELECT rt.id FROM Trayectoria t " +
+        sql.append("(r.id IN(SELECT rt.id FROM Trayectoria t " +
                                 "INNER JOIN t.usuario usurt " +
                                 "INNER JOIN t.rama rt "+
                                 "LEFT JOIN t.seccion srt "+
@@ -196,16 +211,16 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
     }
 
     private void filterSeccionUsuarioSQL(StringBuilder sql, String usuario){
-        sql.append("OR (s.id IN(SELECT st.id FROM Trayectoria t " +
+        sql.append("(s.id IN(SELECT sst.id FROM Trayectoria t " +
                                 "INNER JOIN t.usuario usust " +
                                 "LEFT JOIN t.seccion sst " +
                                 "WHERE usust.usuario = '"+usuario+"' " +
-                                "AND sst NOT IS NULL)" +
-                        "AND s NOT IS NULL) ");
+                                "AND sst IS NOT NULL) " +
+                        "AND s IS NOT NULL) ");
     }
 
     private void filterVisualizacionAnecdotaSQL(StringBuilder sql, String visualizacion){
-        sql.append("OR (a.visualizacion = '"+visualizacion+"') ");
+        sql.append("(a.visualizacion = '"+visualizacion+"') ");
     }
 
     private <T> Boolean filterPresent(T filter){

@@ -71,12 +71,12 @@ public class AnecdotaService {
 
     @Transactional(readOnly = true)
     public Integer countCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
-        return null;
+        return anecdotaRepository.countCatalogAnecdota(catalogAnecdotaRequestDTO);
     }
 
     @Transactional(readOnly = true)
     public List<CatalogAnecdotaResponseDTO> getCatalogAnecdota(CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
-        return null;
+        return anecdotaRepository.getCatalogAnecdota(catalogAnecdotaRequestDTO);
     }
 
     @Transactional(readOnly = true)
