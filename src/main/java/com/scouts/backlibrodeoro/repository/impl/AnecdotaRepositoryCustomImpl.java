@@ -20,7 +20,7 @@ import java.util.Optional;
 public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
     private final Integer PAGE_SIZE_GRID= 6;
-    private final Integer PAGE_SIZE_CATALOG = 6;
+    private final Integer PAGE_SIZE_CATALOG = 8;
 
     private final String SQL_ESTADO_ANECDOTA = "(SELECT MAX(easub.id) FROM EstadoAnecdota easub " +
             "INNER JOIN easub.anecdota asub " +
