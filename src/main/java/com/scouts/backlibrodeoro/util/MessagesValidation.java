@@ -47,7 +47,7 @@ public class MessagesValidation {
     public static final String VALIDATION_CIUDAD_REQUIRED = "La ciudad es obligatoria";
 
     public static final String VALIDATION_TRAYECTORIA_REQUIRED =
-            "Los campos obligatorios son: </br> Grupo </br> A\u00F1o ingreso";
+            "Los campos obligatorios son: </br> Grupo </br> Rama </br> A\u00F1o ingreso";
     public static final String VALIDATION_ANIO_INGRESO_VALIDA =
             "La fecha ingreso en la trayectoria debe estar entre 1940 y el a\u00F1o actual";
     public static final String VALIDATION_ANIO_INGRESO_MAJOR_TO_ANIO_RETIRO =
@@ -56,17 +56,16 @@ public class MessagesValidation {
     public static final String VALIDATION_ANECDOTA_DESCRIPCION = "La descripci\u00F3n es obligatoria";
     public static final String VALIDATION_ANECDOTA_FECHA =
             "La fecha de la anecdota no puede ser superior a la fecha actual";
+    public static final String VALIDATION_ANECDOTA_CATALOG_DATES = "La fecha inicio no puede ser superior a la fecha final";
     public static final String VALIDATION_TIPO_ESTADO_ANECDOTA = "Este estado de anecdota no es valido";
     public static final String VALIDATION_RAMA_ANECDOTA = "La anecdota debe estar asociada a una rama o seccion";
     public static final String VALIDATION_ATTACHED_ANECDOTA = "El archivo adjunto no existe";
     public static final String VALIDATION_ATTACHED_FORMAT_ANECDOTA = "El formato de los adjuntos debe ser .PNG .JPG .JPEG";
     public static final String VALIDATION_VIDEO_FORMAT_ANECDOTA = "El nombre y la url son obligatorios para adjuntar videos";
-    public static final String VALIDATION_VIDEO_STRUCTURE_ANECDOTA = "La estructura de los videos esta mal formada";
 
     public static final String VALIDATION_FORMAT_FECHA = "El formato de la fecha no es el correcto";
 
-    public static final String VALIDATION_ESTADO_VISUALIZACION_ANECDOTA =
-            "Los campos obligatorios son: </br> Estado an\u00E9cdota </br> Visualizaci\u00F3n";
+    public static final String VALIDATION_ESTADO_VISUALIZACION_ANECDOTA = "El campo Visualizaci\u00F3n es obligatorio";
     public static final String VALIDATION_USUARIO_MODIFICACION_ANECDOTA =
             "Si el estado es pendiente modificaci\u00F3n debe agregar un usuario";
 

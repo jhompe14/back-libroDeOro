@@ -74,15 +74,20 @@ public class AnecdotaRestController {
     public ResponseEntity<PageResponseDTO> findCatalogAnecdota(HttpServletRequest request) {
         try {
             CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO = new CatalogAnecdotaRequestDTO(
-                    request.getParameter("usuario"), request.getParameter("page"));
+                    request.getParameter("usuario"),
+                    request.getParameter("fechaInicioAnecdota"),
+                    request.getParameter("fechaFinAnecdota"),
+                    request.getParameter("page"));
 
             return new ResponseEntity(new PageResponseDTO<>(
                     this.anecdotaService.countCatalogAnecdota(catalogAnecdotaRequestDTO),
                     this.anecdotaService.getCatalogAnecdota(catalogAnecdotaRequestDTO)), HttpStatus.OK);
-        } catch (RuntimeException ex){
+        }catch (NegocioException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex){
             NegocioException negocioException = (NegocioException) ex.getCause();
             return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception ex) {
+        }catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

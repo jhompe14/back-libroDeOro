@@ -20,7 +20,8 @@ public class EstadoAnecdotaRequestDTOValidator implements IValidator {
         if(!validateRequeried(estadoAnecdotaRequestDTOValidate))
             throw new NegocioException(MessagesValidation.VALIDATION_ESTADO_VISUALIZACION_ANECDOTA,
                     TypeException.VALIDATION);
-        if(!validateUserModify(estadoAnecdotaRequestDTOValidate)){
+        if(GeneralValidates.validateStringNotIsEmpty(estadoAnecdotaRequestDTOValidate.getEstado())
+                && !validateUserModify(estadoAnecdotaRequestDTOValidate)){
             throw new NegocioException(MessagesValidation.VALIDATION_USUARIO_MODIFICACION_ANECDOTA,
                     TypeException.VALIDATION);
         }
@@ -29,17 +30,14 @@ public class EstadoAnecdotaRequestDTOValidator implements IValidator {
 
     private boolean validateRequeried(EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO){
         return Optional.ofNullable(estadoAnecdotaRequestDTO).map(ear ->
-                GeneralValidates.validateStringNotIsEmpty(ear.getEstado())
-                        && GeneralValidates.validateStringNotIsEmpty(ear.getVisualizacion())).orElse(false);
-
+                GeneralValidates.validateStringNotIsEmpty(ear.getVisualizacion())).orElse(false);
     }
 
     private boolean validateUserModify(EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO) {
         return Optional.ofNullable(estadoAnecdotaRequestDTO).map(ear ->
-                GeneralValidates.validateStringNotIsEmpty(ear.getEstado())
-                        && (!ear.getEstado().equals(TypeEstadoAnecdota.PM.toString())
-                                || (ear.getEstado().equals(TypeEstadoAnecdota.PM.toString())
-                                        && GeneralValidates.validateStringNotIsEmpty(ear.getUsuarioModificacion()))
-                        )).orElse(false);
+                !ear.getEstado().equals(TypeEstadoAnecdota.PM.toString())
+                    || (ear.getEstado().equals(TypeEstadoAnecdota.PM.toString())
+                            && GeneralValidates.validateStringNotIsEmpty(ear.getUsuarioModificacion()))
+                ).orElse(false);
     }
 }

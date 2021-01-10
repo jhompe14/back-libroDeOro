@@ -34,7 +34,8 @@ public class TrayectoriaValidator implements IValidator {
     private Boolean validateRequired(Trayectoria trayectoriaValidation){
         return Optional.ofNullable(trayectoriaValidation).map(r ->
                     Optional.ofNullable(r.getAnioIngreso()).isPresent() &&
-                    Optional.ofNullable(r.getGrupo()).isPresent()
+                    Optional.ofNullable(r.getGrupo()).isPresent() &&
+                    Optional.ofNullable(r.getRama()).isPresent()
         ).orElse(false);
     }
 

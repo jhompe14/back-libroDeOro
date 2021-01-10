@@ -123,13 +123,17 @@ public class AnecdotaService {
        anecdota.setVisualizacion(estadoAnecdotaRequestDTO.getVisualizacion());
        anecdotaRepository.save(anecdota);
 
-        Usuario usuario = null;
-        if(estadoAnecdotaRequestDTO.getEstado().equals(TypeEstadoAnecdota.PM.toString())){
-            usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
-        } else{
-            usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuario());
+        if(Optional.ofNullable(estadoAnecdotaRequestDTO.getEstado()).isPresent() &&
+                GeneralValidates.validateStringNotIsEmpty(estadoAnecdotaRequestDTO.getEstado())) {
+            Usuario usuario = null;
+            if(estadoAnecdotaRequestDTO.getEstado().equals(TypeEstadoAnecdota.PM.toString())){
+                usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
+            } else{
+                usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuario());
+            }
+
+            addEstadoAnecdota(anecdota, TypeEstadoAnecdota.valueOf(estadoAnecdotaRequestDTO.getEstado()), usuario);
         }
-        addEstadoAnecdota(anecdota, TypeEstadoAnecdota.valueOf(estadoAnecdotaRequestDTO.getEstado()), usuario);
 
        return anecdota;
     }

@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +121,8 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
     private void filterCatalogSQL(StringBuilder sql, CatalogAnecdotaRequestDTO catalogAnecdotaRequestDTO){
         filterEstadoSQL(sql, TypeEstadoAnecdota.AP.toString());
+        filterRangeFechaAnecdotaSQL(sql, catalogAnecdotaRequestDTO.getFechaInicioAnecdota(),
+                catalogAnecdotaRequestDTO.getFechaFinAnecdota());
         sql.append("AND ( ");
         filterRamaUsuarioSQL(sql, catalogAnecdotaRequestDTO.getUsuario());
         sql.append("OR ");
@@ -136,14 +139,12 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
             sql.append("AND r.id = "+ filterAnecdotaGridRequestDTO.getIdRama()+" ");
         if(filterPresent(filterAnecdotaGridRequestDTO.getIdSeccion()))
             sql.append("AND s.id = "+ filterAnecdotaGridRequestDTO.getIdSeccion()+" ");
-        if(filterPresent(filterAnecdotaGridRequestDTO.getFechaInicioAnecdota()) &&
-            filterPresent(filterAnecdotaGridRequestDTO.getFechaFinAnecdota()))
-            sql.append("AND a.fecha BETWEEN '"+ filterAnecdotaGridRequestDTO.getFechaInicioAnecdota()+"' " +
-                    "AND '"+ filterAnecdotaGridRequestDTO.getFechaFinAnecdota()+"' ");
         if(filterPresent(filterAnecdotaGridRequestDTO.getCodigoAnecdota()))
             sql.append("AND a.id = "+filterAnecdotaGridRequestDTO.getCodigoAnecdota()+"");
 
         filterEstadoAnecdota(sql, filterAnecdotaGridRequestDTO);
+        filterRangeFechaAnecdotaSQL(sql, filterAnecdotaGridRequestDTO.getFechaInicioAnecdota(),
+                filterAnecdotaGridRequestDTO.getFechaFinAnecdota());
     }
 
     private void filterEstadoAnecdota(StringBuilder sql,
@@ -222,6 +223,11 @@ public class AnecdotaRepositoryCustomImpl implements AnecdotaRepositoryCustom {
 
     private void filterVisualizacionAnecdotaSQL(StringBuilder sql, String visualizacion){
         sql.append("(a.visualizacion = '"+visualizacion+"') ");
+    }
+
+    private void filterRangeFechaAnecdotaSQL(StringBuilder sql, Date fechaInicioAnecdota, Date fechaFinAnecdota){
+        if(filterPresent(fechaInicioAnecdota) && filterPresent(fechaFinAnecdota))
+            sql.append("AND a.fecha BETWEEN '"+ fechaInicioAnecdota+"' AND '"+ fechaFinAnecdota+"' ");
     }
 
     private <T> Boolean filterPresent(T filter){
