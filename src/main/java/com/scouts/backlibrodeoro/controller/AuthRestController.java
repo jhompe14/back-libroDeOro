@@ -3,7 +3,6 @@ package com.scouts.backlibrodeoro.controller;
 import com.scouts.backlibrodeoro.auth.JWTGenerator;
 import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")

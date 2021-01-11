@@ -2,7 +2,6 @@ package com.scouts.backlibrodeoro.controller;
 
 import com.scouts.backlibrodeoro.dto.request.*;
 import com.scouts.backlibrodeoro.dto.response.AnecdotaResponseDTO;
-import com.scouts.backlibrodeoro.dto.response.CatalogAnecdotaResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.PageResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Anecdota;

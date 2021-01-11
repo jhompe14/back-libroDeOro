@@ -10,6 +10,7 @@ import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
+import com.scouts.backlibrodeoro.service.impl.CargoServiceImpl;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.impl.CargoValidator;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class CargoServiceTest {
+public class CargoServiceImplTest {
 
     private CargoRepository cargoRepository;
     private GrupoRepository grupoRepository;
@@ -32,7 +33,7 @@ public class CargoServiceTest {
     private SeccionRepository seccionRepository;
     private CargoValidator cargoValidator;
 
-    private CargoService cargoService;
+    private CargoServiceImpl cargoServiceImpl;
 
     @BeforeEach
     public void init(){
@@ -41,7 +42,7 @@ public class CargoServiceTest {
         ramaRepository = mock(RamaRepository.class);
         seccionRepository = mock(SeccionRepository.class);
         cargoValidator = mock(CargoValidator.class);
-        cargoService = new CargoService(cargoRepository, grupoRepository, ramaRepository,
+        cargoServiceImpl = new CargoServiceImpl(cargoRepository, grupoRepository, ramaRepository,
                 seccionRepository, cargoValidator);
     }
 
@@ -55,7 +56,7 @@ public class CargoServiceTest {
         when(cargoRepository.findCargoByTypeGrupo(idType)).thenReturn(cargoList);
 
         //Act
-        List<Cargo> result= cargoService.getAllCargosByType(typeCargo, idType);
+        List<Cargo> result= cargoServiceImpl.getAllCargosByType(typeCargo, idType);
 
         //Assert
         verify(cargoRepository).findCargoByTypeGrupo(idType);
@@ -72,7 +73,7 @@ public class CargoServiceTest {
         when(cargoRepository.findCargoByTypeRama(idType)).thenReturn(cargoList);
 
         //Act
-        List<Cargo> result= cargoService.getAllCargosByType(typeCargo, idType);
+        List<Cargo> result= cargoServiceImpl.getAllCargosByType(typeCargo, idType);
 
         //Assert
         verify(cargoRepository).findCargoByTypeRama(idType);
@@ -89,7 +90,7 @@ public class CargoServiceTest {
         when(cargoRepository.findCargoByTypeSeccion(idType)).thenReturn(cargoList);
 
         //Act
-        List<Cargo> result= cargoService.getAllCargosByType(typeCargo, idType);
+        List<Cargo> result= cargoServiceImpl.getAllCargosByType(typeCargo, idType);
 
         //Assert
         verify(cargoRepository).findCargoByTypeSeccion(idType);
@@ -106,7 +107,7 @@ public class CargoServiceTest {
         when(cargoRepository.findById(idCargo)).thenReturn(cargoOptional);
 
         //Act
-        Cargo result = cargoService.getCargo(idCargo);
+        Cargo result = cargoServiceImpl.getCargo(idCargo);
 
         //Assert
         assertEquals(cargo.getId(), result.getId());
@@ -121,7 +122,7 @@ public class CargoServiceTest {
 
         //Act
         NegocioException exception= Assertions.assertThrows(NegocioException.class, () ->
-                cargoService.getCargo(idCargo), MessagesValidation.ERROR_CARGO_NO_EXISTE);
+                cargoServiceImpl.getCargo(idCargo), MessagesValidation.ERROR_CARGO_NO_EXISTE);
 
         //Assert
         assertEquals(MessagesValidation.ERROR_CARGO_NO_EXISTE, exception.getMessage());
@@ -138,7 +139,7 @@ public class CargoServiceTest {
 
         //Act
         try {
-            cargoService.createCargo("", idType, cargoRequestDTO);
+            cargoServiceImpl.createCargo("", idType, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -159,7 +160,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
+        Cargo result= cargoServiceImpl.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(grupoRepository).findById(idType);
@@ -181,7 +182,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
+        Cargo result= cargoServiceImpl.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(ramaRepository).findById(idType);
@@ -203,7 +204,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result= cargoService.createCargo(typeCargo, idType, cargoRequestDTO);
+        Cargo result= cargoServiceImpl.createCargo(typeCargo, idType, cargoRequestDTO);
 
         //Assert
         verify(seccionRepository).findById(idType);
@@ -221,7 +222,7 @@ public class CargoServiceTest {
 
         //Act
         try {
-            cargoService.updateCargo(idCargo, cargoRequestDTO);
+            cargoServiceImpl.updateCargo(idCargo, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_CARGO_NO_EXISTE, ex.getMessage());
@@ -239,7 +240,7 @@ public class CargoServiceTest {
 
         //Act
         try {
-            cargoService.updateCargo(idCargo, cargoRequestDTO);
+            cargoServiceImpl.updateCargo(idCargo, cargoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -260,7 +261,7 @@ public class CargoServiceTest {
         when(cargoRepository.save(any())).thenReturn(cargo);
 
         //Act
-        Cargo result = cargoService.updateCargo(idCargo, cargoRequestDTO);
+        Cargo result = cargoServiceImpl.updateCargo(idCargo, cargoRequestDTO);
 
         //Assert
         assertEquals(cargo.getId(), result.getId());
@@ -274,7 +275,7 @@ public class CargoServiceTest {
 
         //Act
         try {
-            cargoService.deleteCargo(idCargo);
+            cargoServiceImpl.deleteCargo(idCargo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_CARGO_NO_EXISTE, ex.getMessage());
@@ -289,7 +290,7 @@ public class CargoServiceTest {
         doNothing().when(cargoRepository).delete(any());
 
         //Act
-        cargoService.deleteCargo(idCargo);
+        cargoServiceImpl.deleteCargo(idCargo);
 
         //Assert
         verify(cargoRepository).delete(any());
