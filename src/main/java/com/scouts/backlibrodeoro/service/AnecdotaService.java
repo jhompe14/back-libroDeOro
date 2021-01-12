@@ -34,6 +34,8 @@ public interface AnecdotaService {
     Anecdota updateEstadoVisualizacionAnecdota(Integer idAnecdota, EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO)
             throws NegocioException, MessagingException;
 
+    void sendNotificationEstadoAnecdotaPM(Integer idAnecdota, String usuario);
+
     void deleteEnlaceAnecdota(Integer idEnlace) throws NegocioException;
 
     List<Enlace> getEnlacesByIdAnecdota(Integer idAnecdota);

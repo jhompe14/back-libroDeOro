@@ -9,6 +9,9 @@ public class MessagesValidation {
     public static final String ERROR_USUARIO_NO_EXISTE = "El usuario no existe";
     public static final String ERROR_ANECDOTA_NO_EXISTE = "La anecdota no existe";
 
+    public static final String ERROR_CODIGO_RECOVERED_CONTRASENA_NO_VALIDO = "El c\u00F3digo de recuperaci\u00F3n no esta disponible";
+    public static final String ERROR_CORREO_RECEPTOR_NO_VALIDO = "El correo del receptor no es valido";
+
     public static final String VALIDATION_NOMBRE_OBLIGATORIO = "El nombre es obligatorio";
     public static final String VALIDATION_TODOS_CAMPOS_OBLIGATORIOS = "Debe diligenciar todos los campos obligatorios: ";
     public static final String VALIDATION_EDAD_MINIMA_MAXIMA =
@@ -75,7 +78,4 @@ public class MessagesValidation {
     public static final String VALIDATION_TYPE_CHANGE_CONTRASENA_RECOVERED_REQUIRED =
             "Los campos obligatorios son </br> Contrase\u00F1a Actual </br> Nueva Contrase\u00F1a";
     public static final String VALIDATION_ACTUAL_CONTRASENA = "La contrase\u00F1a actual no coincide";
-
-    public static final String CODIGO_RECOVERED_CONTRASENA_NO_VALIDO = "El c\u00F3digo de recuperaci\u00F3n no esta disponible";
-
 }

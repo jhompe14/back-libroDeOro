@@ -8,6 +8,7 @@ import com.scouts.backlibrodeoro.model.Anecdota;
 import com.scouts.backlibrodeoro.model.Enlace;
 import com.scouts.backlibrodeoro.service.AnecdotaService;
 import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -146,6 +148,20 @@ public class AnecdotaRestController {
             return new ResponseEntity(ex.getMessage(), ex.getTypeException().equals(TypeException.VALIDATION) ?
                     HttpStatus.BAD_REQUEST: HttpStatus.NOT_FOUND);
         }catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/notification/estado")
+    public ResponseEntity sendNotificationEstadoAnecdotaPM(
+            @RequestBody AnecdotaNotificationEstadoPMDTO anecdotaNotificationEstadoPMDTO){
+        try{
+            this.anecdotaService.sendNotificationEstadoAnecdotaPM(anecdotaNotificationEstadoPMDTO.getIdAnecdota(),
+                    anecdotaNotificationEstadoPMDTO.getUsuario());
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        } catch (RuntimeException ex) {
+            return new ResponseEntity(MessagesValidation.ERROR_CORREO_RECEPTOR_NO_VALIDO, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

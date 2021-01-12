@@ -136,6 +136,7 @@ public class AnecdotaServiceImpl implements AnecdotaService {
 
         if(Optional.ofNullable(estadoAnecdotaRequestDTO.getEstado()).isPresent() &&
                 GeneralValidates.validateStringNotIsEmpty(estadoAnecdotaRequestDTO.getEstado())) {
+
             Usuario usuario = null;
             if(estadoAnecdotaRequestDTO.getEstado().equals(TypeEstadoAnecdota.PM.toString())){
                 usuario = QueryUtil.getUsuarioByUsuario(usuarioRepository, estadoAnecdotaRequestDTO.getUsuarioModificacion());
@@ -147,6 +148,25 @@ public class AnecdotaServiceImpl implements AnecdotaService {
         }
 
        return anecdota;
+    }
+
+    @Transactional(readOnly = true)
+    public void sendNotificationEstadoAnecdotaPM(Integer idAnecdota, String usuario){
+        Usuario usuarioSolicitud = usuarioRepository.findUsuarioByUsuario(usuario);
+        usuarioRepository.findUsuariosAdmin().forEach(usuarioAdmin -> {
+            final String SUBJECT_EMAIL = "Solicitud de modificaci\u00F3n de an\u00E9cdota";
+            final String CONTENT_EMAIL = "El usuario <b>"+usuarioSolicitud.getUsuario()+"</b> " +
+                    "<br> Nombre: <b>"+usuarioSolicitud.getNombres()+" "+usuarioSolicitud.getApellidos()+"</b>" +
+                    "<br> Correo: <b>"+usuarioSolicitud.getCorreo()+"</b>" +
+                    "<br> acaba de solicitar el permiso de modificaci\u00F3n para la an\u00E9cdota con codigo <b>"+idAnecdota+"</b>  " +
+                    "<br> Ingrese por favor al listado de an\u00E9cdotas para conceder el permiso o en su defecto comun\u00EDquese " +
+                    "con el usuario para exponer las razones por el cual es permiso no ser\u00E1 concedido";
+            try {
+                LibroOroUtil.sendEmail(usuarioAdmin.getCorreo(), SUBJECT_EMAIL, CONTENT_EMAIL);
+            } catch (MessagingException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     @Override

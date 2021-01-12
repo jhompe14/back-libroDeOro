@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
 
@@ -18,7 +20,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
     @Query("SELECT usu FROM Usuario usu WHERE usu.usuario = :usuario")
     Usuario findUsuarioByUsuario(@Param("usuario") String usuario);
 
-    @Query("Select usu FROM Usuario usu WHERE usu.usuario = " +
+    @Query("SELECT usu FROM Usuario usu WHERE usu.usuario = " +
             "(SELECT rc.usuario.usuario FROM RecuperoContrasena rc WHERE rc.codigo= :codigo AND rc.estado = :estado)")
     Usuario findUsuarioByRecoverd(@Param("codigo") String codigo, @Param("estado") String estado);
+
+    @Query("SELECT usu FROM Usuario usu WHERE usu.tipoUsuario = 'AD'")
+    List<Usuario> findUsuariosAdmin();
 }

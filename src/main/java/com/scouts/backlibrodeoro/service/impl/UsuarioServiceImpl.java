@@ -142,7 +142,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional(readOnly = true)
     public Usuario getUsuarioByRecovered(String idRecovered) throws NegocioException {
         return Optional.ofNullable(usuarioRepository.findUsuarioByRecoverd(idRecovered, TypeActiveInactive.AC.toString()))
-                .orElseThrow(() -> new NegocioException(MessagesValidation.CODIGO_RECOVERED_CONTRASENA_NO_VALIDO,
+                .orElseThrow(() -> new NegocioException(MessagesValidation.ERROR_CODIGO_RECOVERED_CONTRASENA_NO_VALIDO,
                         TypeException.VALIDATION));
     }
 
@@ -269,7 +269,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     private String messageRecoveredContrasena(String codigo){
-        return hostFrontEnd+"/contrasena/"+codigo;
+        return "Para realizar el proceso de recuperar contrase\u00F1a debe ingresar al siguiente link: " +
+                "<b>"+hostFrontEnd+"/contrasena/"+codigo+"</b>";
     }
 
 }
