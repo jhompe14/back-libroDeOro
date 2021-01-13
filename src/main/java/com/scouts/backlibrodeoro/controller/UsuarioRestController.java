@@ -8,11 +8,13 @@ import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.RecuperoContrasena;
 import com.scouts.backlibrodeoro.model.Usuario;
 import com.scouts.backlibrodeoro.service.UsuarioService;
+import com.scouts.backlibrodeoro.util.MessagesValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,7 +125,9 @@ public class UsuarioRestController {
             return new ResponseEntity(usuarioService.setRecoveredContrasena(usuario), HttpStatus.ACCEPTED);
         } catch (NegocioException ex){
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception ex) {
+        } catch (MessagingException ex){
+            return new ResponseEntity(MessagesValidation.ERROR_CORREO_RECEPTOR_NO_VALIDO, HttpStatus.BAD_REQUEST);
+        }catch (Exception ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
