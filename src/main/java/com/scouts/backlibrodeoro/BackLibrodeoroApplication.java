@@ -6,10 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class BackLibrodeoroApplication {
@@ -36,14 +37,26 @@ public class BackLibrodeoroApplication {
 					.antMatchers(HttpMethod.POST,"/api/usuario/recovered/**").permitAll()
 					.antMatchers(HttpMethod.GET, "/api/usuario/recovered/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/api/usuario/recovered/**").permitAll()
-					.antMatchers("/", "/static/**").permitAll()
+					.antMatchers("/**", "/static/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}
+	}
 
+
+	@Configuration
+	public class WebConfig implements WebMvcConfigurer {
+		/**
+		 * Ensure client-side paths redirect to index.html because client handles routing. NOTE: Do NOT use @EnableWebMvc or it will break this.
+		 */
 		@Override
-		public void configure(WebSecurity web) throws Exception {
-			web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**");
+		public void addViewControllers(ViewControllerRegistry registry) {
+			registry.addViewController("/{spring:\\w+}")
+					.setViewName("forward:/");
+			registry.addViewController("/**/{spring:\\w+}")
+					.setViewName("forward:/");
+			registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+					.setViewName("forward:/");
 		}
 	}
 
