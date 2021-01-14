@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SeccionServiceImpl implements SeccionService {
@@ -55,6 +56,11 @@ public class SeccionServiceImpl implements SeccionService {
         this.seccionValidator.validator(seccion);
 
         seccion.setRama(QueryUtil.getObjectById(ramaRepository, idRama));
+
+        if(!Optional.ofNullable(seccion.getRama()).isPresent()){
+            throw new NegocioException(MessagesValidation.ERROR_RAMA_NO_EXISTE, TypeException.VALIDATION);
+        }
+
         return seccionRepository.save(seccion);
     }
 

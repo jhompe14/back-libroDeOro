@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RamaServiceImpl implements RamaService {
@@ -62,6 +63,11 @@ public class RamaServiceImpl implements RamaService {
         this.ramaValidator.validator(rama);
 
         rama.setGrupo(QueryUtil.getObjectById(grupoRepository, idGrupo));
+
+        if(!Optional.ofNullable(rama.getGrupo()).isPresent()){
+            throw new NegocioException(MessagesValidation.ERROR_GRUPO_NO_EXISTE, TypeException.VALIDATION);
+        }
+
         return ramaRepository.save(rama);
     }
 
