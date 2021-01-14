@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AuthValidator implements IValidator{
+public class AuthValidator implements IValidator {
     @Override
     public <T> void validator(T authDTO) throws NegocioException {
         AuthRequestDTO auth = (AuthRequestDTO) authDTO;

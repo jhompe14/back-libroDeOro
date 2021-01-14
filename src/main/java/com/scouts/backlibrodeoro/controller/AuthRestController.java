@@ -3,7 +3,6 @@ package com.scouts.backlibrodeoro.controller;
 import com.scouts.backlibrodeoro.auth.JWTGenerator;
 import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
-import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,7 +25,7 @@ public class AuthRestController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthRequestDTO> login(@RequestBody AuthRequestDTO auth) throws NegocioException {
+    public ResponseEntity<AuthRequestDTO> login(@RequestBody AuthRequestDTO auth) {
         try {
             if(usuarioService.authIsSuccess(auth)) {
                 String token = JWTGenerator.getJWTToken(auth.getUsuario());
@@ -43,7 +42,9 @@ public class AuthRestController {
 
     @GetMapping
     public ResponseEntity<String> pingAuth()  {
-        return new ResponseEntity("OK", HttpStatus.OK);
+        return new ResponseEntity( new HashMap<String, String>() {{
+            put("message", "OK");
+        }}, HttpStatus.OK);
     }
 
 }

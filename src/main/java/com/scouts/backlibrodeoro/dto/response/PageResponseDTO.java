@@ -2,12 +2,12 @@ package com.scouts.backlibrodeoro.dto.response;
 
 import java.util.List;
 
-public class GridResponseDTO<T> {
+public class PageResponseDTO<T> {
 
     private Integer totalItems;
     private List<T> dataGrid;
 
-    public GridResponseDTO(Integer totalItems, List<T> dataGrid) {
+    public PageResponseDTO(Integer totalItems, List<T> dataGrid) {
         this.totalItems = totalItems;
         this.dataGrid = dataGrid;
     }

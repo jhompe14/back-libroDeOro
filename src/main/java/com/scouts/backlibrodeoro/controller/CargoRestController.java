@@ -3,7 +3,6 @@ package com.scouts.backlibrodeoro.controller;
 import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
-import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.service.CargoService;
 import com.scouts.backlibrodeoro.types.TypeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class CargoRestController {
     }
 
     @GetMapping("/{idCargo}")
-    public ResponseEntity<Seccion> findById(@PathVariable("idCargo") Integer idCargo) throws NegocioException {
+    public ResponseEntity<Cargo> findById(@PathVariable("idCargo") Integer idCargo) {
         try {
             return new ResponseEntity(this.cargoService.getCargo(idCargo), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -49,9 +48,9 @@ public class CargoRestController {
     }
 
     @PostMapping("/type/{typeCargo}/id/{idType}")
-    public ResponseEntity<Seccion> createCargo(@PathVariable("typeCargo") String typeCargo,
+    public ResponseEntity<Cargo> createCargo(@PathVariable("typeCargo") String typeCargo,
                                                @PathVariable("idType") Integer idType,
-                                               @RequestBody CargoRequestDTO cargoRequestDTO) throws NegocioException{
+                                               @RequestBody CargoRequestDTO cargoRequestDTO) {
         try{
             return new ResponseEntity(this.cargoService.createCargo(typeCargo, idType, cargoRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
@@ -62,9 +61,8 @@ public class CargoRestController {
     }
 
     @PutMapping("/{idCargo}")
-    public ResponseEntity<Seccion> updateCargo(@PathVariable("idCargo") Integer idCargo,
-                                                 @RequestBody CargoRequestDTO cargoRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Cargo> updateCargo(@PathVariable("idCargo") Integer idCargo,
+                                                 @RequestBody CargoRequestDTO cargoRequestDTO){
         try{
             return new ResponseEntity(this.cargoService.updateCargo(idCargo, cargoRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -76,7 +74,7 @@ public class CargoRestController {
     }
 
     @DeleteMapping("/{idCargo}")
-    public ResponseEntity deleteCargo(@PathVariable("idCargo") Integer idCargo) throws NegocioException{
+    public ResponseEntity deleteCargo(@PathVariable("idCargo") Integer idCargo) {
         try{
             cargoService.deleteCargo(idCargo);
             return new ResponseEntity(HttpStatus.ACCEPTED);

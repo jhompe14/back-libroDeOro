@@ -7,9 +7,10 @@ import com.scouts.backlibrodeoro.model.Seccion;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
+import com.scouts.backlibrodeoro.service.impl.SeccionServiceImpl;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.SeccionValidator;
+import com.scouts.backlibrodeoro.validator.impl.SeccionValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,14 +23,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class SeccionServiceTest {
+public class SeccionServiceImplTest {
 
     private SeccionRepository seccionRepository;
     private RamaRepository ramaRepository;
     private CargoRepository cargoRepository;
     private SeccionValidator seccionValidator;
 
-    private SeccionService seccionService;
+    private SeccionServiceImpl seccionServiceImpl;
 
     @BeforeEach
     public void init(){
@@ -37,7 +38,7 @@ public class SeccionServiceTest {
         ramaRepository= mock(RamaRepository.class);
         cargoRepository = mock(CargoRepository.class);
         seccionValidator = mock(SeccionValidator.class);
-        seccionService = new SeccionService(seccionRepository, ramaRepository, cargoRepository, seccionValidator);
+        seccionServiceImpl = new SeccionServiceImpl(seccionRepository, ramaRepository, cargoRepository, seccionValidator);
     }
 
     @Test
@@ -47,7 +48,7 @@ public class SeccionServiceTest {
         when(seccionRepository.findAll()).thenReturn(seccionList);
 
         //Act
-        List<Seccion> result = seccionService.getAllSecciones();
+        List<Seccion> result = seccionServiceImpl.getAllSecciones();
 
         //Assert
         assertEquals(seccionList.size(), result.size());
@@ -61,7 +62,7 @@ public class SeccionServiceTest {
         when(seccionRepository.findAll()).thenReturn(seccionList);
 
         //Act
-        List<Seccion> result = seccionService.getAllSecciones();
+        List<Seccion> result = seccionServiceImpl.getAllSecciones();
 
         //Assert
         assertEquals(seccionList.size(), result.size());
@@ -77,7 +78,7 @@ public class SeccionServiceTest {
         when(seccionRepository.findById(idSeccion)).thenReturn(seccionOptional);
 
         //Act
-        Seccion result = seccionService.getSeccion(idSeccion);
+        Seccion result = seccionServiceImpl.getSeccion(idSeccion);
 
         //Assert
         assertEquals(seccion.getId(), result.getId());
@@ -92,7 +93,7 @@ public class SeccionServiceTest {
 
         //Act
         NegocioException exception= Assertions.assertThrows(NegocioException.class, () ->
-                        seccionService.getSeccion(idSeccion), MessagesValidation.ERROR_RAMA_NO_EXISTE);
+                        seccionServiceImpl.getSeccion(idSeccion), MessagesValidation.ERROR_RAMA_NO_EXISTE);
 
         //Assert
         assertEquals(MessagesValidation.ERROR_SECCION_NO_EXISTE, exception.getMessage());
@@ -109,7 +110,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.createSeccion(seccionRequestDTO, idRama);
+            seccionServiceImpl.createSeccion(seccionRequestDTO, idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -127,7 +128,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.createSeccion(seccionRequestDTO, idRama);
+            seccionServiceImpl.createSeccion(seccionRequestDTO, idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_RAMA_NO_EXISTE, ex.getMessage());
@@ -151,7 +152,7 @@ public class SeccionServiceTest {
         when(seccionRepository.save(any())).thenReturn(seccion);
 
         //Act
-        Seccion result = seccionService.createSeccion(seccionRequestDTO, idRama);
+        Seccion result = seccionServiceImpl.createSeccion(seccionRequestDTO, idRama);
 
         //Assert
         assertEquals(seccion.getId(), result.getId());
@@ -167,7 +168,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.updateSeccion(idSeccion, seccionRequestDTO);
+            seccionServiceImpl.updateSeccion(idSeccion, seccionRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_SECCION_NO_EXISTE, ex.getMessage());
@@ -187,7 +188,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.updateSeccion(idSeccion, seccionRequestDTO);
+            seccionServiceImpl.updateSeccion(idSeccion, seccionRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -210,7 +211,7 @@ public class SeccionServiceTest {
         when(seccionRepository.save(any())).thenReturn(seccion);
 
         //Act
-        Seccion result = seccionService.updateSeccion(idSeccion, seccionRequestDTO);
+        Seccion result = seccionServiceImpl.updateSeccion(idSeccion, seccionRequestDTO);
 
         //Assert
         assertEquals(seccion.getId(), result.getId());
@@ -224,7 +225,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.deleteSeccion(idSeccion);
+            seccionServiceImpl.deleteSeccion(idSeccion);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_SECCION_NO_EXISTE, ex.getMessage());
@@ -240,7 +241,7 @@ public class SeccionServiceTest {
 
         //Act
         try {
-            seccionService.deleteSeccion(idSeccion);
+            seccionServiceImpl.deleteSeccion(idSeccion);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_SECCION_CARGOS_ACTIVOS, ex.getMessage());
@@ -256,7 +257,7 @@ public class SeccionServiceTest {
         doNothing().when(seccionRepository).delete(any());
 
         //Act
-        seccionService.deleteSeccion(idSeccion);
+        seccionServiceImpl.deleteSeccion(idSeccion);
 
         //Assert
         verify(seccionRepository).delete(any());

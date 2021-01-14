@@ -3,7 +3,6 @@ package com.scouts.backlibrodeoro.dto.request;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
 import com.scouts.backlibrodeoro.types.TypeException;
-import com.scouts.backlibrodeoro.types.TypeIntegrante;
 import com.scouts.backlibrodeoro.types.TypeUsuario;
 import com.scouts.backlibrodeoro.util.GeneralValidates;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
@@ -31,11 +30,14 @@ public class FilterAnecdotaGridRequestDTO {
 
     private String typeUsuarioOwner;
 
+    private Integer codigoAnecdota;
+
     private Integer page;
 
     public FilterAnecdotaGridRequestDTO(String idGrupo, String idRama, String idSeccion, String fechaInicioAnecdota,
                                         String fechaFinAnecdota, String estado, String usuarioFilter,
-                                        String usuarioOwner, String typeUsuarioOwner, String page) {
+                                        String usuarioOwner, String typeUsuarioOwner, String codigoAnecdota,
+                                        String page) {
         this.idGrupo = Optional.ofNullable(idGrupo).map(Integer::parseInt).orElse(null);
         this.idRama = Optional.ofNullable(idRama).map(Integer::parseInt).orElse(null);
         this.idSeccion = Optional.ofNullable(idSeccion).map(Integer::parseInt).orElse(null);
@@ -45,6 +47,7 @@ public class FilterAnecdotaGridRequestDTO {
         this.usuarioFilter = usuarioFilter;
         this.usuarioOwner = usuarioOwner;
         this.typeUsuarioOwner = validateTypeUsuario(typeUsuarioOwner);
+        this.codigoAnecdota = Optional.ofNullable(codigoAnecdota).map(Integer::parseInt).orElse(null);
         this.page = Integer.parseInt(page);
     }
 
@@ -88,6 +91,10 @@ public class FilterAnecdotaGridRequestDTO {
         return page;
     }
 
+    public Integer getCodigoAnecdota() {
+        return codigoAnecdota;
+    }
+
     private String validateEstadoAnecdota(String estado){
         return Optional.ofNullable(estado).map(e ->{
             try {
@@ -110,7 +117,7 @@ public class FilterAnecdotaGridRequestDTO {
                 TypeUsuario.valueOf(tusu);
             }catch (IllegalArgumentException ex){
                 try {
-                    throw new NegocioException(MessagesValidation.VALIDATION_TIPO_USUARIO_OBLIGATORIO,
+                    throw new NegocioException(MessagesValidation.VALIDATION_TIPO_USUARIO_REQUIRED,
                             TypeException.VALIDATION);
                 } catch (NegocioException negocioException) {
                     throw new RuntimeException(negocioException);

@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class RamaValidator implements IValidator{
+public class RamaValidator implements IValidator {
     @Override
     public <T> void validator(T rama) throws NegocioException {
         Rama ramaValidation = (Rama) rama;

@@ -11,3 +11,6 @@ spring:
       ddl-auto: update # Para actualizar las tablas sin necesidad de borrarlas
       generate-ddl: true # Para que imprima en sql las transformaciones a sql
     show-sql: true  # Para que imprima en sql las transformaciones a sql
+host:
+  frontend: "https://libro-oro-scouts.herokuapp.com"
+

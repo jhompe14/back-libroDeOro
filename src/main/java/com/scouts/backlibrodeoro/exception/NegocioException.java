@@ -2,7 +2,7 @@ package com.scouts.backlibrodeoro.exception;
 
 import com.scouts.backlibrodeoro.types.TypeException;
 
-public class NegocioException extends Exception {
+public class NegocioException extends RuntimeException {
 
     private TypeException typeException;
 

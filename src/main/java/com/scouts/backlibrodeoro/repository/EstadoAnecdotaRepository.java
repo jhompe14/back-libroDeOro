@@ -13,4 +13,8 @@ public interface EstadoAnecdotaRepository extends JpaRepository<EstadoAnecdota, 
     EstadoAnecdota findEstadoAnecdotaByIdAnecdotaAndEstadoGestionado(@Param("idAnecdota") Integer idAnecdota,
                                                                      @Param("estadoGestionado") String estadoGestionado);
 
+    @Query("SELECT ea FROM EstadoAnecdota ea WHERE ea.id = (SELECT MAX(easub.id) FROM EstadoAnecdota easub " +
+            "INNER JOIN easub.anecdota asub WHERE asub.id= :idAnecdota) ")
+    EstadoAnecdota findEstadoAnecdotaActive(@Param("idAnecdota") Integer idAnecdota);
+
 }

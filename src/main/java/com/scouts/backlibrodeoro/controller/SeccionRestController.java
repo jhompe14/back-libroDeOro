@@ -31,7 +31,7 @@ public class SeccionRestController {
     }
 
     @GetMapping("/{idSeccion}")
-    public ResponseEntity<Seccion> findById(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException {
+    public ResponseEntity<Seccion> findById(@PathVariable("idSeccion") Integer idSeccion) {
         try {
             return new ResponseEntity(this.seccionService.getSeccion(idSeccion), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -42,8 +42,8 @@ public class SeccionRestController {
     }
 
     @PostMapping("/rama/{idRama}")
-    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama, @RequestBody SeccionRequestDTO seccionRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Seccion> createSeccion(@PathVariable("idRama") Integer idRama,
+                                                 @RequestBody SeccionRequestDTO seccionRequestDTO){
         try{
             return new ResponseEntity(this.seccionService.createSeccion(seccionRequestDTO, idRama), HttpStatus.CREATED);
         }catch (NegocioException ex){
@@ -54,8 +54,8 @@ public class SeccionRestController {
     }
 
     @PutMapping("/{idSeccion}")
-    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion, @RequestBody SeccionRequestDTO seccionRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Seccion> updateSeccion(@PathVariable("idSeccion") Integer idSeccion,
+                                                 @RequestBody SeccionRequestDTO seccionRequestDTO){
         try{
             return new ResponseEntity(this.seccionService.updateSeccion(idSeccion, seccionRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -67,7 +67,7 @@ public class SeccionRestController {
     }
 
     @DeleteMapping("/{idSeccion}")
-    public ResponseEntity deleteSeccion(@PathVariable("idSeccion") Integer idSeccion) throws NegocioException{
+    public ResponseEntity deleteSeccion(@PathVariable("idSeccion") Integer idSeccion) {
         try{
             seccionService.deleteSeccion(idSeccion);
             return new ResponseEntity(HttpStatus.ACCEPTED);

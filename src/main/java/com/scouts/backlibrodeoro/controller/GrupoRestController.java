@@ -32,7 +32,7 @@ public class GrupoRestController {
     }
 
     @GetMapping("/{idGrupo}")
-    public ResponseEntity<Grupo> findById(@PathVariable("idGrupo") Integer idGrupo) throws NegocioException {
+    public ResponseEntity<Grupo> findById(@PathVariable("idGrupo") Integer idGrupo) {
         try {
             return new ResponseEntity(this.grupoService.getGrupo(idGrupo), HttpStatus.OK);
         }catch (NegocioException ex){
@@ -43,7 +43,7 @@ public class GrupoRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Grupo> createGrupo(@RequestBody GrupoRequestDTO grupoRequestDTO) throws NegocioException{
+    public ResponseEntity<Grupo> createGrupo(@RequestBody GrupoRequestDTO grupoRequestDTO) {
         try{
             return new ResponseEntity(this.grupoService.createGrupo(grupoRequestDTO), HttpStatus.CREATED);
         }catch (NegocioException ex){
@@ -54,8 +54,8 @@ public class GrupoRestController {
     }
 
     @PutMapping("/{idGrupo}")
-    public ResponseEntity<Grupo> updateGrupo(@PathVariable("idGrupo") Integer idGrupo, @RequestBody GrupoRequestDTO grupoRequestDTO)
-            throws NegocioException{
+    public ResponseEntity<Grupo> updateGrupo(@PathVariable("idGrupo") Integer idGrupo,
+                                             @RequestBody GrupoRequestDTO grupoRequestDTO) {
         try{
            return new ResponseEntity(this.grupoService.updateGrupo(idGrupo, grupoRequestDTO), HttpStatus.ACCEPTED);
         }catch (NegocioException ex){
@@ -67,7 +67,7 @@ public class GrupoRestController {
     }
 
     @DeleteMapping("/{idGrupo}")
-    public ResponseEntity deleteGrupo(@PathVariable("idGrupo") Integer idGrupo) throws NegocioException{
+    public ResponseEntity deleteGrupo(@PathVariable("idGrupo") Integer idGrupo) {
         try{
             grupoService.deleteGrupo(idGrupo);
             return new ResponseEntity(HttpStatus.ACCEPTED);

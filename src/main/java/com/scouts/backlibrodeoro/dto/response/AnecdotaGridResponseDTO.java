@@ -1,7 +1,7 @@
 package com.scouts.backlibrodeoro.dto.response;
 
 import com.scouts.backlibrodeoro.types.TypeEstadoAnecdota;
-import com.scouts.backlibrodeoro.util.UtilLibroOro;
+import com.scouts.backlibrodeoro.util.LibroOroUtil;
 
 import java.util.Date;
 
@@ -15,11 +15,15 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
 
     private String nombreSeccion;
 
+    private String nombreSuceso;
+
     private String fechaSuceso;
 
     private String usuarioRegistro;
 
     private String estado;
+
+    private String descripcionEstado;
 
     private String usuarioGestion;
 
@@ -27,14 +31,17 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
     }
 
     public AnecdotaGridResponseDTO(Integer idAnecdota, String nombreGrupo, String nombreRama, String nombreSeccion,
-                                   Date fechaSuceso, String usuarioRegistro, String estado, String usuarioGestion) {
+                                   String nombreSuceso, Date fechaSuceso, String usuarioRegistro, String estado,
+                                   String usuarioGestion) {
         this.idAnecdota = idAnecdota;
         this.nombreGrupo = nombreGrupo;
         this.nombreRama = nombreRama;
         this.nombreSeccion = nombreSeccion;
-        this.fechaSuceso = UtilLibroOro.setFormatDate(fechaSuceso);
+        this.nombreSuceso = nombreSuceso;
+        this.fechaSuceso = LibroOroUtil.setFormatDate(fechaSuceso);
         this.usuarioRegistro = usuarioRegistro;
-        this.estado = TypeEstadoAnecdota.valueOf(estado).getValue();
+        this.estado = estado;
+        this.descripcionEstado = TypeEstadoAnecdota.valueOf(estado).getValue();
         this.usuarioGestion = usuarioGestion;
     }
 
@@ -66,7 +73,15 @@ public class AnecdotaGridResponseDTO implements java.io.Serializable{
         return estado;
     }
 
+    public String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
     public String getUsuarioGestion() {
         return usuarioGestion;
+    }
+
+    public String getNombreSuceso() {
+        return nombreSuceso;
     }
 }

@@ -8,9 +8,10 @@ import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
 import com.scouts.backlibrodeoro.repository.SeccionRepository;
+import com.scouts.backlibrodeoro.service.impl.RamaServiceImpl;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.RamaValidator;
+import com.scouts.backlibrodeoro.validator.impl.RamaValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class RamaServiceTest {
+public class RamaServiceImplTest {
 
     private RamaRepository ramaRepository;
     private SeccionRepository seccionRepository;
@@ -31,7 +32,7 @@ public class RamaServiceTest {
     private CargoRepository cargoRepository;
     private RamaValidator ramaValidator;
 
-    private RamaService ramaService;
+    private RamaServiceImpl ramaServiceImpl;
 
     @BeforeEach
     public void init(){
@@ -40,7 +41,7 @@ public class RamaServiceTest {
         cargoRepository = mock(CargoRepository.class);
         seccionRepository = mock(SeccionRepository.class);
         ramaValidator = mock(RamaValidator.class);
-        ramaService = new RamaService(ramaRepository, grupoRepository, seccionRepository, cargoRepository, ramaValidator);
+        ramaServiceImpl = new RamaServiceImpl(ramaRepository, grupoRepository, seccionRepository, cargoRepository, ramaValidator);
     }
 
     @Test
@@ -50,7 +51,7 @@ public class RamaServiceTest {
         when(ramaRepository.findAll()).thenReturn(ramaList);
 
         //Act
-        List<Rama> result = ramaService.getAllRamas();
+        List<Rama> result = ramaServiceImpl.getAllRamas();
 
         //Assert
         assertEquals(ramaList.size(), result.size());
@@ -64,7 +65,7 @@ public class RamaServiceTest {
         when(ramaRepository.findAll()).thenReturn(ramaList);
 
         //Act
-        List<Rama> result = ramaService.getAllRamas();
+        List<Rama> result = ramaServiceImpl.getAllRamas();
 
         //Assert
         assertEquals(ramaList.size(), result.size());
@@ -80,7 +81,7 @@ public class RamaServiceTest {
         when(ramaRepository.findById(idRama)).thenReturn(ramaOptional);
 
         //Act
-        Rama result = ramaService.getRama(idRama);
+        Rama result = ramaServiceImpl.getRama(idRama);
 
         //Assert
         assertEquals(rama.getId(), result.getId());
@@ -94,7 +95,7 @@ public class RamaServiceTest {
         when(ramaRepository.findById(idRama)).thenReturn(ramaOptional);
 
         //Act
-        NegocioException exception= Assertions.assertThrows(NegocioException.class, () -> ramaService.getRama(idRama),
+        NegocioException exception= Assertions.assertThrows(NegocioException.class, () -> ramaServiceImpl.getRama(idRama),
                 MessagesValidation.ERROR_RAMA_NO_EXISTE);
 
         //Assert
@@ -111,7 +112,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.createRama(ramaRequestDTO, idGrupo);
+            ramaServiceImpl.createRama(ramaRequestDTO, idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, ex.getMessage());
@@ -129,7 +130,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.createRama(ramaRequestDTO, idGrupo);
+            ramaServiceImpl.createRama(ramaRequestDTO, idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_GRUPO_NO_EXISTE, ex.getMessage());
@@ -155,7 +156,7 @@ public class RamaServiceTest {
         when(ramaRepository.save(any())).thenReturn(rama);
 
         //Act
-        Rama result = ramaService.createRama(ramaRequestDTO, idGrupo);
+        Rama result = ramaServiceImpl.createRama(ramaRequestDTO, idGrupo);
 
         //Assert
         assertEquals(rama.getId(), result.getId());
@@ -171,7 +172,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.updateRama(idRama, ramaRequestDTO);
+            ramaServiceImpl.updateRama(idRama, ramaRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_RAMA_NO_EXISTE, ex.getMessage());
@@ -190,7 +191,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.updateRama(idRama, ramaRequestDTO);
+            ramaServiceImpl.updateRama(idRama, ramaRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_TODOS_CAMPOS_OBLIGATORIOS, ex.getMessage());
@@ -213,7 +214,7 @@ public class RamaServiceTest {
         when(ramaRepository.save(any())).thenReturn(rama);
 
         //Act
-        Rama result = ramaService.updateRama(idRama, ramaRequestDTO);
+        Rama result = ramaServiceImpl.updateRama(idRama, ramaRequestDTO);
 
         //Assert
         assertEquals(rama.getId(), result.getId());
@@ -227,7 +228,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.deleteRama(idRama);
+            ramaServiceImpl.deleteRama(idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_RAMA_NO_EXISTE, ex.getMessage());
@@ -243,7 +244,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.deleteRama(idRama);
+            ramaServiceImpl.deleteRama(idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_RAMA_SECCIONES_ACTIVAS, ex.getMessage());
@@ -260,7 +261,7 @@ public class RamaServiceTest {
 
         //Act
         try {
-            ramaService.deleteRama(idRama);
+            ramaServiceImpl.deleteRama(idRama);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_RAMA_CARGOS_ACTIVOS, ex.getMessage());
@@ -277,7 +278,7 @@ public class RamaServiceTest {
         doNothing().when(ramaRepository).delete(any());
 
         //Act
-        ramaService.deleteRama(idRama);
+        ramaServiceImpl.deleteRama(idRama);
 
         //Assert
         verify(ramaRepository).delete(any());

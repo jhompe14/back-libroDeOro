@@ -1,5 +1,6 @@
-package com.scouts.backlibrodeoro.validator;
+package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Trayectoria;
 import com.scouts.backlibrodeoro.types.TypeException;
@@ -11,12 +12,12 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-public class TrayectoriaValidator implements IValidator{
+public class TrayectoriaValidator implements IValidator {
     @Override
     public <T> void validator(T trayectoria) throws NegocioException {
         Trayectoria trayectoriaValidation = (Trayectoria) trayectoria;
         if(!validateRequired(trayectoriaValidation)){
-            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_OBLIGATORIO,
+            throw new NegocioException(MessagesValidation.VALIDATION_TRAYECTORIA_REQUIRED,
                     TypeException.VALIDATION);
         }
         if(!validateAnioIngresoValid(trayectoriaValidation)){
@@ -33,7 +34,8 @@ public class TrayectoriaValidator implements IValidator{
     private Boolean validateRequired(Trayectoria trayectoriaValidation){
         return Optional.ofNullable(trayectoriaValidation).map(r ->
                     Optional.ofNullable(r.getAnioIngreso()).isPresent() &&
-                    Optional.ofNullable(r.getGrupo()).isPresent()
+                    Optional.ofNullable(r.getGrupo()).isPresent() &&
+                    Optional.ofNullable(r.getRama()).isPresent()
         ).orElse(false);
     }
 

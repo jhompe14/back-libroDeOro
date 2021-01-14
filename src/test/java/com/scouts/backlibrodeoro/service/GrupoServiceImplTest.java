@@ -6,9 +6,10 @@ import com.scouts.backlibrodeoro.model.Grupo;
 import com.scouts.backlibrodeoro.repository.CargoRepository;
 import com.scouts.backlibrodeoro.repository.GrupoRepository;
 import com.scouts.backlibrodeoro.repository.RamaRepository;
+import com.scouts.backlibrodeoro.service.impl.GrupoServiceImpl;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
-import com.scouts.backlibrodeoro.validator.GrupoValidator;
+import com.scouts.backlibrodeoro.validator.impl.GrupoValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,14 +22,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-public class GrupoServiceTest {
+public class GrupoServiceImplTest {
 
     private GrupoRepository grupoRepository;
     private RamaRepository ramaRepository;
     private CargoRepository cargoRepository;
     private GrupoValidator grupoValidator;
 
-    private GrupoService grupoService;
+    private GrupoServiceImpl grupoServiceImpl;
 
     @BeforeEach
     public void init(){
@@ -36,7 +37,7 @@ public class GrupoServiceTest {
         ramaRepository = mock(RamaRepository.class);
         cargoRepository = mock(CargoRepository.class);
         grupoValidator = mock(GrupoValidator.class);
-        grupoService = new GrupoService(grupoRepository, ramaRepository, cargoRepository, grupoValidator);
+        grupoServiceImpl = new GrupoServiceImpl(grupoRepository, ramaRepository, cargoRepository, grupoValidator);
     }
 
     @Test
@@ -46,7 +47,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findAll()).thenReturn(grupoList);
 
         //Act
-        List<Grupo> result = grupoService.getAllGrupos();
+        List<Grupo> result = grupoServiceImpl.getAllGrupos();
 
         //Assert
         assertEquals(grupoList.size(), result.size());
@@ -60,7 +61,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findAll()).thenReturn(grupoList);
 
         //Act
-        List<Grupo> result = grupoService.getAllGrupos();
+        List<Grupo> result = grupoServiceImpl.getAllGrupos();
 
         //Assert
         assertEquals(grupoList.size(), result.size());
@@ -76,7 +77,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findById(idGrupo)).thenReturn(grupoOptional);
 
         //Act
-        Grupo result = grupoService.getGrupo(idGrupo);
+        Grupo result = grupoServiceImpl.getGrupo(idGrupo);
 
         //Assert
         assertEquals(grupo.getId(), result.getId());
@@ -90,7 +91,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findById(idGrupo)).thenReturn(grupoOptional);
 
         //Act
-        NegocioException exception= Assertions.assertThrows(NegocioException.class, () -> grupoService.getGrupo(idGrupo),
+        NegocioException exception= Assertions.assertThrows(NegocioException.class, () -> grupoServiceImpl.getGrupo(idGrupo),
                 MessagesValidation.ERROR_GRUPO_NO_EXISTE);
 
         //Assert
@@ -105,7 +106,7 @@ public class GrupoServiceTest {
 
         //Act
         try {
-            grupoService.createGrupo(grupoRequestDTO);
+            grupoServiceImpl.createGrupo(grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -126,7 +127,7 @@ public class GrupoServiceTest {
         when(grupoRepository.save(any())).thenReturn(grupo);
 
         //Act
-        Grupo result = grupoService.createGrupo(grupoRequestDTO);
+        Grupo result = grupoServiceImpl.createGrupo(grupoRequestDTO);
 
         //Assert
         assertEquals(grupo.getId(), result.getId());
@@ -141,7 +142,7 @@ public class GrupoServiceTest {
 
         //Act
         try {
-            grupoService.updateGrupo(idGrupo, grupoRequestDTO);
+            grupoServiceImpl.updateGrupo(idGrupo, grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_GRUPO_NO_EXISTE, ex.getMessage());
@@ -158,7 +159,7 @@ public class GrupoServiceTest {
 
         //Act
         try {
-            grupoService.updateGrupo(idGrupo, grupoRequestDTO);
+            grupoServiceImpl.updateGrupo(idGrupo, grupoRequestDTO);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_NOMBRE_OBLIGATORIO, ex.getMessage());
@@ -181,7 +182,7 @@ public class GrupoServiceTest {
         when(grupoRepository.findById(idGrupo)).thenReturn(Optional.of(grupo));
 
         //Act
-        Grupo result = grupoService.updateGrupo(idGrupo, grupoRequestDTO);
+        Grupo result = grupoServiceImpl.updateGrupo(idGrupo, grupoRequestDTO);
 
         //Assert
         assertEquals(grupo.getId(), result.getId());
@@ -196,7 +197,7 @@ public class GrupoServiceTest {
         //Act
         //Act
         try {
-            grupoService.deleteGrupo(idGrupo);
+            grupoServiceImpl.deleteGrupo(idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.ERROR_GRUPO_NO_EXISTE, ex.getMessage());
@@ -212,7 +213,7 @@ public class GrupoServiceTest {
 
         //Act
         try {
-            grupoService.deleteGrupo(idGrupo);
+            grupoServiceImpl.deleteGrupo(idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_GRUPO_RAMAS_ACTIVAS, ex.getMessage());
@@ -229,7 +230,7 @@ public class GrupoServiceTest {
 
         //Act
         try {
-            grupoService.deleteGrupo(idGrupo);
+            grupoServiceImpl.deleteGrupo(idGrupo);
         }catch (NegocioException ex){
             //Assert
             assertEquals(MessagesValidation.VALIDATION_GRUPO_CARGOS_ACTIVOS, ex.getMessage());
@@ -246,7 +247,7 @@ public class GrupoServiceTest {
         doNothing().when(grupoRepository).delete(any());
 
         //Act
-        grupoService.deleteGrupo(idGrupo);
+        grupoServiceImpl.deleteGrupo(idGrupo);
 
         //Assert
         verify(grupoRepository).delete(any());
