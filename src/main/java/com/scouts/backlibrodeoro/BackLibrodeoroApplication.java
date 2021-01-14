@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -36,9 +37,13 @@ public class BackLibrodeoroApplication {
 					.antMatchers(HttpMethod.GET, "/api/usuario/recovered/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/api/usuario/recovered/**").permitAll()
 					.antMatchers("/", "/static/**").permitAll()
-					.antMatchers("/resources/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
+		}
+
+		@Override
+		public void configure(WebSecurity web) throws Exception {
+			web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**");
 		}
 	}
 
