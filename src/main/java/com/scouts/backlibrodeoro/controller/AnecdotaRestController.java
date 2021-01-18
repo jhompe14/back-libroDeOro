@@ -96,9 +96,9 @@ public class AnecdotaRestController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Anecdota> createAnecdota(@RequestParam(value = "nombre", required = false) String nombre,
                                                    @RequestParam(value = "fecha", required = false) String fecha,
-                                                   @RequestParam("descripcion") String descripcion,
-                                                   @RequestParam("usuario") String usuario,
-                                                   @RequestParam("idRama") String idRama,
+                                                   @RequestParam(value = "descripcion", required = false) String descripcion,
+                                                   @RequestParam(value = "usuario", required = false) String usuario,
+                                                   @RequestParam(value = "idRama", required = false) String idRama,
                                                    @RequestParam(value = "idSeccion", required = false) String idSeccion,
                                                    @RequestParam(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
                                                    @RequestParam(value = "videos", required = false) List<String> videos) {
@@ -120,9 +120,9 @@ public class AnecdotaRestController {
     public ResponseEntity<Anecdota> updateAnecdota(@PathVariable("idAnecdota") Integer idAnecdota,
                                                    @RequestParam(value = "nombre", required = false) String nombre,
                                                    @RequestParam(value = "fecha", required = false) String fecha,
-                                                   @RequestParam("descripcion") String descripcion,
-                                                   @RequestParam("usuario") String usuario,
-                                                   @RequestParam("idRama") String idRama,
+                                                   @RequestParam(value = "descripcion", required = false) String descripcion,
+                                                   @RequestParam(value = "usuario", required = false) String usuario,
+                                                   @RequestParam(value = "idRama", required = false) String idRama,
                                                    @RequestParam(value = "idSeccion", required = false) String idSeccion,
                                                    @RequestParam(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
                                                    @RequestParam(value = "videos", required = false) List<String> videos){
