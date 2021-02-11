@@ -1,14 +1,11 @@
 package com.scouts.backlibrodeoro.service.impl;
 
+import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.service.RamaService;
 import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.RamaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Rama;
-import com.scouts.backlibrodeoro.repository.CargoRepository;
-import com.scouts.backlibrodeoro.repository.GrupoRepository;
-import com.scouts.backlibrodeoro.repository.RamaRepository;
-import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.impl.RamaValidator;
@@ -26,16 +23,21 @@ public class RamaServiceImpl implements RamaService {
     private final SeccionRepository seccionRepository;
     private final GrupoRepository grupoRepository;
     private final CargoRepository cargoRepository;
+    private final TrayectoriaRepository trayectoriaRepository;
+    private final AnecdotaRepository anecdotaRepository;
     private final RamaValidator ramaValidator;
 
     @Autowired
     public RamaServiceImpl(RamaRepository ramaRepository, GrupoRepository grupoRepository,
                            SeccionRepository seccionRepository, CargoRepository cargoRepository,
+                           TrayectoriaRepository trayectoriaRepository, AnecdotaRepository anecdotaRepository,
                            RamaValidator ramaValidator) {
         this.ramaRepository = ramaRepository;
         this.grupoRepository = grupoRepository;
         this.seccionRepository = seccionRepository;
         this.cargoRepository = cargoRepository;
+        this.trayectoriaRepository = trayectoriaRepository;
+        this.anecdotaRepository = anecdotaRepository;
         this.ramaValidator = ramaValidator;
     }
 
@@ -96,6 +98,14 @@ public class RamaServiceImpl implements RamaService {
 
         if(cargoRepository.countCargoByTypeRama(idRama) > 0){
             throw new NegocioException(MessagesValidation.VALIDATION_RAMA_CARGOS_ACTIVOS, TypeException.VALIDATION);
+        }
+
+        if(trayectoriaRepository.countTrayectoriaByRama(idRama) > 0){
+            throw new NegocioException(MessagesValidation.VALIDATION_RAMA_TRAYECTORIAS_ACTIVAS, TypeException.VALIDATION);
+        }
+
+        if(anecdotaRepository.countAnecdotaByRama(idRama) > 0){
+            throw new NegocioException(MessagesValidation.VALIDATION_RAMA_ANECDOTAS_ACTIVAS, TypeException.VALIDATION);
         }
 
         ramaRepository.delete(rama);

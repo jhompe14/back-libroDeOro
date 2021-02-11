@@ -21,14 +21,21 @@ public class MessagesValidation {
 
     public static final String VALIDATION_GRUPO_RAMAS_ACTIVAS = "El grupo posee ramas activas";
     public static final String VALIDATION_GRUPO_CARGOS_ACTIVOS = "El grupo posee cargos activos";
+    public static final String VALIDATION_GRUPO_TRAYECTORIAS_ACTIVAS = "El grupo posee trayectorias activas";
 
     public static final String VALIDATION_RAMA_SECCIONES_ACTIVAS = "La rama posee secciones activas";
     public static final String VALIDATION_RAMA_CARGOS_ACTIVOS = "La rama posee cargos activos";
+    public static final String VALIDATION_RAMA_TRAYECTORIAS_ACTIVAS = "La rama posee trayectorias activas";
+    public static final String VALIDATION_RAMA_ANECDOTAS_ACTIVAS = "La rama posee anecdotas activas";
     public static final String VALIDATION_RAMA_EDAD_MINIMA = "La edad m\u00EDnima es obligatoria";
     public static final String VALIDATION_RAMA_EDAD_MAXIMA = "La edad m\u00E1xima es obligatoria";
 
 
     public static final String VALIDATION_SECCION_CARGOS_ACTIVOS = "La secci\u00F3n posee cargos activos";
+    public static final String VALIDATION_SECCION_TRAYECTORIAS_ACTIVAS = "La secci\u00F3n posee trayectorias activas";
+    public static final String VALIDATION_SECCION_ANECDOTAS_ACTIVAS = "La secci\u00F3n posee anecdotas activas";
+
+    public static final String VALIDATION_CARGO_TRAYECTORIAS_ACTIVAS = "EL cargo posee trayectorias activas";
 
     public static final String NOT_FOUND_USUARIO_CONTRASENA = "Usuario y contrase\u00F1a incorrectos";
     public static final String DILIGENCIAR_USUARIO_CONTRASENA =

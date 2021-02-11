@@ -1,13 +1,11 @@
 package com.scouts.backlibrodeoro.service.impl;
 
+import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.service.SeccionService;
 import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.SeccionRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Seccion;
-import com.scouts.backlibrodeoro.repository.CargoRepository;
-import com.scouts.backlibrodeoro.repository.RamaRepository;
-import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeException;
 import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.validator.impl.SeccionValidator;
@@ -24,14 +22,19 @@ public class SeccionServiceImpl implements SeccionService {
     private final SeccionRepository seccionRepository;
     private final RamaRepository ramaRepository;
     private final CargoRepository cargoRepository;
+    private final TrayectoriaRepository trayectoriaRepository;
+    private final AnecdotaRepository anecdotaRepository;
     private final SeccionValidator seccionValidator;
 
     @Autowired
     public SeccionServiceImpl(SeccionRepository seccionRepository, RamaRepository ramaRepository,
-                              CargoRepository cargoRepository, SeccionValidator seccionValidator) {
+                              CargoRepository cargoRepository, TrayectoriaRepository trayectoriaRepository,
+                              AnecdotaRepository anecdotaRepository, SeccionValidator seccionValidator) {
         this.seccionRepository = seccionRepository;
         this.ramaRepository = ramaRepository;
         this.cargoRepository = cargoRepository;
+        this.trayectoriaRepository = trayectoriaRepository;
+        this.anecdotaRepository = anecdotaRepository;
         this.seccionValidator = seccionValidator;
     }
 
@@ -83,6 +86,14 @@ public class SeccionServiceImpl implements SeccionService {
 
         if(cargoRepository.countCargoByTypeSeccion(idSeccion)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_SECCION_CARGOS_ACTIVOS, TypeException.VALIDATION);
+        }
+
+        if(trayectoriaRepository.countTrayectoriaBySeccion(idSeccion)>0){
+            throw new NegocioException(MessagesValidation.VALIDATION_SECCION_TRAYECTORIAS_ACTIVAS, TypeException.VALIDATION);
+        }
+
+        if(anecdotaRepository.countAnecdotaBySeccion(idSeccion)>0){
+            throw new NegocioException(MessagesValidation.VALIDATION_SECCION_ANECDOTAS_ACTIVAS, TypeException.VALIDATION);
         }
 
         seccionRepository.delete(seccion);
