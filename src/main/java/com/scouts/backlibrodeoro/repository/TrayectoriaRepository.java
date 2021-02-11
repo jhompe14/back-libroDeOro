@@ -14,4 +14,16 @@ public interface TrayectoriaRepository extends JpaRepository<Trayectoria, Intege
     @Query("DELETE FROM Trayectoria t where t.usuario.usuario=:usuario")
     void deleteTrayectoriasByUsuario(@Param("usuario") String usuario);
 
+    @Query("SELECT Count(1) FROM Trayectoria t WHERE t.grupo.id = :idGrupo")
+    Integer countTrayectoriaByGrupo(@Param("idGrupo") Integer idGrupo);
+
+    @Query("SELECT Count(1) FROM Trayectoria t WHERE t.rama.id = :idRama")
+    Integer countTrayectoriaByRama(@Param("idRama") Integer idRama);
+
+    @Query("SELECT Count(1) FROM Trayectoria t WHERE t.seccion.id = :idSeccion")
+    Integer countTrayectoriaBySeccion(@Param("idSeccion") Integer idSeccion);
+
+    @Query("SELECT Count(1) FROM Trayectoria t WHERE t.cargo.id = :idCargo")
+    Integer countTrayectoriaByCargo(@Param("idCargo") Integer idCargo);
+
 }

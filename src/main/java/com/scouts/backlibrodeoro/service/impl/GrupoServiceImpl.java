@@ -1,5 +1,7 @@
 package com.scouts.backlibrodeoro.service.impl;
 
+import com.scouts.backlibrodeoro.model.Trayectoria;
+import com.scouts.backlibrodeoro.repository.TrayectoriaRepository;
 import com.scouts.backlibrodeoro.service.GrupoService;
 import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.GrupoRequestDTO;
@@ -23,14 +25,16 @@ public class GrupoServiceImpl implements GrupoService {
     private final GrupoRepository grupoRepository;
     private final RamaRepository ramaRepository;
     private final CargoRepository cargoRepository;
+    private final TrayectoriaRepository trayectoriaRepository;
     private final GrupoValidator grupoValidator;
 
     @Autowired
     public GrupoServiceImpl(GrupoRepository grupoRepository, RamaRepository ramaRepository, CargoRepository cargoRepository,
-                            GrupoValidator grupoValidator){
+                            TrayectoriaRepository trayectoriaRepository, GrupoValidator grupoValidator){
         this.grupoRepository= grupoRepository;
         this.ramaRepository= ramaRepository;
         this.cargoRepository = cargoRepository;
+        this.trayectoriaRepository = trayectoriaRepository;
         this.grupoValidator= grupoValidator;
     }
 
@@ -80,6 +84,10 @@ public class GrupoServiceImpl implements GrupoService {
 
         if(cargoRepository.countCargoByTypeGrupo(idGrupo)>0){
             throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_CARGOS_ACTIVOS, TypeException.VALIDATION);
+        }
+
+        if(trayectoriaRepository.countTrayectoriaByGrupo(idGrupo)>0){
+            throw new NegocioException(MessagesValidation.VALIDATION_GRUPO_TRAYECTORIAS_ACTIVAS, TypeException.VALIDATION);
         }
 
         grupoRepository.delete(grupo);

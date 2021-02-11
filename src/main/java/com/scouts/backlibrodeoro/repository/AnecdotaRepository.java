@@ -13,4 +13,10 @@ import java.util.List;
 @Repository
 public interface AnecdotaRepository extends JpaRepository<Anecdota, Integer>, AnecdotaRepositoryCustom {
 
+    @Query("SELECT Count(1) FROM Anecdota a WHERE a.rama.id = :idRama")
+    Integer countAnecdotaByRama(@Param("idRama") Integer idRama);
+
+    @Query("SELECT Count(1) FROM Anecdota a WHERE a.seccion.id = :idSeccion")
+    Integer countAnecdotaBySeccion(@Param("idSeccion") Integer idSeccion);
+
 }

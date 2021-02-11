@@ -1,14 +1,13 @@
 package com.scouts.backlibrodeoro.service.impl;
 
+import com.scouts.backlibrodeoro.repository.*;
 import com.scouts.backlibrodeoro.service.CargoService;
+import com.scouts.backlibrodeoro.types.TypeException;
+import com.scouts.backlibrodeoro.util.MessagesValidation;
 import com.scouts.backlibrodeoro.util.QueryUtil;
 import com.scouts.backlibrodeoro.dto.request.CargoRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.Cargo;
-import com.scouts.backlibrodeoro.repository.CargoRepository;
-import com.scouts.backlibrodeoro.repository.GrupoRepository;
-import com.scouts.backlibrodeoro.repository.RamaRepository;
-import com.scouts.backlibrodeoro.repository.SeccionRepository;
 import com.scouts.backlibrodeoro.types.TypeCargo;
 import com.scouts.backlibrodeoro.validator.impl.CargoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,18 @@ public class CargoServiceImpl implements CargoService {
     private final GrupoRepository grupoRepository;
     private final RamaRepository ramaRepository;
     private final SeccionRepository seccionRepository;
+    private final TrayectoriaRepository trayectoriaRepository;
     private final CargoValidator cargoValidator;
 
     @Autowired
     public CargoServiceImpl(CargoRepository cargoRepository, GrupoRepository grupoRepository, RamaRepository ramaRepository,
-                            SeccionRepository seccionRepository, CargoValidator cargoValidator) {
+                            SeccionRepository seccionRepository, TrayectoriaRepository trayectoriaRepository,
+                            CargoValidator cargoValidator) {
         this.cargoRepository = cargoRepository;
         this.grupoRepository = grupoRepository;
         this.ramaRepository = ramaRepository;
         this.seccionRepository = seccionRepository;
+        this.trayectoriaRepository = trayectoriaRepository;
         this.cargoValidator = cargoValidator;
     }
 
@@ -99,6 +101,10 @@ public class CargoServiceImpl implements CargoService {
     @Override
     @Transactional
     public void deleteCargo(Integer idCargo) throws NegocioException {
+        if(trayectoriaRepository.countTrayectoriaByCargo(idCargo)>0){
+            throw new NegocioException(MessagesValidation.VALIDATION_CARGO_TRAYECTORIAS_ACTIVAS, TypeException.VALIDATION);
+        }
+
         cargoRepository.delete(Objects.requireNonNull(QueryUtil.getObjectById(cargoRepository, idCargo)));
     }
 
