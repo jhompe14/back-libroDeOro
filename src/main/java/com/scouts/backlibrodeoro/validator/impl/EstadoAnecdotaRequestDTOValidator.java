@@ -1,5 +1,6 @@
 package com.scouts.backlibrodeoro.validator.impl;
 
+import com.scouts.backlibrodeoro.types.TypeVisualizacion;
 import com.scouts.backlibrodeoro.validator.IValidator;
 import com.scouts.backlibrodeoro.dto.request.EstadoAnecdotaRequestDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
@@ -30,7 +31,9 @@ public class EstadoAnecdotaRequestDTOValidator implements IValidator {
 
     private boolean validateRequeried(EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO){
         return Optional.ofNullable(estadoAnecdotaRequestDTO).map(ear ->
-                GeneralValidates.validateStringNotIsEmpty(ear.getVisualizacion())).orElse(false);
+                GeneralValidates.validateStringNotIsEmpty(ear.getVisualizacion()) &&
+                        (ear.getVisualizacion().equals(TypeVisualizacion.PL.toString()))
+                            || ear.getVisualizacion().equals(TypeVisualizacion.PR.toString())).orElse(false);
     }
 
     private boolean validateUserModify(EstadoAnecdotaRequestDTO estadoAnecdotaRequestDTO) {
