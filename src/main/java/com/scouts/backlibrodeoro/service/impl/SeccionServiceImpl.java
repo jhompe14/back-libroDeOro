@@ -41,7 +41,7 @@ public class SeccionServiceImpl implements SeccionService {
     @Override
     @Transactional(readOnly = true)
     public List<Seccion> getAllSecciones(){
-        return seccionRepository.findAll();
+        return seccionRepository.findAllSecciones();
     }
 
     @Override

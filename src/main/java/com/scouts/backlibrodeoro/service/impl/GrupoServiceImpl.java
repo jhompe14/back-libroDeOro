@@ -41,7 +41,7 @@ public class GrupoServiceImpl implements GrupoService {
     @Override
     @Transactional(readOnly = true)
     public List<Grupo> getAllGrupos(){
-        return grupoRepository.findAll();
+        return grupoRepository.findAllGrupos();
     }
 
     @Override
