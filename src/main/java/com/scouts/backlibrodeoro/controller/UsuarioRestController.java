@@ -1,8 +1,7 @@
 package com.scouts.backlibrodeoro.controller;
 
-import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
+import com.scouts.backlibrodeoro.dto.request.*;
+import com.scouts.backlibrodeoro.dto.response.PageResponseDTO;
 import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.RecuperoContrasena;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +52,26 @@ public class UsuarioRestController {
         } catch (NegocioException ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ex) {
+            NegocioException negocioException = (NegocioException) ex.getCause();
+            return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponseDTO> findGridUsuario(HttpServletRequest request) {
+        try {
+            FilterUsuarioGridRequestDTO filterUsuarioGridRequestDTO =
+                    new FilterUsuarioGridRequestDTO(request.getParameter("usuario"),
+                            request.getParameter("nombres"),
+                            request.getParameter("apellidos"),
+                            request.getParameter("page"));
+
+            return new ResponseEntity(new PageResponseDTO<>(
+                    this.usuarioService.countFilterUsuario(filterUsuarioGridRequestDTO),
+                    this.usuarioService.getFilterUsuario(filterUsuarioGridRequestDTO)), HttpStatus.OK);
+        } catch (RuntimeException ex){
             NegocioException negocioException = (NegocioException) ex.getCause();
             return new ResponseEntity(negocioException.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {

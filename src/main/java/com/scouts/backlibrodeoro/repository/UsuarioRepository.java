@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer>, UsuarioRepositoryCustom  {
 
     @Query("SELECT usu FROM Usuario usu WHERE usu.usuario = :usuario AND usu.contrasena = :contrasena")
     Usuario findUsuarioByUsuarioAndContrasena(@Param("usuario") String usuario, @Param("contrasena") String contrasena);

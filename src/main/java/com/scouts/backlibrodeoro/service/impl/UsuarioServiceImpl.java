@@ -1,11 +1,9 @@
 package com.scouts.backlibrodeoro.service.impl;
 
+import com.scouts.backlibrodeoro.dto.request.*;
+import com.scouts.backlibrodeoro.dto.response.UsuarioGridResponseDTO;
 import com.scouts.backlibrodeoro.service.UsuarioService;
 import com.scouts.backlibrodeoro.util.QueryUtil;
-import com.scouts.backlibrodeoro.dto.request.AuthRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.ContrasenaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.TrayectoriaRequestDTO;
-import com.scouts.backlibrodeoro.dto.request.UsuarioRequestDTO;
 import com.scouts.backlibrodeoro.dto.response.UsuarioResponseDTO;
 import com.scouts.backlibrodeoro.exception.NegocioException;
 import com.scouts.backlibrodeoro.model.RecuperoContrasena;
@@ -85,6 +83,16 @@ public class UsuarioServiceImpl implements UsuarioService {
             auth.setTipoUsuario(usuarioOptional.orElse(new Usuario()).getTipoUsuario());
         }
         return true;
+    }
+
+    @Override
+    public Integer countFilterUsuario(FilterUsuarioGridRequestDTO filterUsuarioGridRequestDTO) {
+        return usuarioRepository.countFilterUsuario(filterUsuarioGridRequestDTO);
+    }
+
+    @Override
+    public List<UsuarioGridResponseDTO> getFilterUsuario(FilterUsuarioGridRequestDTO filterUsuarioGridRequestDTO) {
+        return usuarioRepository.getFilterUsuario(filterUsuarioGridRequestDTO);
     }
 
     @Override
