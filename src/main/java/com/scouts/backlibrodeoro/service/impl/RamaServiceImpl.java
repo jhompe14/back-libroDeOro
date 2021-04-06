@@ -44,7 +44,7 @@ public class RamaServiceImpl implements RamaService {
     @Override
     @Transactional(readOnly = true)
     public List<Rama> getAllRamas(){
-        return ramaRepository.findAll();
+        return ramaRepository.findAllRamas();
     }
 
     @Override
